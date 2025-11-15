@@ -48,7 +48,7 @@ export function MyPage({ user }: MyPageProps) {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => setActiveTab(tab.id as 'history' | 'stats' | 'settings')}
                   className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-colors ${
                     activeTab === tab.id
                       ? 'bg-blue-600 text-white'

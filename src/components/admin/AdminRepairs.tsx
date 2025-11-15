@@ -1,20 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
 import { mockRepairs } from '../../lib/mockData';
-
-type Repair = {
-  id: string;
-  type: string;
-  bikeId: string;
-  category: string;
-  description: string;
-  reporter: string;
-  reporterId: string;
-  status: 'pending' | 'in-progress' | 'completed';
-  createdAt: Date;
-  completedAt?: Date;
-  adminNote?: string;
-};
+import type { Repair } from '../../types';
 
 export function AdminRepairs() {
   const [repairs, setRepairs] = useState<Repair[]>([]);
@@ -24,9 +11,9 @@ export function AdminRepairs() {
     // Load repairs from localStorage or use mockRepairs
     const savedRepairs = localStorage.getItem('repairs');
     if (savedRepairs) {
-      const parsedRepairs = JSON.parse(savedRepairs);
+      const parsedRepairs: Repair[] = JSON.parse(savedRepairs);
       // Convert date strings back to Date objects
-      const repairsWithDates = parsedRepairs.map((r: any) => ({
+      const repairsWithDates = parsedRepairs.map(r => ({
         ...r,
         createdAt: new Date(r.createdAt),
         completedAt: r.completedAt ? new Date(r.completedAt) : undefined,

@@ -10,37 +10,10 @@ import { RoutePage } from './components/pages/RoutePage';
 import { AICourseRecommendPage } from './components/pages/AICourseRecommendPage';
 import { LoginModal } from './components/auth/LoginModal';
 import { SignupModal } from './components/auth/SignupModal';
+import type { User, Rental, SignupData } from './types';
 
-export type User = {
-  id: string;
-  email: string;
-  name: string;
-  role: 'user' | 'admin';
-  phone: string;
-};
-
-export type Station = {
-  id: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  bikeCount: number;
-  status: 'active' | 'inactive';
-};
-
-export type Rental = {
-  id: string;
-  userId: string;
-  bikeId: string;
-  startStationId: string;
-  endStationId?: string;
-  rentalTime: Date;
-  returnTime?: Date;
-  distance?: number;
-  duration?: number;
-  status: 'rented' | 'returned';
-};
+// Re-export types for backward compatibility
+export type { User, Station, Rental } from './types';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -62,7 +35,7 @@ export default function App() {
     setShowLoginModal(false);
   };
 
-  const handleSignup = (data: any) => {
+  const handleSignup = (data: SignupData) => {
     const newUser: User = {
       id: Date.now().toString(),
       email: data.email,

@@ -184,7 +184,7 @@ export function BoardList({ onPostClick, user }: BoardListProps) {
 
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
+          onChange={(e) => setSortBy(e.target.value as 'latest' | 'popular' | 'comments')}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="latest">최신순</option>

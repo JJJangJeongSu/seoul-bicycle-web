@@ -52,7 +52,7 @@ export function ListView({ stations, onStationClick, user, currentRental, onRent
         <span className="text-sm text-gray-700">🔄 정렬:</span>
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
+          onChange={(e) => setSortBy(e.target.value as 'name' | 'bikes-desc' | 'bikes-asc')}
           className="px-4 py-2 border-2 border-sky-200 rounded-full focus:ring-4 focus:ring-sky-200 focus:border-sky-400 transition-all bg-white shadow-sm"
         >
           <option value="name">📍 대여소명 (가나다순)</option>

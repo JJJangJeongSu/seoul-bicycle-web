@@ -1,4 +1,4 @@
-import { Station, Rental } from '../App';
+import type { Station, Rental, Post, Repair, Route } from '../types';
 
 export const mockStations: Station[] = [
   {
@@ -273,7 +273,7 @@ export const mockRentals: Rental[] = [
   },
 ];
 
-export const mockPosts = [
+export const mockPosts: Post[] = [
   {
     id: 'P-001',
     category: 'notice',
@@ -337,7 +337,7 @@ export const mockPosts = [
   },
 ];
 
-export const mockRepairs = [
+export const mockRepairs: Repair[] = [
   {
     id: 'REP-001',
     type: 'bike',
@@ -386,7 +386,7 @@ export const seoulDistricts = [
 ];
 
 // Recommended routes
-export const recommendedRoutes = [
+export const recommendedRoutes: Route[] = [
   {
     id: 'ROUTE-001',
     name: '한강 야경 라이딩 코스',
