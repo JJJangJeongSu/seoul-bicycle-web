@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "2.0.0",
-  "lastUpdated": "2025-11-15",
+  "schemaVersion": "2.1.0",
+  "lastUpdated": "2025-11-15T15:30:00Z",
 
   "project": {
     "name": "서울 따릉이 시뮬레이션 플랫폼",
@@ -17,7 +17,10 @@
       "uiLibrary": "shadcn/ui + Radix UI",
       "charts": "Recharts 2.15.2",
       "icons": "Lucide React",
-      "forms": "React Hook Form 7.55.0"
+      "forms": "React Hook Form 7.55.0",
+      "router": "react-router-dom 7.9.6",
+      "toastLibrary": "sonner 2.0.3",
+      "stateManagement": "React Context API (built-in)"
     }
   },
 
@@ -25,34 +28,63 @@
     "architecture": {
       "pattern": "Component-based SPA",
       "stateManagement": {
-        "type": "React local state only",
-        "libraries": [],
-        "description": "No global state management library. All state managed via useState in App.tsx and page components.",
-        "stateOwners": {
-          "App.tsx": ["user", "currentPage", "currentRental", "showLoginModal", "showSignupModal"],
-          "pages": "각 페이지는 자체 local state 관리 (activeTab, selectedItem, etc.)"
+        "type": "Context API + React local state",
+        "libraries": ["React Context API (built-in)"],
+        "description": "Global state managed via Context API (AuthContext, RentalContext). Page-level state still uses useState.",
+        "contexts": {
+          "AuthContext": {
+            "location": "src/contexts/AuthContext.tsx",
+            "provides": ["user", "showLoginModal", "showSignupModal", "login", "signup", "logout", "openLoginModal"],
+            "hook": "useAuth()"
+          },
+          "RentalContext": {
+            "location": "src/contexts/RentalContext.tsx",
+            "provides": ["currentRental", "setCurrentRental", "startRental", "endRental"],
+            "hook": "useRental()"
+          }
         },
-        "dataFlow": "Props drilling from App.tsx to child components"
+        "localState": {
+          "pages": "각 페이지는 자체 local state 관리 (activeTab, selectedItem, filters, etc.)"
+        },
+        "dataFlow": "Context Providers → useAuth()/useRental() hooks → Components (no props drilling)"
       },
       "routing": {
-        "type": "Manual client-side routing",
-        "implementation": "currentPage state in App.tsx",
-        "description": "No React Router. Page navigation via setCurrentPage() callback",
-        "pages": ["home", "mypage", "board", "repair", "admin", "route", "aicourserecommend"],
-        "urlBased": false,
-        "browserHistory": false
+        "type": "React Router v7",
+        "library": "react-router-dom@7.9.6",
+        "implementation": "Routes + Route components in App.tsx",
+        "description": "URL-based routing with React Router. Browser history support.",
+        "routes": [
+          { "path": "/", "component": "HomePage" },
+          { "path": "/mypage", "component": "MyPage", "protected": "user && user.role !== 'admin'" },
+          { "path": "/board", "component": "BoardPage" },
+          { "path": "/repair", "component": "RepairPage" },
+          { "path": "/route", "component": "RoutePage" },
+          { "path": "/ai-course", "component": "AICourseRecommendPage" },
+          { "path": "/admin/*", "component": "AdminPage", "protected": "user?.role === 'admin'" }
+        ],
+        "urlBased": true,
+        "browserHistory": true,
+        "features": ["URL navigation", "Back/Forward buttons", "Bookmarkable URLs", "Protected routes", "404 redirect"]
       },
       "authentication": {
         "type": "Mock authentication",
-        "location": "App.tsx handleLogin() function",
+        "location": "src/contexts/AuthContext.tsx",
+        "implementation": "AuthContext with useAuth() hook",
         "logic": {
           "adminEmail": "admin@test.com",
           "adminRole": "Any email === 'admin@test.com' → role: 'admin'",
           "userRole": "Any other email → role: 'user'",
           "passwordValidation": "No validation (mock system)"
         },
-        "storage": "In-memory only (user state in App.tsx)",
-        "persistence": "None (resets on page reload)"
+        "features": {
+          "login": "Sets user in AuthContext",
+          "signup": "Creates new user with role 'user'",
+          "logout": "Clears user and dispatches 'auth:logout' event, navigates to home",
+          "modalManagement": "showLoginModal, showSignupModal state in AuthContext"
+        },
+        "storage": "In-memory only (user state in AuthContext)",
+        "persistence": "None (resets on page reload)",
+        "crossContextCommunication": "Logout dispatches custom event to clear RentalContext"
       },
       "dataSource": {
         "type": "Mock data",
@@ -60,55 +92,55 @@
         "pattern": "Import mock arrays → Copy to local state → Mutate locally",
         "persistence": "None (changes lost on reload)",
         "apiCalls": "None (100% client-side)"
+      },
+      "errorHandling": {
+        "errorBoundary": {
+          "location": "src/components/ErrorBoundary.tsx",
+          "integration": "Wraps entire app in main.tsx",
+          "features": [
+            "Catches JavaScript errors in component tree",
+            "Displays user-friendly error UI",
+            "Provides 'Try Again' and 'Go Home' buttons",
+            "Logs errors to console",
+            "Shows stack trace in development mode"
+          ],
+          "prevents": "Full app crashes - errors are isolated to error boundary scope"
+        }
       }
     },
 
     "typeDefinitions": {
-      "location": "src/App.tsx (lines 13-42)",
-      "types": {
-        "User": {
-          "file": "src/App.tsx",
-          "lines": "13-19",
-          "fields": {
-            "id": "string",
-            "email": "string",
-            "name": "string",
-            "role": "'user' | 'admin'",
-            "phone": "string"
-          }
-        },
-        "Station": {
-          "file": "src/App.tsx",
-          "lines": "21-29",
-          "fields": {
-            "id": "string",
-            "name": "string",
-            "address": "string",
-            "latitude": "number",
-            "longitude": "number",
-            "bikeCount": "number",
-            "status": "'active' | 'inactive'"
-          }
-        },
-        "Rental": {
-          "file": "src/App.tsx",
-          "lines": "31-42",
-          "fields": {
-            "id": "string",
-            "userId": "string",
-            "bikeId": "string",
-            "startStationId": "string",
-            "endStationId": "string | undefined",
-            "rentalTime": "Date",
-            "returnTime": "Date | undefined",
-            "distance": "number | undefined",
-            "duration": "number | undefined",
-            "status": "'rented' | 'returned'"
-          }
-        }
+      "location": "src/types/index.ts (centralized)",
+      "reExportedFrom": "src/App.tsx (for backward compatibility)",
+      "coreTypes": {
+        "User": "Authentication and user profile",
+        "SignupData": "Signup form data structure",
+        "Station": "Bike station information",
+        "Rental": "Bike rental records"
       },
-      "importPattern": "import { User, Station, Rental } from '../../App'",
-      "note": "Additional types defined in page components (Post, Comment, Repair, CourseInfo, etc.)"
+      "boardTypes": {
+        "Post": "Board post with category, content, stats",
+        "Comment": "Post comment",
+        "PostCategory": "'notice' | 'info' | 'question' | 'free'"
+      },
+      "repairTypes": {
+        "Repair": "Repair report with status tracking",
+        "RepairType": "'bike' | 'station'",
+        "RepairCategory": "'brake' | 'tire' | 'chain' | 'light' | 'seat' | 'bell' | 'other'",
+        "RepairStatus": "'pending' | 'in-progress' | 'completed'"
+      },
+      "routeTypes": {
+        "Route": "Recommended cycling route",
+        "RouteDifficulty": "'easy' | 'medium' | 'hard'"
+      },
+      "uiTypes": {
+        "MyPageTab": "'history' | 'stats' | 'settings'",
+        "AdminTab": "'dashboard' | 'users' | 'stations' | 'bikes' | 'repairs'",
+        "SortBy": "'date' | 'distance' | 'duration'",
+        "ViewMode": "'map' | 'list'"
+      },
+      "importPattern": "import type { User, Station, Rental } from '@/types'",
+      "note": "All types centralized in src/types/index.ts. App.tsx re-exports for backward compatibility."
     },
 
     "components": {
@@ -134,34 +166,48 @@
       },
 
       "hierarchy": {
+        "main.tsx": {
+          "renders": "BrowserRouter → ErrorBoundary → AuthProvider → RentalProvider → App",
+          "purpose": "Wraps app with routing, error handling, and context providers"
+        },
         "App.tsx": {
-          "state": ["user", "currentPage", "currentRental", "showLoginModal", "showSignupModal"],
-          "renders": ["Navbar", "CurrentPage (conditional)", "LoginModal (conditional)", "SignupModal (conditional)"],
+          "state": "None (moved to Context)",
+          "usesContexts": ["useAuth()"],
+          "renders": ["Navbar", "Routes (with Route components)", "LoginModal (conditional)", "SignupModal (conditional)"],
           "children": {
             "Navbar": {
-              "props": ["user", "currentPage", "onPageChange", "onLoginClick", "onLogout", "currentRental"],
-              "responsibilities": ["Navigation", "User status display", "Rental indicator"]
+              "props": "None",
+              "hooks": ["useAuth()", "useRental()", "useNavigate()", "useLocation()"],
+              "responsibilities": ["Navigation", "User status display", "Rental indicator"],
+              "note": "⚠️ Partially migrated - still expects props in current code"
             },
             "HomePage": {
-              "props": ["user", "currentRental", "onRent", "onLoginRequired"],
+              "props": "None (will use hooks)",
+              "hooks": ["useAuth()", "useRental()"],
               "state": ["viewMode", "searchTerm", "selectedDistrict", "bikeFilter", "selectedStation", "stations"],
-              "children": ["MapView", "ListView", "StationDetailModal"]
+              "children": ["MapView", "ListView", "StationDetailModal"],
+              "note": "⚠️ Not yet migrated to Context"
             },
             "MyPage": {
-              "props": ["user"],
+              "props": "None (will use hooks)",
+              "hooks": ["useAuth()"],
               "state": ["activeTab"],
               "children": ["RentalHistory", "UserStats", "UserSettings"],
               "accessControl": "user.role !== 'admin' required"
             },
             "BoardPage": {
-              "props": ["user"],
+              "props": "None (will use hooks)",
+              "hooks": ["useAuth()"],
               "state": ["selectedPostId", "isWriting"],
-              "children": ["BoardList", "PostDetail", "PostEditor"]
+              "children": ["BoardList", "PostDetail", "PostEditor"],
+              "note": "⚠️ Not yet migrated to Context"
             },
             "RepairPage": {
-              "props": ["user", "onLoginRequired"],
+              "props": "None (will use hooks)",
+              "hooks": ["useAuth()"],
               "state": ["activeView"],
-              "children": ["RepairForm", "RepairList"]
+              "children": ["RepairForm", "RepairList"],
+              "note": "⚠️ Not yet migrated to Context"
             },
             "RoutePage": {
               "props": [],
@@ -498,24 +544,37 @@
     },
 
     "dataFlow": {
-      "pattern": "Unidirectional data flow via props",
+      "pattern": "Context-based centralized state + Local component state",
       "globalState": {
-        "owner": "App.tsx",
-        "variables": {
-          "user": {
-            "type": "User | null",
-            "flow": "App → Navbar, HomePage, MyPage, BoardPage, RepairPage",
-            "updates": "Login/Logout only"
+        "owner": "Context Providers (AuthContext, RentalContext)",
+        "access": "Via useAuth() and useRental() hooks",
+        "benefits": ["No props drilling", "Centralized state logic", "Easy testing", "Cross-component communication"],
+        "contexts": {
+          "AuthContext": {
+            "provides": {
+              "user": {
+                "type": "User | null",
+                "access": "Any component via useAuth()",
+                "updates": "login(), signup(), logout()"
+              },
+              "modals": {
+                "showLoginModal": "boolean",
+                "showSignupModal": "boolean",
+                "controls": "setShowLoginModal(), setShowSignupModal(), openLoginModal()"
+              }
+            }
           },
-          "currentRental": {
-            "type": "Rental | null",
-            "flow": "App → HomePage, Navbar",
-            "updates": "Rent bike (HomePage) / Return bike (Navbar or StationDetail)"
-          },
-          "currentPage": {
-            "type": "'home' | 'mypage' | 'board' | 'repair' | 'admin' | 'route' | 'aicourserecommend'",
-            "flow": "App → Navbar (display) / App → conditional page render",
-            "updates": "Navigation button clicks in Navbar"
+          "RentalContext": {
+            "provides": {
+              "currentRental": {
+                "type": "Rental | null",
+                "access": "Any component via useRental()",
+                "updates": "startRental(), endRental(), setCurrentRental()"
+              }
+            },
+            "features": {
+              "autoCleanup": "Listens to 'auth:logout' event to clear rental on logout"
+            }
           }
         }
       },
@@ -529,15 +588,20 @@
           "AdminPage": ["activeTab"]
         }
       },
-      "callbackPattern": {
-        "description": "Child components receive callbacks to update parent state",
-        "examples": {
-          "onRent": "HomePage → App.tsx (updates currentRental)",
-          "onPageChange": "Navbar → App.tsx (updates currentPage)",
-          "onLoginRequired": "HomePage/RepairPage → App.tsx (shows login modal)",
-          "onLogin": "LoginModal → App.tsx (updates user)",
-          "onLogout": "Navbar → App.tsx (clears user)"
-        }
+      "migrationStatus": {
+        "completed": [
+          "AuthContext created with login, signup, logout",
+          "RentalContext created with rental management",
+          "Context providers integrated in main.tsx",
+          "App.tsx refactored to use Context",
+          "Cross-context communication via custom events"
+        ],
+        "pending": [
+          "Navbar migration to useAuth() and useRental()",
+          "HomePage migration to Context hooks",
+          "Other pages (MyPage, BoardPage, RepairPage) migration"
+        ],
+        "note": "⚠️ App currently broken - Context created but components still expect props"
       }
     }
   },
@@ -994,30 +1058,82 @@
       "State resets on page reload (no persistence)",
       "Use admin@test.com to get admin role, any other email gets user role",
       "UI components in src/components/ui/ are from shadcn/ui - do not edit",
-      "Types are defined in App.tsx, not separate type files",
-      "Routing is manual via currentPage state, not React Router"
+      "Types are centralized in src/types/index.ts",
+      "React Router provides URL-based navigation",
+      "State is managed via Context API (AuthContext, RentalContext)",
+      "ErrorBoundary wraps the entire app for graceful error handling"
     ],
     "forAI": [
       "Always check mockData.ts first when looking for data",
-      "Types are in App.tsx (User, Station, Rental)",
-      "State is in App.tsx for global, page components for local",
-      "No routing library - look for currentPage state",
+      "Types are in src/types/index.ts (centralized)",
+      "Global state is in Context (AuthContext, RentalContext) - use useAuth() and useRental() hooks",
+      "React Router is used - look for Routes and Route components",
       "UI components are read-only - don't edit shadcn/ui files",
       "When implementing features, simulate API calls with local state mutations",
-      "Remember: no backend exists, all operations are client-side only"
+      "Remember: no backend exists, all operations are client-side only",
+      "⚠️ CURRENT STATUS: Context API partially implemented - components need migration to hooks"
     ],
     "futureWork": [
+      "Complete Context migration for all components (Navbar, HomePage, etc.)",
       "Implement actual backend API",
       "Add database for persistence",
       "Replace mock data with API calls",
       "Add proper authentication with JWT",
       "Implement real geocoding API",
       "Add actual AI integration for course recommendations",
-      "Add React Router for URL-based routing",
-      "Add global state management (if needed)",
+      "Add Storage abstraction layer (planned)",
+      "Replace alert() with Toast notifications (sonner library available)",
+      "Add ARIA labels for accessibility",
       "Add unit tests and E2E tests",
-      "Add TypeScript strict mode",
       "Add ESLint and Prettier"
     ]
+  },
+
+  "recentImprovements": {
+    "phase1": {
+      "date": "2025-11-15",
+      "status": "✅ Completed",
+      "duration": "8-12 hours",
+      "changes": [
+        "Created src/types/index.ts - centralized all type definitions",
+        "Removed all 'any' types from codebase (8+ files affected)",
+        "Replaced unsafe 'as any' type assertions with proper union types",
+        "Implemented ErrorBoundary component for app stability",
+        "Confirmed React Router v7 already integrated",
+        "All builds passing with zero TypeScript errors"
+      ],
+      "impact": {
+        "typeSafety": "100% - Zero any types remaining",
+        "errorHandling": "App no longer crashes on component errors",
+        "maintainability": "Types centralized and reusable"
+      }
+    },
+    "phase2": {
+      "date": "2025-11-15",
+      "status": "⚠️ Partial (In Progress)",
+      "duration": "4-6 hours (so far)",
+      "changes": [
+        "Created AuthContext (src/contexts/AuthContext.tsx) for authentication state",
+        "Created RentalContext (src/contexts/RentalContext.tsx) for rental state",
+        "Integrated Context Providers in main.tsx (BrowserRouter → ErrorBoundary → AuthProvider → RentalProvider → App)",
+        "Refactored App.tsx to use useAuth() hook",
+        "Implemented cross-context communication via custom events (auth:logout)",
+        "Added useCallback for performance optimization"
+      ],
+      "remaining": [
+        "Update Navbar.tsx to use useAuth() and useRental() hooks",
+        "Update HomePage.tsx to use Context hooks",
+        "Update MyPage, BoardPage, RepairPage to use Context",
+        "Remove all props drilling throughout the app",
+        "Test Context integration end-to-end"
+      ],
+      "currentIssue": "⚠️ App is broken - Context created but components still expect props from App.tsx",
+      "nextSteps": "Complete component migration to finish Phase 2"
+    },
+    "phase2Planned": {
+      "storage": "Create storage.ts utility class to abstract localStorage",
+      "toast": "Integrate Sonner toast system to replace alert()",
+      "accessibility": "Add ARIA labels and keyboard navigation support"
+    }
   }
 }
