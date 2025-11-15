@@ -1,17 +1,18 @@
 import { Bike, MapPin, Clock } from 'lucide-react';
-import { Station, User, Rental } from '../../App';
+import type { Station } from '../../types';
 import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useRental } from '../../contexts/RentalContext';
 
 type ListViewProps = {
   stations: Station[];
   onStationClick: (station: Station) => void;
-  user?: User | null;
-  currentRental?: Rental | null;
   onRent?: (stationId: string) => void;
-  onLoginRequired?: () => void;
 };
 
-export function ListView({ stations, onStationClick, user, currentRental, onRent, onLoginRequired }: ListViewProps) {
+export function ListView({ stations, onStationClick, onRent }: ListViewProps) {
+  const { user, setShowLoginModal } = useAuth();
+  const { currentRental } = useRental();
   const [sortBy, setSortBy] = useState<'name' | 'bikes-desc' | 'bikes-asc'>('name');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
@@ -129,7 +130,7 @@ export function ListView({ stations, onStationClick, user, currentRental, onRent
                       onClick={(e) => {
                         e.stopPropagation();
                         if (!user) {
-                          onLoginRequired?.();
+                          setShowLoginModal(true);
                           return;
                         }
                         if (currentRental) {

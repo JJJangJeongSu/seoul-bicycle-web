@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Eye, ThumbsUp, MessageSquare, Share2, Edit, Trash2 } from 'lucide-react';
-import { User } from '../../App';
 import { mockPosts } from '../../lib/mockData';
 import type { Post } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
 
 type PostDetailProps = {
   postId: string;
-  user: User | null;
   onBack: () => void;
 };
 
-export function PostDetail({ postId, user, onBack }: PostDetailProps) {
+export function PostDetail({ postId, onBack }: PostDetailProps) {
+  const { user } = useAuth();
   const [postData, setPostData] = useState<Post | null>(null);
   const [liked, setLiked] = useState(false);
   const [userLikedPosts, setUserLikedPosts] = useState<string[]>([]);

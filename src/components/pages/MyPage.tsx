@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { User } from '../../App';
 import { Bike, BarChart3, History, Settings, Award } from 'lucide-react';
 import { RentalHistory } from '../mypage/RentalHistory';
 import { UserStats } from '../mypage/UserStats';
 import { UserSettings } from '../mypage/UserSettings';
+import { useAuth } from '../../contexts/AuthContext';
 
-type MyPageProps = {
-  user: User;
-};
+export function MyPage() {
+  const { user } = useAuth();
 
-export function MyPage({ user }: MyPageProps) {
+  if (!user) {
+    return null;
+  }
   const [activeTab, setActiveTab] = useState<'history' | 'stats' | 'settings'>('history');
 
   const tabs = [

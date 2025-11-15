@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { ArrowLeft, Save, Image as ImageIcon } from 'lucide-react';
-import { User } from '../../App';
+import { useAuth } from '../../contexts/AuthContext';
 
 type PostEditorProps = {
-  user: User;
   onBack: () => void;
   onSubmit: () => void;
 };
 
-export function PostEditor({ user, onBack, onSubmit }: PostEditorProps) {
+export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
+  const { user } = useAuth();
+
+  if (!user) {
+    return null;
+  }
   const [formData, setFormData] = useState({
     category: 'free',
     title: '',

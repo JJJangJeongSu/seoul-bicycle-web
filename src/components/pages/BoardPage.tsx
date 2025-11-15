@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import { User } from '../../App';
 import { Plus } from 'lucide-react';
 import { BoardList } from '../board/BoardList';
 import { PostDetail } from '../board/PostDetail';
 import { PostEditor } from '../board/PostEditor';
+import { useAuth } from '../../contexts/AuthContext';
 
-type BoardPageProps = {
-  user: User | null;
-};
-
-export function BoardPage({ user }: BoardPageProps) {
+export function BoardPage() {
+  const { user } = useAuth();
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [isWriting, setIsWriting] = useState(false);
 
@@ -45,11 +42,11 @@ export function BoardPage({ user }: BoardPageProps) {
 
       {/* Content */}
       {selectedPostId ? (
-        <PostDetail postId={selectedPostId} user={user} onBack={handleBack} />
+        <PostDetail postId={selectedPostId} onBack={handleBack} />
       ) : isWriting ? (
-        <PostEditor user={user!} onBack={handleBack} onSubmit={handleBack} />
+        <PostEditor onBack={handleBack} onSubmit={handleBack} />
       ) : (
-        <BoardList onPostClick={handlePostClick} user={user} />
+        <BoardList onPostClick={handlePostClick} />
       )}
     </div>
   );

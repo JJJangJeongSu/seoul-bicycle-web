@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { MessageSquare, Eye, ThumbsUp, Pin, Search } from 'lucide-react';
 import { mockPosts } from '../../lib/mockData';
-import { User } from '../../App';
 
 type Post = {
   id: string;
@@ -19,10 +18,9 @@ type Post = {
 
 type BoardListProps = {
   onPostClick: (postId: string) => void;
-  user: User | null;
 };
 
-export function BoardList({ onPostClick, user }: BoardListProps) {
+export function BoardList({ onPostClick }: BoardListProps) {
   const [category, setCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'comments'>('latest');
