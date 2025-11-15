@@ -1,19 +1,16 @@
 import { useState, useMemo } from 'react';
 import { Search, Filter, Map as MapIcon, List, RefreshCw } from 'lucide-react';
-import { User, Station, Rental } from '../../App';
+import type { Station, Rental } from '../../types';
 import { mockStations, seoulDistricts } from '../../lib/mockData';
 import { MapView } from '../home/MapView';
 import { ListView } from '../home/ListView';
 import { StationDetailModal } from '../home/StationDetailModal';
+import { useAuth } from '../../contexts/AuthContext';
+import { useRental } from '../../contexts/RentalContext';
 
-type HomePageProps = {
-  user: User | null;
-  currentRental: Rental | null;
-  onRent: (rental: Rental) => void;
-  onLoginRequired: () => void;
-};
-
-export function HomePage({ user, currentRental, onRent, onLoginRequired }: HomePageProps) {
+export function HomePage() {
+  const { user, setShowLoginModal } = useAuth();
+  const { currentRental, setCurrentRental } = useRental();
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('전체');
@@ -57,7 +54,7 @@ export function HomePage({ user, currentRental, onRent, onLoginRequired }: HomeP
 
   const handleRent = (stationId: string) => {
     if (!user) {
-      onLoginRequired();
+      setShowLoginModal(true);
       return;
     }
 
@@ -92,7 +89,7 @@ export function HomePage({ user, currentRental, onRent, onLoginRequired }: HomeP
       s.id === stationId ? { ...s, bikeCount: s.bikeCount - 1 } : s
     ));
 
-    onRent(newRental);
+    setCurrentRental(newRental);
     setSelectedStation(null);
     alert(`✅ 대여 완료!\n자전거 번호: ${newRental.bikeId}\n출발 대여소: ${station.name}`);
   };
@@ -141,10 +138,10 @@ export function HomePage({ user, currentRental, onRent, onLoginRequired }: HomeP
     ));
 
     const startStation = stations.find(s => s.id === currentRental.startStationId);
-    
+
     alert(`✅ 반납 완료!\n\n출발: ${startStation?.name}\n도착: ${station.name}\n이용 시간: ${duration}분\n이동 거리: ${distance}km`);
-    
-    onRent(null);
+
+    setCurrentRental(null);
     setSelectedStation(null);
   };
 
@@ -276,10 +273,7 @@ export function HomePage({ user, currentRental, onRent, onLoginRequired }: HomeP
         <ListView
           stations={filteredStations}
           onStationClick={setSelectedStation}
-          user={user}
-          currentRental={currentRental}
           onRent={handleRent}
-          onLoginRequired={onLoginRequired}
         />
       )}
 
@@ -287,8 +281,6 @@ export function HomePage({ user, currentRental, onRent, onLoginRequired }: HomeP
       {selectedStation && (
         <StationDetailModal
           station={selectedStation}
-          user={user}
-          currentRental={currentRental}
           onClose={() => setSelectedStation(null)}
           onRent={handleRent}
           onReturn={handleReturn}

@@ -33,7 +33,7 @@ export function AdminPage() {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'dashboard' | 'users' | 'stations' | 'bikes' | 'repairs')}
                 className={`flex items-center gap-2 px-6 py-4 whitespace-nowrap transition-colors ${
                   activeTab === tab.id
                     ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600'

@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { MessageSquare, Eye, ThumbsUp, Pin, Search } from 'lucide-react';
 import { mockPosts } from '../../lib/mockData';
-import { User } from '../../App';
 
 type Post = {
   id: string;
@@ -19,10 +18,9 @@ type Post = {
 
 type BoardListProps = {
   onPostClick: (postId: string) => void;
-  user: User | null;
 };
 
-export function BoardList({ onPostClick, user }: BoardListProps) {
+export function BoardList({ onPostClick }: BoardListProps) {
   const [category, setCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'comments'>('latest');
@@ -184,7 +182,7 @@ export function BoardList({ onPostClick, user }: BoardListProps) {
 
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
+          onChange={(e) => setSortBy(e.target.value as 'latest' | 'popular' | 'comments')}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="latest">최신순</option>

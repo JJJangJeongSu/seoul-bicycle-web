@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import { User } from '../../App';
 import { AlertCircle, Image as ImageIcon, Send } from 'lucide-react';
 
 type RepairFormProps = {
-  user: User;
   onSuccess: () => void;
   onCancel: () => void;
 };
 
-export function RepairForm({ user, onSuccess, onCancel }: RepairFormProps) {
+export function RepairForm({ onSuccess, onCancel }: RepairFormProps) {
   const [formData, setFormData] = useState({
     type: 'bike',
     bikeId: '',
