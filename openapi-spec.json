@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "서울 따릉이 시뮬레이션 플랫폼 API",
     "description": "서울 공공자전거 따릉이 시스템을 시뮬레이션하는 RESTful API. 사용자 인증, 대여소 조회, 자전거 대여/반납, 게시판, 고장 신고, 경로 찾기, AI 코스 추천 등의 기능을 제공합니다.",
@@ -9,56 +9,72 @@
       "url": "https://www.figma.com/design/aJfOnTQZwtUneqKjGGYkcj/Simulation-Platform-Design"
     }
   },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api.seoul-bike.example.com/api",
+      "description": "Production server"
+    }
+  ],
   "tags": [
     {
-      "name": "auth"
+      "name": "auth",
+      "description": "사용자 인증 및 권한 관리"
     },
     {
-      "name": "stations"
+      "name": "stations",
+      "description": "대여소 정보 조회 및 관리"
     },
     {
-      "name": "rentals"
+      "name": "rentals",
+      "description": "자전거 대여 및 반납 관리"
     },
     {
-      "name": "board"
+      "name": "board",
+      "description": "커뮤니티 게시판"
     },
     {
-      "name": "repairs"
+      "name": "repairs",
+      "description": "자전거 및 대여소 고장 신고"
     },
     {
-      "name": "routes"
+      "name": "routes",
+      "description": "경로 찾기 및 네비게이션"
     },
     {
-      "name": "ai"
+      "name": "ai",
+      "description": "AI 기반 코스 추천"
     },
     {
-      "name": "users"
+      "name": "users",
+      "description": "사용자 프로필 관리"
     },
     {
-      "name": "admin"
+      "name": "admin",
+      "description": "관리자 전용 기능"
     }
   ],
   "paths": {
     "/auth/login": {
       "post": {
-        "summary": "사용자 로그인",
-        "deprecated": false,
-        "description": "이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.",
-        "operationId": "loginUser",
         "tags": [
           "auth"
         ],
-        "parameters": [],
+        "operationId": "loginUser",
+        "summary": "사용자 로그인",
+        "description": "이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Login"
-              },
-              "examples": {}
+                "$ref": "#/components/schemas/Request.Auth.Login"
+              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -68,56 +84,54 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Login5"
+                          "$ref": "#/components/schemas/Data.Auth.Login"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 실패 - 잘못된 이메일 또는 비밀번호",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       }
     },
     "/auth/signup": {
       "post": {
-        "summary": "회원가입",
-        "deprecated": false,
-        "description": "새로운 사용자 계정을 생성합니다. 모든 신규 가입자는 일반 사용자(role: user) 권한으로 생성됩니다. 이메일 중복 확인 후 계정을 생성하며, 성공 시 JWT 토큰과 사용자 정보를 반환합니다.",
-        "operationId": "signupUser",
         "tags": [
           "auth"
         ],
-        "parameters": [],
+        "operationId": "signupUser",
+        "summary": "회원가입",
+        "description": "새로운 사용자 계정을 생성합니다. 모든 신규 가입자는 일반 사용자(role: user) 권한으로 생성됩니다. 이메일 중복 확인 후 계정을 생성하며, 성공 시 JWT 토큰과 사용자 정보를 반환합니다.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Signup"
+                "$ref": "#/components/schemas/Request.Auth.Signup"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -127,68 +141,66 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Signup4"
+                          "$ref": "#/components/schemas/Data.Auth.Signup"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "400": {
             "description": "잘못된 요청 - 필수 필드 누락 또는 형식 오류",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "409": {
             "description": "이메일 중복 - 이미 사용 중인 이메일",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       }
     },
     "/auth/check-email": {
       "get": {
-        "summary": "이메일 중복 확인",
-        "deprecated": false,
-        "description": "회원가입 시 이메일 중복 여부를 확인합니다. 사용 가능한 이메일인 경우 available: true를 반환합니다.",
-        "operationId": "checkEmailAvailability",
         "tags": [
           "auth"
         ],
+        "operationId": "checkEmailAvailability",
+        "summary": "이메일 중복 확인",
+        "description": "회원가입 시 이메일 중복 여부를 확인합니다. 사용 가능한 이메일인 경우 available: true를 반환합니다.",
         "parameters": [
           {
             "name": "email",
             "in": "query",
-            "description": "확인할 이메일 주소",
             "required": true,
             "schema": {
               "type": "string",
               "format": "email",
               "example": "user@example.com"
-            }
+            },
+            "description": "확인할 이메일 주소"
           }
         ],
         "responses": {
@@ -199,50 +211,49 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/EmailCheck"
+                          "$ref": "#/components/schemas/Data.EmailCheck"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       }
     },
     "/stations": {
       "get": {
-        "summary": "대여소 목록 조회",
-        "deprecated": false,
-        "description": "전체 대여소 목록을 조회합니다. 각 대여소의 위치, 주소, 현재 자전거 수, 운영 상태 등을 포함합니다. 필터링 및 검색 기능을 지원합니다.",
-        "operationId": "getAllStations",
         "tags": [
           "stations"
         ],
+        "operationId": "getAllStations",
+        "summary": "대여소 목록 조회",
+        "description": "전체 대여소 목록을 조회합니다. 각 대여소의 위치, 주소, 현재 자전거 수, 운영 상태 등을 포함합니다. 필터링 및 검색 기능을 지원합니다.",
         "parameters": [
           {
             "name": "district",
             "in": "query",
-            "description": "서울시 구 단위 필터 (예: 강남구, 서초구)",
             "required": false,
             "schema": {
               "type": "string",
               "example": "강남구"
-            }
+            },
+            "description": "서울시 구 단위 필터 (예: 강남구, 서초구)"
           },
           {
             "name": "status",
             "in": "query",
-            "description": "대여소 운영 상태 필터",
             "required": false,
             "schema": {
               "type": "string",
@@ -251,17 +262,18 @@
                 "inactive"
               ],
               "example": "active"
-            }
+            },
+            "description": "대여소 운영 상태 필터"
           },
           {
             "name": "search",
             "in": "query",
-            "description": "대여소명 또는 주소 검색어",
             "required": false,
             "schema": {
               "type": "string",
               "example": "강남역"
-            }
+            },
+            "description": "대여소명 또는 주소 검색어"
           }
         ],
         "responses": {
@@ -272,36 +284,35 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/StationList"
+                          "$ref": "#/components/schemas/Data.Stations.List"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       }
     },
     "/stations/status": {
       "get": {
-        "summary": "대여소 실시간 현황 갱신",
-        "deprecated": false,
-        "description": "모든 대여소의 실시간 자전거 수와 운영 상태를 조회합니다. 클라이언트의 자동 새로고침 기능에서 사용됩니다.",
-        "operationId": "getStationsStatus",
         "tags": [
           "stations"
         ],
-        "parameters": [],
+        "operationId": "getStationsStatus",
+        "summary": "대여소 실시간 현황 갱신",
+        "description": "모든 대여소의 실시간 자전거 수와 운영 상태를 조회합니다. 클라이언트의 자동 새로고침 기능에서 사용됩니다.",
         "responses": {
           "200": {
             "description": "실시간 현황 조회 성공",
@@ -310,57 +321,57 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/StatusList"
+                          "$ref": "#/components/schemas/Data.Stations.StatusList"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       }
     },
     "/stations/nearest": {
       "get": {
-        "summary": "가장 가까운 대여소 찾기",
-        "deprecated": false,
-        "description": "주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.",
-        "operationId": "getNearestStation",
         "tags": [
           "stations"
         ],
+        "operationId": "getNearestStation",
+        "summary": "가장 가까운 대여소 찾기",
+        "description": "주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.",
         "parameters": [
           {
             "name": "lat",
             "in": "query",
-            "description": "위도 (latitude)",
             "required": true,
             "schema": {
               "type": "number",
               "format": "double",
               "example": 37.4979
-            }
+            },
+            "description": "위도 (latitude)"
           },
           {
             "name": "lon",
             "in": "query",
-            "description": "경도 (longitude)",
             "required": true,
             "schema": {
               "type": "number",
               "format": "double",
               "example": 127.0276
-            }
+            },
+            "description": "경도 (longitude)"
           }
         ],
         "responses": {
@@ -371,45 +382,49 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Nearest"
+                          "$ref": "#/components/schemas/Data.Stations.Nearest"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       }
     },
     "/rentals": {
       "post": {
-        "summary": "자전거 대여",
-        "deprecated": false,
-        "description": "지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.",
-        "operationId": "createRental",
         "tags": [
           "rentals"
         ],
-        "parameters": [],
+        "operationId": "createRental",
+        "summary": "자전거 대여",
+        "description": "지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Create"
+                "$ref": "#/components/schemas/Request.Rental.Create"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -419,95 +434,92 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Rental"
+                          "$ref": "#/components/schemas/Data.Rental.Create"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "400": {
             "description": "대여 불가 - 이미 대여 중이거나 자전거 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자는 대여할 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/rentals/{rentalId}/return": {
       "put": {
-        "summary": "자전거 반납",
-        "deprecated": false,
-        "description": "대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.",
-        "operationId": "returnRental",
         "tags": [
           "rentals"
+        ],
+        "operationId": "returnRental",
+        "summary": "자전거 반납",
+        "description": "대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "rentalId",
             "in": "path",
-            "description": "대여 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "pattern": "^R-[0-9]+$",
               "example": "R-1699999999999"
-            }
+            },
+            "description": "대여 ID"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Return"
+                "$ref": "#/components/schemas/Request.Rental.Return"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -517,100 +529,96 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/RentalReturn"
+                          "$ref": "#/components/schemas/Data.Rental.Return"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "400": {
             "description": "반납 불가 - 대여 중인 자전거 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "대여 기록을 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/users/{userId}/rentals": {
       "get": {
-        "summary": "사용자 대여 이력 조회",
-        "deprecated": false,
-        "description": "특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.",
-        "operationId": "getUserRentals",
         "tags": [
           "rentals"
+        ],
+        "operationId": "getUserRentals",
+        "summary": "사용자 대여 이력 조회",
+        "description": "특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "사용자 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "example": "1"
-            }
+            },
+            "description": "사용자 ID"
           },
           {
             "name": "page",
             "in": "query",
-            "description": "페이지 번호 (1부터 시작)",
             "required": false,
             "schema": {
               "type": "integer",
               "minimum": 1,
               "default": 1,
               "example": 1
-            }
+            },
+            "description": "페이지 번호 (1부터 시작)"
           },
           {
             "name": "limit",
             "in": "query",
-            "description": "페이지당 항목 수",
             "required": false,
             "schema": {
               "type": "integer",
@@ -618,7 +626,8 @@
               "maximum": 100,
               "default": 10,
               "example": 10
-            }
+            },
+            "description": "페이지당 항목 수"
           }
         ],
         "responses": {
@@ -629,16 +638,16 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/UserList"
+                          "$ref": "#/components/schemas/Data.Rentals.UserList"
                         },
                         "pagination": {
-                          "$ref": "#/components/schemas/Pagination"
+                          "$ref": "#/components/schemas/Common.Pagination"
                         }
                       },
                       "required": [
@@ -649,65 +658,55 @@
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "사용자를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/board/posts": {
       "get": {
-        "summary": "게시글 목록 조회",
-        "deprecated": false,
-        "description": "커뮤니티 게시판의 게시글 목록을 조회합니다. 카테고리별 필터링, 검색, 페이지네이션을 지원합니다. 공지사항(isPinned: true)은 상단에 고정됩니다.",
-        "operationId": "getAllPosts",
         "tags": [
           "board"
         ],
+        "operationId": "getAllPosts",
+        "summary": "게시글 목록 조회",
+        "description": "커뮤니티 게시판의 게시글 목록을 조회합니다. 카테고리별 필터링, 검색, 페이지네이션을 지원합니다. 공지사항(isPinned: true)은 상단에 고정됩니다.",
         "parameters": [
           {
             "name": "page",
             "in": "query",
-            "description": "페이지 번호",
             "required": false,
             "schema": {
               "type": "integer",
               "minimum": 1,
               "default": 1,
               "example": 1
-            }
+            },
+            "description": "페이지 번호"
           },
           {
             "name": "limit",
             "in": "query",
-            "description": "페이지당 항목 수",
             "required": false,
             "schema": {
               "type": "integer",
@@ -715,22 +714,22 @@
               "maximum": 100,
               "default": 20,
               "example": 20
-            }
+            },
+            "description": "페이지당 항목 수"
           },
           {
             "name": "search",
             "in": "query",
-            "description": "제목 또는 내용 검색어",
             "required": false,
             "schema": {
               "type": "string",
               "example": "따릉이"
-            }
+            },
+            "description": "제목 또는 내용 검색어"
           },
           {
             "name": "category",
             "in": "query",
-            "description": "게시글 카테고리 필터",
             "required": false,
             "schema": {
               "type": "string",
@@ -741,7 +740,8 @@
                 "free"
               ],
               "example": "info"
-            }
+            },
+            "description": "게시글 카테고리 필터"
           }
         ],
         "responses": {
@@ -752,16 +752,16 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/PostList"
+                          "$ref": "#/components/schemas/Data.Posts.List"
                         },
                         "pagination": {
-                          "$ref": "#/components/schemas/Pagination"
+                          "$ref": "#/components/schemas/Common.Pagination"
                         }
                       },
                       "required": [
@@ -772,30 +772,31 @@
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       },
       "post": {
-        "summary": "게시글 작성",
-        "deprecated": false,
-        "description": "새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.",
-        "operationId": "createPost",
         "tags": [
           "board"
         ],
-        "parameters": [],
+        "operationId": "createPost",
+        "summary": "게시글 작성",
+        "description": "새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Create2"
+                "$ref": "#/components/schemas/Request.Post.Create"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -805,73 +806,66 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Post"
+                          "$ref": "#/components/schemas/Data.Post"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "400": {
             "description": "잘못된 요청 - 필수 필드 누락",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/board/posts/{postId}": {
       "get": {
-        "summary": "게시글 상세 조회",
-        "deprecated": false,
-        "description": "특정 게시글의 상세 정보를 조회합니다. 조회 시 조회수(views)가 자동으로 1 증가합니다.",
-        "operationId": "getPostById",
         "tags": [
           "board"
         ],
+        "operationId": "getPostById",
+        "summary": "게시글 상세 조회",
+        "description": "특정 게시글의 상세 정보를 조회합니다. 조회 시 조회수(views)가 자동으로 1 증가합니다.",
         "parameters": [
           {
             "name": "postId",
             "in": "path",
-            "description": "게시글 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "pattern": "^P-[0-9]+$",
               "example": "P-1699999999999"
-            }
+            },
+            "description": "게시글 ID"
           }
         ],
         "responses": {
@@ -882,67 +876,70 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/PostDetail"
+                          "$ref": "#/components/schemas/Data.Post.Detail"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "게시글을 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       },
       "put": {
-        "summary": "게시글 수정",
-        "deprecated": false,
-        "description": "기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.",
-        "operationId": "updatePost",
         "tags": [
           "board"
+        ],
+        "operationId": "updatePost",
+        "summary": "게시글 수정",
+        "description": "기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "postId",
             "in": "path",
-            "description": "게시글 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "pattern": "^P-[0-9]+$",
               "example": "P-1699999999999"
-            }
+            },
+            "description": "게시글 ID"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Update1"
+                "$ref": "#/components/schemas/Request.Post.Update"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -952,144 +949,135 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Post"
+                          "$ref": "#/components/schemas/Data.Post"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 작성자만 수정 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "게시글을 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
+        }
+      },
+      "delete": {
+        "tags": [
+          "board"
+        ],
+        "operationId": "deletePost",
+        "summary": "게시글 삭제",
+        "description": "게시글을 삭제합니다. 작성자 본인 또는 관리자만 삭제할 수 있습니다.",
         "security": [
           {
             "BearerAuth": []
           }
-        ]
-      },
-      "delete": {
-        "summary": "게시글 삭제",
-        "deprecated": false,
-        "description": "게시글을 삭제합니다. 작성자 본인 또는 관리자만 삭제할 수 있습니다.",
-        "operationId": "deletePost",
-        "tags": [
-          "board"
         ],
         "parameters": [
           {
             "name": "postId",
             "in": "path",
-            "description": "게시글 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "pattern": "^P-[0-9]+$",
               "example": "P-1699999999999"
-            }
+            },
+            "description": "게시글 ID"
           }
         ],
         "responses": {
           "204": {
-            "description": "게시글 삭제 성공",
-            "headers": {}
+            "description": "게시글 삭제 성공"
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 작성자 또는 관리자만 삭제 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "게시글을 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/repairs/my": {
       "get": {
-        "summary": "내 신고 내역 조회",
-        "deprecated": false,
-        "description": "현재 로그인한 사용자가 신고한 고장 내역을 조회합니다. 상태별 필터링을 지원합니다.",
-        "operationId": "getMyRepairs",
         "tags": [
           "repairs"
+        ],
+        "operationId": "getMyRepairs",
+        "summary": "내 신고 내역 조회",
+        "description": "현재 로그인한 사용자가 신고한 고장 내역을 조회합니다. 상태별 필터링을 지원합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "description": "신고 상태 필터",
             "required": false,
             "schema": {
               "type": "string",
@@ -1099,7 +1087,8 @@
                 "completed"
               ],
               "example": "pending"
-            }
+            },
+            "description": "신고 상태 필터"
           }
         ],
         "responses": {
@@ -1110,60 +1099,59 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/RepairList"
+                          "$ref": "#/components/schemas/Data.Repairs.List"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/repairs": {
       "post": {
-        "summary": "고장 신고 등록",
-        "deprecated": false,
-        "description": "자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.",
-        "operationId": "createRepair",
         "tags": [
           "repairs"
         ],
-        "parameters": [],
+        "operationId": "createRepair",
+        "summary": "고장 신고 등록",
+        "description": "자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Create3"
+                "$ref": "#/components/schemas/Request.Repair.Create"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -1173,73 +1161,71 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Repair"
+                          "$ref": "#/components/schemas/Data.Repair"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "400": {
             "description": "잘못된 요청 - 필수 필드 누락",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/repairs/{repairId}": {
       "get": {
-        "summary": "신고 상세 조회",
-        "deprecated": false,
-        "description": "특정 고장 신고의 상세 정보를 조회합니다. 처리 상태, 관리자 메모 등을 포함합니다.",
-        "operationId": "getRepairById",
         "tags": [
           "repairs"
+        ],
+        "operationId": "getRepairById",
+        "summary": "신고 상세 조회",
+        "description": "특정 고장 신고의 상세 정보를 조회합니다. 처리 상태, 관리자 메모 등을 포함합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "repairId",
             "in": "path",
-            "description": "신고 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "pattern": "^REP-[0-9]+$",
               "example": "REP-1699999999999"
-            }
+            },
+            "description": "신고 ID"
           }
         ],
         "responses": {
@@ -1250,71 +1236,65 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/RepairDetail"
+                          "$ref": "#/components/schemas/Data.Repair.Detail"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "신고를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/geocode": {
       "get": {
-        "summary": "주소를 좌표로 변환",
-        "deprecated": false,
-        "description": "주소 문자열을 위도/경도 좌표로 변환합니다. 현재는 해시 기반 모의 지오코딩을 사용합니다.",
-        "operationId": "geocodeAddress",
         "tags": [
           "routes"
         ],
+        "operationId": "geocodeAddress",
+        "summary": "주소를 좌표로 변환",
+        "description": "주소 문자열을 위도/경도 좌표로 변환합니다. 현재는 해시 기반 모의 지오코딩을 사용합니다.",
         "parameters": [
           {
             "name": "address",
             "in": "query",
-            "description": "변환할 주소",
             "required": true,
             "schema": {
               "type": "string",
               "example": "서울특별시 강남구 테헤란로 152"
-            }
+            },
+            "description": "변환할 주소"
           }
         ],
         "responses": {
@@ -1325,56 +1305,54 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Coordinates"
+                          "$ref": "#/components/schemas/Data.Geocode"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "400": {
             "description": "잘못된 주소",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       }
     },
     "/routes/calculate": {
       "post": {
-        "summary": "최적 경로 계산",
-        "deprecated": false,
-        "description": "출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.",
-        "operationId": "calculateRoute",
         "tags": [
           "routes"
         ],
-        "parameters": [],
+        "operationId": "calculateRoute",
+        "summary": "최적 경로 계산",
+        "description": "출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Calculate"
+                "$ref": "#/components/schemas/Request.Route.Calculate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1384,56 +1362,54 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/RouteInfo"
+                          "$ref": "#/components/schemas/Data.Route"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "400": {
             "description": "잘못된 좌표",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       }
     },
     "/ai/recommend-course": {
       "post": {
-        "summary": "AI 코스 추천",
-        "deprecated": false,
-        "description": "사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.",
-        "operationId": "recommendCourse",
         "tags": [
           "ai"
         ],
-        "parameters": [],
+        "operationId": "recommendCourse",
+        "summary": "AI 코스 추천",
+        "description": "사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RecommendCourse"
+                "$ref": "#/components/schemas/Request.AI.RecommendCourse"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1443,57 +1419,60 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/CourseInfo"
+                          "$ref": "#/components/schemas/Data.AI.CourseRecommendation"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "400": {
             "description": "잘못된 요청",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": []
+        }
       }
     },
     "/users/{userId}": {
       "get": {
-        "summary": "사용자 정보 조회",
-        "deprecated": false,
-        "description": "특정 사용자의 프로필 정보를 조회합니다.",
-        "operationId": "getUserById",
         "tags": [
           "users"
+        ],
+        "operationId": "getUserById",
+        "summary": "사용자 정보 조회",
+        "description": "특정 사용자의 프로필 정보를 조회합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "사용자 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "example": "1"
-            }
+            },
+            "description": "사용자 ID"
           }
         ],
         "responses": {
@@ -1504,81 +1483,79 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/User"
+                          "$ref": "#/components/schemas/Data.User"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "사용자를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
+        }
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "operationId": "updateUser",
+        "summary": "사용자 정보 수정",
+        "description": "사용자의 프로필 정보를 수정합니다. 본인 또는 관리자만 수정할 수 있습니다.",
         "security": [
           {
             "BearerAuth": []
           }
-        ]
-      },
-      "put": {
-        "summary": "사용자 정보 수정",
-        "deprecated": false,
-        "description": "사용자의 프로필 정보를 수정합니다. 본인 또는 관리자만 수정할 수 있습니다.",
-        "operationId": "updateUser",
-        "tags": [
-          "users"
         ],
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "사용자 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "example": "1"
-            }
+            },
+            "description": "사용자 ID"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Update"
+                "$ref": "#/components/schemas/Request.User.Update"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1588,150 +1565,142 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/User"
+                          "$ref": "#/components/schemas/Data.User"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "사용자를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/users/{userId}/password": {
       "put": {
-        "summary": "비밀번호 변경",
-        "deprecated": false,
-        "description": "사용자의 비밀번호를 변경합니다. 현재 비밀번호 확인이 필요합니다.",
-        "operationId": "changePassword",
         "tags": [
           "users"
+        ],
+        "operationId": "changePassword",
+        "summary": "비밀번호 변경",
+        "description": "사용자의 비밀번호를 변경합니다. 현재 비밀번호 확인이 필요합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "사용자 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "example": "1"
-            }
+            },
+            "description": "사용자 ID"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChangePassword"
+                "$ref": "#/components/schemas/Request.User.ChangePassword"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "204": {
-            "description": "비밀번호 변경 성공",
-            "headers": {}
+            "description": "비밀번호 변경 성공"
           },
           "400": {
             "description": "잘못된 요청 - 현재 비밀번호 불일치",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/users/{userId}/statistics": {
       "get": {
-        "summary": "사용자 통계 조회",
-        "deprecated": false,
-        "description": "사용자의 자전거 이용 통계를 조회합니다. 총 대여 횟수, 총 이동 거리, 총 이용 시간, 평균값 등을 포함합니다.",
-        "operationId": "getUserStatistics",
         "tags": [
           "users"
+        ],
+        "operationId": "getUserStatistics",
+        "summary": "사용자 통계 조회",
+        "description": "사용자의 자전거 이용 통계를 조회합니다. 총 대여 횟수, 총 이동 거리, 총 이용 시간, 평균값 등을 포함합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "사용자 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "example": "1"
-            }
+            },
+            "description": "사용자 ID"
           }
         ],
         "responses": {
@@ -1742,83 +1711,82 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/UserStatistics"
+                          "$ref": "#/components/schemas/Data.User.Statistics"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "사용자를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/admin/statistics": {
       "get": {
-        "summary": "전체 시스템 통계 조회",
-        "deprecated": false,
-        "description": "관리자 전용. 전체 시스템의 통계를 조회합니다. 총 사용자 수, 총 대여소 수, 총 자전거 수, 일일 대여 현황 등을 포함합니다.",
-        "operationId": "getAdminStatistics",
         "tags": [
           "admin"
+        ],
+        "operationId": "getAdminStatistics",
+        "summary": "전체 시스템 통계 조회",
+        "description": "관리자 전용. 전체 시스템의 통계를 조회합니다. 총 사용자 수, 총 대여소 수, 총 자전거 수, 일일 대여 현황 등을 포함합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "startDate",
             "in": "query",
-            "description": "통계 시작 날짜",
             "required": false,
             "schema": {
               "type": "string",
               "format": "date",
               "example": "2024-01-01"
-            }
+            },
+            "description": "통계 시작 날짜"
           },
           {
             "name": "endDate",
             "in": "query",
-            "description": "통계 종료 날짜",
             "required": false,
             "schema": {
               "type": "string",
               "format": "date",
               "example": "2024-12-31"
-            }
+            },
+            "description": "통계 종료 날짜"
           }
         ],
         "responses": {
@@ -1829,78 +1797,76 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/AdminStatistics"
+                          "$ref": "#/components/schemas/Data.Admin.Statistics"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자만 접근 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/admin/users": {
       "get": {
-        "summary": "회원 목록 조회",
-        "deprecated": false,
-        "description": "관리자 전용. 전체 회원 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.",
-        "operationId": "getAllUsersAdmin",
         "tags": [
           "admin"
+        ],
+        "operationId": "getAllUsersAdmin",
+        "summary": "회원 목록 조회",
+        "description": "관리자 전용. 전체 회원 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "page",
             "in": "query",
-            "description": "페이지 번호",
             "required": false,
             "schema": {
               "type": "integer",
               "minimum": 1,
               "default": 1,
               "example": 1
-            }
+            },
+            "description": "페이지 번호"
           },
           {
             "name": "limit",
             "in": "query",
-            "description": "페이지당 항목 수",
             "required": false,
             "schema": {
               "type": "integer",
@@ -1908,17 +1874,18 @@
               "maximum": 100,
               "default": 20,
               "example": 20
-            }
+            },
+            "description": "페이지당 항목 수"
           },
           {
             "name": "search",
             "in": "query",
-            "description": "이름 또는 이메일 검색어",
             "required": false,
             "schema": {
               "type": "string",
               "example": "홍길동"
-            }
+            },
+            "description": "이름 또는 이메일 검색어"
           }
         ],
         "responses": {
@@ -1929,16 +1896,16 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/AdminUsersList"
+                          "$ref": "#/components/schemas/Data.Admin.UsersList"
                         },
                         "pagination": {
-                          "$ref": "#/components/schemas/Pagination"
+                          "$ref": "#/components/schemas/Common.Pagination"
                         }
                       },
                       "required": [
@@ -1949,70 +1916,65 @@
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자만 접근 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/admin/users/{userId}/status": {
       "put": {
-        "summary": "회원 상태 변경",
-        "deprecated": false,
-        "description": "관리자 전용. 회원의 상태를 변경합니다. 활성화 또는 차단 상태로 설정할 수 있습니다.",
-        "operationId": "updateUserStatus",
         "tags": [
           "admin"
+        ],
+        "operationId": "updateUserStatus",
+        "summary": "회원 상태 변경",
+        "description": "관리자 전용. 회원의 상태를 변경합니다. 활성화 또는 차단 상태로 설정할 수 있습니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "사용자 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "example": "1"
-            }
+            },
+            "description": "사용자 ID"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserStatus"
+                "$ref": "#/components/schemas/Request.Admin.UpdateUserStatus"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2022,150 +1984,141 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/User"
+                          "$ref": "#/components/schemas/Data.User"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자만 접근 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "사용자를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/admin/users/{userId}": {
       "delete": {
-        "summary": "회원 삭제",
-        "deprecated": false,
-        "description": "관리자 전용. 회원을 완전히 삭제합니다.",
-        "operationId": "deleteUserAdmin",
         "tags": [
           "admin"
+        ],
+        "operationId": "deleteUserAdmin",
+        "summary": "회원 삭제",
+        "description": "관리자 전용. 회원을 완전히 삭제합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "사용자 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "example": "1"
-            }
+            },
+            "description": "사용자 ID"
           }
         ],
         "responses": {
           "204": {
-            "description": "회원 삭제 성공",
-            "headers": {}
+            "description": "회원 삭제 성공"
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자만 접근 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "사용자를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/admin/stations": {
       "post": {
-        "summary": "대여소 추가",
-        "deprecated": false,
-        "description": "관리자 전용. 새로운 대여소를 추가합니다.",
-        "operationId": "createStation",
         "tags": [
           "admin"
         ],
-        "parameters": [],
+        "operationId": "createStation",
+        "summary": "대여소 추가",
+        "description": "관리자 전용. 새로운 대여소를 추가합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateStation"
+                "$ref": "#/components/schemas/Request.Admin.CreateStation"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -2175,94 +2128,91 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Station"
+                          "$ref": "#/components/schemas/Data.Station"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "400": {
             "description": "잘못된 요청",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자만 접근 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/admin/stations/{stationId}": {
       "put": {
-        "summary": "대여소 정보 수정",
-        "deprecated": false,
-        "description": "관리자 전용. 대여소 정보를 수정합니다.",
-        "operationId": "updateStation",
         "tags": [
           "admin"
+        ],
+        "operationId": "updateStation",
+        "summary": "대여소 정보 수정",
+        "description": "관리자 전용. 대여소 정보를 수정합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "stationId",
             "in": "path",
-            "description": "대여소 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "example": "ST-001"
-            }
+            },
+            "description": "대여소 ID"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateStation"
+                "$ref": "#/components/schemas/Request.Admin.UpdateStation"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2272,143 +2222,134 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Station"
+                          "$ref": "#/components/schemas/Data.Station"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자만 접근 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "대여소를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
+        }
+      },
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "operationId": "deleteStation",
+        "summary": "대여소 삭제",
+        "description": "관리자 전용. 대여소를 삭제합니다.",
         "security": [
           {
             "BearerAuth": []
           }
-        ]
-      },
-      "delete": {
-        "summary": "대여소 삭제",
-        "deprecated": false,
-        "description": "관리자 전용. 대여소를 삭제합니다.",
-        "operationId": "deleteStation",
-        "tags": [
-          "admin"
         ],
         "parameters": [
           {
             "name": "stationId",
             "in": "path",
-            "description": "대여소 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "example": "ST-001"
-            }
+            },
+            "description": "대여소 ID"
           }
         ],
         "responses": {
           "204": {
-            "description": "대여소 삭제 성공",
-            "headers": {}
+            "description": "대여소 삭제 성공"
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자만 접근 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "대여소를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/admin/repairs": {
       "get": {
-        "summary": "고장 신고 목록 조회",
-        "deprecated": false,
-        "description": "관리자 전용. 전체 고장 신고 목록을 조회합니다. 상태별 필터링 및 페이지네이션을 지원합니다.",
-        "operationId": "getAllRepairsAdmin",
         "tags": [
           "admin"
+        ],
+        "operationId": "getAllRepairsAdmin",
+        "summary": "고장 신고 목록 조회",
+        "description": "관리자 전용. 전체 고장 신고 목록을 조회합니다. 상태별 필터링 및 페이지네이션을 지원합니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "description": "신고 상태 필터",
             "required": false,
             "schema": {
               "type": "string",
@@ -2418,19 +2359,20 @@
                 "completed"
               ],
               "example": "pending"
-            }
+            },
+            "description": "신고 상태 필터"
           },
           {
             "name": "page",
             "in": "query",
-            "description": "페이지 번호",
             "required": false,
             "schema": {
               "type": "integer",
               "minimum": 1,
               "default": 1,
               "example": 1
-            }
+            },
+            "description": "페이지 번호"
           }
         ],
         "responses": {
@@ -2441,16 +2383,16 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/AdminRepairsList"
+                          "$ref": "#/components/schemas/Data.Admin.RepairsList"
                         },
                         "pagination": {
-                          "$ref": "#/components/schemas/Pagination"
+                          "$ref": "#/components/schemas/Common.Pagination"
                         }
                       },
                       "required": [
@@ -2461,71 +2403,66 @@
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자만 접근 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/admin/repairs/{repairId}": {
       "put": {
-        "summary": "고장 처리 상태 업데이트",
-        "deprecated": false,
-        "description": "관리자 전용. 고장 신고의 처리 상태를 업데이트합니다. 관리자 메모를 추가할 수 있습니다.",
-        "operationId": "updateRepairStatus",
         "tags": [
           "admin"
+        ],
+        "operationId": "updateRepairStatus",
+        "summary": "고장 처리 상태 업데이트",
+        "description": "관리자 전용. 고장 신고의 처리 상태를 업데이트합니다. 관리자 메모를 추가할 수 있습니다.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "repairId",
             "in": "path",
-            "description": "신고 ID",
             "required": true,
-            "example": "",
             "schema": {
               "type": "string",
               "pattern": "^REP-[0-9]+$",
               "example": "REP-1699999999999"
-            }
+            },
+            "description": "신고 ID"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRepairStatus"
+                "$ref": "#/components/schemas/Request.Admin.UpdateRepairStatus"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2535,71 +2472,73 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Success"
+                      "$ref": "#/components/schemas/Response.Success"
                     },
                     {
                       "type": "object",
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/Repair"
+                          "$ref": "#/components/schemas/Data.Repair"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ]
                     }
                   ]
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "401": {
             "description": "인증 필요",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "403": {
             "description": "권한 없음 - 관리자만 접근 가능",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           },
           "404": {
             "description": "신고를 찾을 수 없음",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Response.Error"
                 }
               }
-            },
-            "headers": {}
+            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT 토큰을 사용한 인증. 'Authorization: Bearer {token}' 헤더 형식으로 전송합니다."
+      }
+    },
     "schemas": {
-      "Success": {
+      "Response.Success": {
         "type": "object",
         "required": [
           "status",
-          "data"
+          "metadata"
         ],
         "properties": {
           "status": {
@@ -2607,16 +2546,15 @@
             "enum": [
               "success"
             ],
-            "description": "응답 상태"
+            "description": "응답 상태",
+            "example": "success"
           },
-          "data": {
-            "type": "object",
-            "description": "응답 데이터 (구체적인 타입은 각 엔드포인트별로 정의됨)",
-            "properties": {}
+          "metadata": {
+            "$ref": "#/components/schemas/Common.Metadata"
           }
         }
       },
-      "Error": {
+      "Response.Error": {
         "type": "object",
         "required": [
           "status",
@@ -2651,7 +2589,6 @@
               "details": {
                 "type": "object",
                 "description": "추가 에러 정보",
-                "properties": {},
                 "example": {
                   "field": "password",
                   "reason": "incorrect"
@@ -2659,56 +2596,45 @@
               }
             }
           },
-          "metadata": {}
-        }
-      },
-      "Login": {
-        "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "description": "사용자 이메일",
-            "example": "user@example.com"
-          },
-          "password": {
-            "type": "string",
-            "format": "password",
-            "description": "비밀번호",
-            "example": "password123"
+          "metadata": {
+            "$ref": "#/components/schemas/Common.Metadata"
           }
         }
       },
-      "Signup": {
+      "Entity.User": {
         "type": "object",
         "required": [
+          "id",
           "email",
-          "password",
           "name",
+          "role",
           "phone"
         ],
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "사용자 고유 ID",
+            "example": "1"
+          },
           "email": {
             "type": "string",
             "format": "email",
-            "description": "이메일 주소",
-            "example": "newuser@example.com"
-          },
-          "password": {
-            "type": "string",
-            "format": "password",
-            "minLength": 8,
-            "description": "비밀번호 (8자 이상)",
-            "example": "password123"
+            "description": "사용자 이메일 주소 (로그인 ID)",
+            "example": "user@example.com"
           },
           "name": {
             "type": "string",
-            "description": "이름",
+            "description": "사용자 이름",
             "example": "홍길동"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "admin"
+            ],
+            "description": "사용자 역할 (user: 일반 사용자, admin: 관리자)",
+            "example": "user"
           },
           "phone": {
             "type": "string",
@@ -2718,33 +2644,25 @@
           }
         }
       },
-      "UpdateUserStatus": {
+      "Entity.Station": {
         "type": "object",
         "required": [
-          "status"
-        ],
-        "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "active",
-              "blocked"
-            ],
-            "description": "사용자 상태",
-            "example": "active"
-          }
-        }
-      },
-      "CreateStation": {
-        "type": "object",
-        "required": [
+          "id",
           "name",
           "address",
           "latitude",
           "longitude",
-          "capacity"
+          "bikeCount",
+          "capacity",
+          "status"
         ],
         "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^ST-[0-9]{3}$",
+            "description": "대여소 고유 ID",
+            "example": "ST-001"
+          },
           "name": {
             "type": "string",
             "description": "대여소 이름",
@@ -2767,32 +2685,17 @@
             "description": "경도",
             "example": 127.0276
           },
+          "bikeCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "현재 대여 가능한 자전거 수",
+            "example": 12
+          },
           "capacity": {
             "type": "integer",
             "minimum": 1,
-            "description": "최대 수용 대수",
+            "description": "대여소 최대 수용 대수",
             "example": 20
-          }
-        }
-      },
-      "UpdateStation": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "대여소 이름",
-            "example": "강남역 1번출구"
-          },
-          "address": {
-            "type": "string",
-            "description": "대여소 주소",
-            "example": "서울특별시 강남구 강남대로 396"
-          },
-          "bikeCount": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "현재 자전거 수",
-            "example": 15
           },
           "status": {
             "type": "string",
@@ -2800,686 +2703,12 @@
               "active",
               "inactive"
             ],
-            "description": "운영 상태",
+            "description": "대여소 운영 상태 (active: 운영 중, inactive: 운영 중지)",
             "example": "active"
           }
         }
       },
-      "UpdateRepairStatus": {
-        "type": "object",
-        "required": [
-          "status"
-        ],
-        "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "pending",
-              "in-progress",
-              "completed"
-            ],
-            "description": "처리 상태",
-            "example": "in-progress"
-          },
-          "adminNote": {
-            "type": "string",
-            "description": "관리자 메모",
-            "example": "부품 발주 중"
-          }
-        }
-      },
-      "ChangePassword": {
-        "type": "object",
-        "required": [
-          "currentPassword",
-          "newPassword"
-        ],
-        "properties": {
-          "currentPassword": {
-            "type": "string",
-            "format": "password",
-            "description": "현재 비밀번호",
-            "example": "oldpassword123"
-          },
-          "newPassword": {
-            "type": "string",
-            "format": "password",
-            "minLength": 8,
-            "description": "새 비밀번호 (8자 이상)",
-            "example": "newpassword123"
-          }
-        }
-      },
-      "Update": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "이름",
-            "example": "홍길동"
-          },
-          "phone": {
-            "type": "string",
-            "pattern": "^010-[0-9]{4}-[0-9]{4}$",
-            "description": "전화번호",
-            "example": "010-1234-5678"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "description": "이메일",
-            "example": "newemail@example.com"
-          }
-        }
-      },
-      "Create": {
-        "type": "object",
-        "required": [
-          "stationId"
-        ],
-        "properties": {
-          "stationId": {
-            "type": "string",
-            "pattern": "^ST-[0-9]{3}$",
-            "description": "대여소 ID",
-            "example": "ST-001"
-          }
-        }
-      },
-      "Return": {
-        "type": "object",
-        "required": [
-          "endStationId"
-        ],
-        "properties": {
-          "endStationId": {
-            "type": "string",
-            "pattern": "^ST-[0-9]{3}$",
-            "description": "반납 대여소 ID",
-            "example": "ST-015"
-          }
-        }
-      },
-      "Update1": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "description": "게시글 제목",
-            "example": "한강 야간 라이딩 코스 추천 (수정)"
-          },
-          "content": {
-            "type": "string",
-            "description": "게시글 내용",
-            "example": "수정된 내용..."
-          }
-        }
-      },
-      "Create2": {
-        "type": "object",
-        "required": [
-          "title",
-          "content"
-        ],
-        "properties": {
-          "title": {
-            "type": "string",
-            "description": "게시글 제목",
-            "example": "한강 야간 라이딩 코스 추천"
-          },
-          "content": {
-            "type": "string",
-            "description": "게시글 내용",
-            "example": "반포한강공원에서 여의도까지 야간 라이딩 코스를 추천합니다..."
-          },
-          "category": {
-            "type": "string",
-            "enum": [
-              "notice",
-              "info",
-              "question",
-              "free"
-            ],
-            "description": "게시글 카테고리",
-            "example": "info"
-          }
-        }
-      },
-      "Create3": {
-        "type": "object",
-        "required": [
-          "type",
-          "category",
-          "description"
-        ],
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "bike",
-              "station"
-            ],
-            "description": "신고 대상",
-            "example": "bike"
-          },
-          "bikeId": {
-            "type": "string",
-            "pattern": "^SPB-[0-9]{5}$",
-            "description": "자전거 ID (type이 bike일 때 필수)",
-            "example": "SPB-12345"
-          },
-          "stationId": {
-            "type": "string",
-            "pattern": "^ST-[0-9]{3}$",
-            "description": "대여소 ID (type이 station일 때 필수)",
-            "example": "ST-001"
-          },
-          "category": {
-            "type": "string",
-            "enum": [
-              "brake",
-              "tire",
-              "chain",
-              "light",
-              "seat",
-              "bell",
-              "other"
-            ],
-            "description": "고장 카테고리",
-            "example": "brake"
-          },
-          "description": {
-            "type": "string",
-            "description": "고장 상세 설명",
-            "example": "브레이크가 제대로 작동하지 않습니다."
-          },
-          "photos": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uri"
-            },
-            "description": "첨부 사진 URL 목록",
-            "example": [
-              "https://example.com/photo1.jpg"
-            ]
-          }
-        }
-      },
-      "Calculate": {
-        "type": "object",
-        "required": [
-          "startLat",
-          "startLon",
-          "endLat",
-          "endLon"
-        ],
-        "properties": {
-          "startLat": {
-            "type": "number",
-            "format": "double",
-            "description": "출발지 위도",
-            "example": 37.4979
-          },
-          "startLon": {
-            "type": "number",
-            "format": "double",
-            "description": "출발지 경도",
-            "example": 127.0276
-          },
-          "endLat": {
-            "type": "number",
-            "format": "double",
-            "description": "목적지 위도",
-            "example": 37.5219
-          },
-          "endLon": {
-            "type": "number",
-            "format": "double",
-            "description": "목적지 경도",
-            "example": 126.9245
-          }
-        }
-      },
-      "RecommendCourse": {
-        "type": "object",
-        "required": [
-          "prompt"
-        ],
-        "properties": {
-          "prompt": {
-            "type": "string",
-            "description": "자연어 코스 추천 요청",
-            "example": "한강에서 야경을 보며 라이딩하고 싶어요"
-          },
-          "preferences": {
-            "type": "object",
-            "properties": {
-              "difficulty": {
-                "type": "string",
-                "enum": [
-                  "최하",
-                  "하",
-                  "중",
-                  "상",
-                  "최상"
-                ],
-                "description": "희망 난이도",
-                "example": "하"
-              },
-              "duration": {
-                "type": "integer",
-                "description": "희망 소요 시간 (분)",
-                "example": 60
-              },
-              "distance": {
-                "type": "number",
-                "format": "float",
-                "description": "희망 거리 (km)",
-                "example": 10
-              }
-            }
-          }
-        }
-      },
-      "Signup4": {
-        "type": "object",
-        "required": [
-          "user",
-          "token"
-        ],
-        "properties": {
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
-          "token": {
-            "type": "string",
-            "description": "JWT 인증 토큰",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-          }
-        }
-      },
-      "Login5": {
-        "type": "object",
-        "required": [
-          "user",
-          "token"
-        ],
-        "properties": {
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
-          "token": {
-            "type": "string",
-            "description": "JWT 인증 토큰",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-          }
-        }
-      },
-      "StatusList": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/StationStatus"
-        }
-      },
-      "Nearest": {
-        "type": "object",
-        "required": [
-          "station",
-          "distance"
-        ],
-        "properties": {
-          "station": {
-            "$ref": "#/components/schemas/Station"
-          },
-          "distance": {
-            "type": "number",
-            "format": "float",
-            "description": "거리 (km)",
-            "example": 0.5
-          }
-        }
-      },
-      "Station": {
-        "$ref": "#/components/schemas/Station"
-      },
-      "StationList": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Station"
-        }
-      },
-      "StationStatus": {
-        "type": "object",
-        "required": [
-          "id",
-          "bikeCount",
-          "status"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "ST-001"
-          },
-          "bikeCount": {
-            "type": "integer",
-            "example": 12
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "active",
-              "inactive"
-            ],
-            "example": "active"
-          }
-        }
-      },
-      "Post": {
-        "$ref": "#/components/schemas/Post"
-      },
-      "PostDetail": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Post"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "authorInfo": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "example": "1"
-                  },
-                  "name": {
-                    "type": "string",
-                    "example": "김철수"
-                  }
-                }
-              }
-            }
-          }
-        ]
-      },
-      "PostList": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Post"
-        }
-      },
-      "RentalCreate": {
-        "$ref": "#/components/schemas/Rental"
-      },
-      "UserList": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Rental"
-        }
-      },
-      "RentalReturn": {
-        "type": "object",
-        "required": [
-          "rental",
-          "summary"
-        ],
-        "properties": {
-          "rental": {
-            "$ref": "#/components/schemas/Rental"
-          },
-          "summary": {
-            "type": "object",
-            "required": [
-              "startStation",
-              "endStation",
-              "duration",
-              "distance"
-            ],
-            "properties": {
-              "startStation": {
-                "type": "string",
-                "example": "강남역 1번출구"
-              },
-              "endStation": {
-                "type": "string",
-                "example": "여의도한강공원"
-              },
-              "duration": {
-                "type": "integer",
-                "description": "이용 시간 (분)",
-                "example": 45
-              },
-              "distance": {
-                "type": "number",
-                "format": "float",
-                "description": "이동 거리 (km)",
-                "example": 5.2
-              }
-            }
-          }
-        }
-      },
-      "EmailCheck": {
-        "type": "object",
-        "required": [
-          "available"
-        ],
-        "properties": {
-          "available": {
-            "type": "boolean",
-            "description": "이메일 사용 가능 여부",
-            "example": true
-          }
-        }
-      },
-      "Repair": {
-        "$ref": "#/components/schemas/Repair"
-      },
-      "RepairDetail": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Repair"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "reporterInfo": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "example": "1"
-                  },
-                  "name": {
-                    "type": "string",
-                    "example": "홍길동"
-                  },
-                  "phone": {
-                    "type": "string",
-                    "example": "010-1234-5678"
-                  }
-                }
-              }
-            }
-          }
-        ]
-      },
-      "RepairList": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Repair"
-        }
-      },
-      "AdminStatistics": {
-        "type": "object",
-        "required": [
-          "totalUsers",
-          "totalStations",
-          "totalBikes",
-          "todayRentals",
-          "activeRentals"
-        ],
-        "properties": {
-          "totalUsers": {
-            "type": "integer",
-            "description": "총 사용자 수",
-            "example": 5420
-          },
-          "totalStations": {
-            "type": "integer",
-            "description": "총 대여소 수",
-            "example": 150
-          },
-          "totalBikes": {
-            "type": "integer",
-            "description": "총 자전거 수",
-            "example": 3000
-          },
-          "todayRentals": {
-            "type": "integer",
-            "description": "오늘 대여 건수",
-            "example": 847
-          },
-          "activeRentals": {
-            "type": "integer",
-            "description": "현재 대여 중인 자전거 수",
-            "example": 234
-          }
-        }
-      },
-      "AdminUsersList": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/User"
-        }
-      },
-      "AdminRepairsList": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Repair"
-        }
-      },
-      "User": {
-        "$ref": "#/components/schemas/User"
-      },
-      "UserStatistics": {
-        "type": "object",
-        "required": [
-          "totalRentals",
-          "totalDistance",
-          "totalDuration",
-          "averageDistance",
-          "averageDuration"
-        ],
-        "properties": {
-          "totalRentals": {
-            "type": "integer",
-            "description": "총 대여 횟수",
-            "example": 42
-          },
-          "totalDistance": {
-            "type": "number",
-            "format": "float",
-            "description": "총 이동 거리 (km)",
-            "example": 215.8
-          },
-          "totalDuration": {
-            "type": "integer",
-            "description": "총 이용 시간 (분)",
-            "example": 1280
-          },
-          "averageDistance": {
-            "type": "number",
-            "format": "float",
-            "description": "평균 이동 거리 (km)",
-            "example": 5.1
-          },
-          "averageDuration": {
-            "type": "integer",
-            "description": "평균 이용 시간 (분)",
-            "example": 30
-          }
-        }
-      },
-      "Geocode": {
-        "$ref": "#/components/schemas/Coordinates"
-      },
-      "CourseRecommendation": {
-        "$ref": "#/components/schemas/CourseInfo"
-      },
-      "Route": {
-        "$ref": "#/components/schemas/RouteInfo"
-      },
-      "Coordinates": {
-        "type": "object",
-        "required": [
-          "lat",
-          "lon"
-        ],
-        "properties": {
-          "lat": {
-            "type": "number",
-            "format": "double",
-            "description": "위도",
-            "example": 37.4979
-          },
-          "lon": {
-            "type": "number",
-            "format": "double",
-            "description": "경도",
-            "example": 127.0276
-          }
-        }
-      },
-      "Pagination": {
-        "type": "object",
-        "required": [
-          "currentPage",
-          "totalPages",
-          "totalItems",
-          "itemsPerPage",
-          "hasNext",
-          "hasPrev"
-        ],
-        "properties": {
-          "currentPage": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "현재 페이지 번호",
-            "example": 1
-          },
-          "totalPages": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "전체 페이지 수",
-            "example": 5
-          },
-          "totalItems": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "전체 항목 수",
-            "example": 100
-          },
-          "itemsPerPage": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "페이지당 항목 수",
-            "example": 20
-          },
-          "hasNext": {
-            "type": "boolean",
-            "description": "다음 페이지 존재 여부",
-            "example": true
-          },
-          "hasPrev": {
-            "type": "boolean",
-            "description": "이전 페이지 존재 여부",
-            "example": false
-          }
-        }
-      },
-      "Rental": {
+      "Entity.Rental": {
         "type": "object",
         "required": [
           "id",
@@ -3553,7 +2782,188 @@
           }
         }
       },
-      "CourseInfo": {
+      "Entity.Post": {
+        "type": "object",
+        "required": [
+          "id",
+          "category",
+          "title",
+          "content",
+          "author",
+          "authorId",
+          "views",
+          "likes",
+          "comments",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^P-[0-9]+$",
+            "description": "게시글 고유 ID",
+            "example": "P-1699999999999"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "notice",
+              "info",
+              "question",
+              "free"
+            ],
+            "description": "게시글 카테고리 (notice: 공지, info: 정보, question: 질문, free: 자유)",
+            "example": "info"
+          },
+          "title": {
+            "type": "string",
+            "description": "게시글 제목",
+            "example": "한강 야간 라이딩 코스 추천"
+          },
+          "content": {
+            "type": "string",
+            "description": "게시글 내용",
+            "example": "반포한강공원에서 여의도까지 야간 라이딩 코스를 추천합니다..."
+          },
+          "author": {
+            "type": "string",
+            "description": "작성자 이름",
+            "example": "김철수"
+          },
+          "authorId": {
+            "type": "string",
+            "description": "작성자 ID",
+            "example": "1"
+          },
+          "views": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "조회수",
+            "example": 124
+          },
+          "likes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "좋아요 수",
+            "example": 15
+          },
+          "comments": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "댓글 수",
+            "example": 8
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "작성 시간",
+            "example": "2024-11-07T14:30:00Z"
+          },
+          "isPinned": {
+            "type": "boolean",
+            "description": "공지사항 고정 여부",
+            "example": false
+          }
+        }
+      },
+      "Entity.Repair": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "category",
+          "description",
+          "reporter",
+          "reporterId",
+          "status",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^REP-[0-9]+$",
+            "description": "신고 고유 ID",
+            "example": "REP-1699999999999"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "bike",
+              "station"
+            ],
+            "description": "신고 대상 (bike: 자전거, station: 대여소)",
+            "example": "bike"
+          },
+          "bikeId": {
+            "type": "string",
+            "pattern": "^SPB-[0-9]{5}$",
+            "description": "자전거 ID (type이 bike일 때만)",
+            "example": "SPB-12345"
+          },
+          "stationId": {
+            "type": "string",
+            "pattern": "^ST-[0-9]{3}$",
+            "description": "대여소 ID (type이 station일 때만)",
+            "example": "ST-001"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "brake",
+              "tire",
+              "chain",
+              "light",
+              "seat",
+              "bell",
+              "other"
+            ],
+            "description": "고장 카테고리",
+            "example": "brake"
+          },
+          "description": {
+            "type": "string",
+            "description": "고장 상세 설명",
+            "example": "브레이크가 제대로 작동하지 않습니다."
+          },
+          "reporter": {
+            "type": "string",
+            "description": "신고자 이름",
+            "example": "홍길동"
+          },
+          "reporterId": {
+            "type": "string",
+            "description": "신고자 ID",
+            "example": "1"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "in-progress",
+              "completed"
+            ],
+            "description": "처리 상태 (pending: 대기 중, in-progress: 처리 중, completed: 완료)",
+            "example": "pending"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "신고 접수 시간",
+            "example": "2024-11-15T09:00:00Z"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "처리 완료 시간",
+            "example": "2024-11-15T15:00:00Z"
+          },
+          "adminNote": {
+            "type": "string",
+            "description": "관리자 메모",
+            "example": "브레이크 패드 교체 완료"
+          }
+        }
+      },
+      "Entity.CourseInfo": {
         "type": "object",
         "required": [
           "name",
@@ -3617,7 +3027,7 @@
           }
         }
       },
-      "RouteInfo": {
+      "Entity.RouteInfo": {
         "type": "object",
         "required": [
           "startStation",
@@ -3629,10 +3039,10 @@
         ],
         "properties": {
           "startStation": {
-            "$ref": "#/components/schemas/Station"
+            "$ref": "#/components/schemas/Entity.Station"
           },
           "endStation": {
-            "$ref": "#/components/schemas/Station"
+            "$ref": "#/components/schemas/Entity.Station"
           },
           "distance": {
             "type": "number",
@@ -3658,17 +3068,863 @@
             "example": 0.2
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT",
-        "description": "JWT 토큰을 사용한 인증. 'Authorization: Bearer {token}' 헤더 형식으로 전송합니다."
+      },
+      "Common.Coordinates": {
+        "type": "object",
+        "required": [
+          "lat",
+          "lon"
+        ],
+        "properties": {
+          "lat": {
+            "type": "number",
+            "format": "double",
+            "description": "위도",
+            "example": 37.4979
+          },
+          "lon": {
+            "type": "number",
+            "format": "double",
+            "description": "경도",
+            "example": 127.0276
+          }
+        }
+      },
+      "Common.Metadata": {
+        "type": "object",
+        "required": [
+          "timestamp",
+          "version",
+          "requestId"
+        ],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "응답 생성 시간 (ISO 8601)",
+            "example": "2024-11-15T10:30:00Z"
+          },
+          "version": {
+            "type": "string",
+            "description": "API 버전",
+            "example": "v1.0"
+          },
+          "api": {
+            "type": "string",
+            "description": "API 이름",
+            "example": "stations"
+          },
+          "operation": {
+            "type": "string",
+            "description": "작업 타입",
+            "example": "getAll"
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "요청 추적을 위한 고유 ID",
+            "example": "req_123456789abcdef"
+          },
+          "processingTime": {
+            "type": "integer",
+            "description": "처리 시간 (밀리초)",
+            "example": 45
+          }
+        }
+      },
+      "Common.Pagination": {
+        "type": "object",
+        "required": [
+          "currentPage",
+          "totalPages",
+          "totalItems",
+          "itemsPerPage",
+          "hasNext",
+          "hasPrev"
+        ],
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "현재 페이지 번호",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "전체 페이지 수",
+            "example": 5
+          },
+          "totalItems": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "전체 항목 수",
+            "example": 100
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "페이지당 항목 수",
+            "example": 20
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "다음 페이지 존재 여부",
+            "example": true
+          },
+          "hasPrev": {
+            "type": "boolean",
+            "description": "이전 페이지 존재 여부",
+            "example": false
+          }
+        }
+      },
+      "Request.Auth.Login": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "사용자 이메일",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "비밀번호",
+            "example": "password123"
+          }
+        }
+      },
+      "Request.Auth.Signup": {
+        "type": "object",
+        "required": [
+          "email",
+          "password",
+          "name",
+          "phone"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "이메일 주소",
+            "example": "newuser@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 8,
+            "description": "비밀번호 (8자 이상)",
+            "example": "password123"
+          },
+          "name": {
+            "type": "string",
+            "description": "이름",
+            "example": "홍길동"
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^010-[0-9]{4}-[0-9]{4}$",
+            "description": "전화번호 (형식: 010-XXXX-XXXX)",
+            "example": "010-1234-5678"
+          }
+        }
+      },
+      "Request.Rental.Create": {
+        "type": "object",
+        "required": [
+          "stationId"
+        ],
+        "properties": {
+          "stationId": {
+            "type": "string",
+            "pattern": "^ST-[0-9]{3}$",
+            "description": "대여소 ID",
+            "example": "ST-001"
+          }
+        }
+      },
+      "Request.Rental.Return": {
+        "type": "object",
+        "required": [
+          "endStationId"
+        ],
+        "properties": {
+          "endStationId": {
+            "type": "string",
+            "pattern": "^ST-[0-9]{3}$",
+            "description": "반납 대여소 ID",
+            "example": "ST-015"
+          }
+        }
+      },
+      "Request.Post.Create": {
+        "type": "object",
+        "required": [
+          "title",
+          "content"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "게시글 제목",
+            "example": "한강 야간 라이딩 코스 추천"
+          },
+          "content": {
+            "type": "string",
+            "description": "게시글 내용",
+            "example": "반포한강공원에서 여의도까지 야간 라이딩 코스를 추천합니다..."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "notice",
+              "info",
+              "question",
+              "free"
+            ],
+            "description": "게시글 카테고리",
+            "example": "info"
+          }
+        }
+      },
+      "Request.Post.Update": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "게시글 제목",
+            "example": "한강 야간 라이딩 코스 추천 (수정)"
+          },
+          "content": {
+            "type": "string",
+            "description": "게시글 내용",
+            "example": "수정된 내용..."
+          }
+        }
+      },
+      "Request.Repair.Create": {
+        "type": "object",
+        "required": [
+          "type",
+          "category",
+          "description"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "bike",
+              "station"
+            ],
+            "description": "신고 대상",
+            "example": "bike"
+          },
+          "bikeId": {
+            "type": "string",
+            "pattern": "^SPB-[0-9]{5}$",
+            "description": "자전거 ID (type이 bike일 때 필수)",
+            "example": "SPB-12345"
+          },
+          "stationId": {
+            "type": "string",
+            "pattern": "^ST-[0-9]{3}$",
+            "description": "대여소 ID (type이 station일 때 필수)",
+            "example": "ST-001"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "brake",
+              "tire",
+              "chain",
+              "light",
+              "seat",
+              "bell",
+              "other"
+            ],
+            "description": "고장 카테고리",
+            "example": "brake"
+          },
+          "description": {
+            "type": "string",
+            "description": "고장 상세 설명",
+            "example": "브레이크가 제대로 작동하지 않습니다."
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "첨부 사진 URL 목록",
+            "example": [
+              "https://example.com/photo1.jpg"
+            ]
+          }
+        }
+      },
+      "Request.Route.Calculate": {
+        "type": "object",
+        "required": [
+          "startLat",
+          "startLon",
+          "endLat",
+          "endLon"
+        ],
+        "properties": {
+          "startLat": {
+            "type": "number",
+            "format": "double",
+            "description": "출발지 위도",
+            "example": 37.4979
+          },
+          "startLon": {
+            "type": "number",
+            "format": "double",
+            "description": "출발지 경도",
+            "example": 127.0276
+          },
+          "endLat": {
+            "type": "number",
+            "format": "double",
+            "description": "목적지 위도",
+            "example": 37.5219
+          },
+          "endLon": {
+            "type": "number",
+            "format": "double",
+            "description": "목적지 경도",
+            "example": 126.9245
+          }
+        }
+      },
+      "Request.AI.RecommendCourse": {
+        "type": "object",
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "자연어 코스 추천 요청",
+            "example": "한강에서 야경을 보며 라이딩하고 싶어요"
+          },
+          "preferences": {
+            "type": "object",
+            "properties": {
+              "difficulty": {
+                "type": "string",
+                "enum": [
+                  "최하",
+                  "하",
+                  "중",
+                  "상",
+                  "최상"
+                ],
+                "description": "희망 난이도",
+                "example": "하"
+              },
+              "duration": {
+                "type": "integer",
+                "description": "희망 소요 시간 (분)",
+                "example": 60
+              },
+              "distance": {
+                "type": "number",
+                "format": "float",
+                "description": "희망 거리 (km)",
+                "example": 10.0
+              }
+            }
+          }
+        }
+      },
+      "Request.User.Update": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "이름",
+            "example": "홍길동"
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^010-[0-9]{4}-[0-9]{4}$",
+            "description": "전화번호",
+            "example": "010-1234-5678"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "이메일",
+            "example": "newemail@example.com"
+          }
+        }
+      },
+      "Request.User.ChangePassword": {
+        "type": "object",
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ],
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "format": "password",
+            "description": "현재 비밀번호",
+            "example": "oldpassword123"
+          },
+          "newPassword": {
+            "type": "string",
+            "format": "password",
+            "minLength": 8,
+            "description": "새 비밀번호 (8자 이상)",
+            "example": "newpassword123"
+          }
+        }
+      },
+      "Request.Admin.UpdateUserStatus": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "blocked"
+            ],
+            "description": "사용자 상태",
+            "example": "active"
+          }
+        }
+      },
+      "Request.Admin.CreateStation": {
+        "type": "object",
+        "required": [
+          "name",
+          "address",
+          "latitude",
+          "longitude",
+          "capacity"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "대여소 이름",
+            "example": "강남역 1번출구"
+          },
+          "address": {
+            "type": "string",
+            "description": "대여소 주소",
+            "example": "서울특별시 강남구 강남대로 396"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "description": "위도",
+            "example": 37.4979
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "description": "경도",
+            "example": 127.0276
+          },
+          "capacity": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "최대 수용 대수",
+            "example": 20
+          }
+        }
+      },
+      "Request.Admin.UpdateStation": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "대여소 이름",
+            "example": "강남역 1번출구"
+          },
+          "address": {
+            "type": "string",
+            "description": "대여소 주소",
+            "example": "서울특별시 강남구 강남대로 396"
+          },
+          "bikeCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "현재 자전거 수",
+            "example": 15
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive"
+            ],
+            "description": "운영 상태",
+            "example": "active"
+          }
+        }
+      },
+      "Request.Admin.UpdateRepairStatus": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "in-progress",
+              "completed"
+            ],
+            "description": "처리 상태",
+            "example": "in-progress"
+          },
+          "adminNote": {
+            "type": "string",
+            "description": "관리자 메모",
+            "example": "부품 발주 중"
+          }
+        }
+      },
+      "Data.Auth.Login": {
+        "type": "object",
+        "required": [
+          "user",
+          "token"
+        ],
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/Entity.User"
+          },
+          "token": {
+            "type": "string",
+            "description": "JWT 인증 토큰",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        }
+      },
+      "Data.Auth.Signup": {
+        "type": "object",
+        "required": [
+          "user",
+          "token"
+        ],
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/Entity.User"
+          },
+          "token": {
+            "type": "string",
+            "description": "JWT 인증 토큰",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        }
+      },
+      "Data.EmailCheck": {
+        "type": "object",
+        "required": [
+          "available"
+        ],
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "description": "이메일 사용 가능 여부",
+            "example": true
+          }
+        }
+      },
+      "Data.Stations.List": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Entity.Station"
+        }
+      },
+      "Data.Stations.StatusList": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "bikeCount",
+            "status"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "ST-001"
+            },
+            "bikeCount": {
+              "type": "integer",
+              "example": 12
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "active",
+                "inactive"
+              ],
+              "example": "active"
+            }
+          }
+        }
+      },
+      "Data.Stations.Nearest": {
+        "type": "object",
+        "required": [
+          "station",
+          "distance"
+        ],
+        "properties": {
+          "station": {
+            "$ref": "#/components/schemas/Entity.Station"
+          },
+          "distance": {
+            "type": "number",
+            "format": "float",
+            "description": "거리 (km)",
+            "example": 0.5
+          }
+        }
+      },
+      "Data.Rental.Create": {
+        "$ref": "#/components/schemas/Entity.Rental"
+      },
+      "Data.Rental.Return": {
+        "type": "object",
+        "required": [
+          "rental",
+          "summary"
+        ],
+        "properties": {
+          "rental": {
+            "$ref": "#/components/schemas/Entity.Rental"
+          },
+          "summary": {
+            "type": "object",
+            "required": [
+              "startStation",
+              "endStation",
+              "duration",
+              "distance"
+            ],
+            "properties": {
+              "startStation": {
+                "type": "string",
+                "example": "강남역 1번출구"
+              },
+              "endStation": {
+                "type": "string",
+                "example": "여의도한강공원"
+              },
+              "duration": {
+                "type": "integer",
+                "description": "이용 시간 (분)",
+                "example": 45
+              },
+              "distance": {
+                "type": "number",
+                "format": "float",
+                "description": "이동 거리 (km)",
+                "example": 5.2
+              }
+            }
+          }
+        }
+      },
+      "Data.Rentals.UserList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Entity.Rental"
+        }
+      },
+      "Data.Post": {
+        "$ref": "#/components/schemas/Entity.Post"
+      },
+      "Data.Post.Detail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Entity.Post"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "authorInfo": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "김철수"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Data.Posts.List": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Entity.Post"
+        }
+      },
+      "Data.Repair": {
+        "$ref": "#/components/schemas/Entity.Repair"
+      },
+      "Data.Repair.Detail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Entity.Repair"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "reporterInfo": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "홍길동"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "010-1234-5678"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Data.Repairs.List": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Entity.Repair"
+        }
+      },
+      "Data.Geocode": {
+        "$ref": "#/components/schemas/Common.Coordinates"
+      },
+      "Data.Route": {
+        "$ref": "#/components/schemas/Entity.RouteInfo"
+      },
+      "Data.AI.CourseRecommendation": {
+        "$ref": "#/components/schemas/Entity.CourseInfo"
+      },
+      "Data.User": {
+        "$ref": "#/components/schemas/Entity.User"
+      },
+      "Data.User.Statistics": {
+        "type": "object",
+        "required": [
+          "totalRentals",
+          "totalDistance",
+          "totalDuration",
+          "averageDistance",
+          "averageDuration"
+        ],
+        "properties": {
+          "totalRentals": {
+            "type": "integer",
+            "description": "총 대여 횟수",
+            "example": 42
+          },
+          "totalDistance": {
+            "type": "number",
+            "format": "float",
+            "description": "총 이동 거리 (km)",
+            "example": 215.8
+          },
+          "totalDuration": {
+            "type": "integer",
+            "description": "총 이용 시간 (분)",
+            "example": 1280
+          },
+          "averageDistance": {
+            "type": "number",
+            "format": "float",
+            "description": "평균 이동 거리 (km)",
+            "example": 5.1
+          },
+          "averageDuration": {
+            "type": "integer",
+            "description": "평균 이용 시간 (분)",
+            "example": 30
+          }
+        }
+      },
+      "Data.Admin.Statistics": {
+        "type": "object",
+        "required": [
+          "totalUsers",
+          "totalStations",
+          "totalBikes",
+          "todayRentals",
+          "activeRentals"
+        ],
+        "properties": {
+          "totalUsers": {
+            "type": "integer",
+            "description": "총 사용자 수",
+            "example": 5420
+          },
+          "totalStations": {
+            "type": "integer",
+            "description": "총 대여소 수",
+            "example": 150
+          },
+          "totalBikes": {
+            "type": "integer",
+            "description": "총 자전거 수",
+            "example": 3000
+          },
+          "todayRentals": {
+            "type": "integer",
+            "description": "오늘 대여 건수",
+            "example": 847
+          },
+          "activeRentals": {
+            "type": "integer",
+            "description": "현재 대여 중인 자전거 수",
+            "example": 234
+          }
+        }
+      },
+      "Data.Admin.UsersList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Entity.User"
+        }
+      },
+      "Data.Station": {
+        "$ref": "#/components/schemas/Entity.Station"
+      },
+      "Data.Admin.RepairsList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Entity.Repair"
+        }
       }
     }
-  },
-  "servers": [],
-  "security": []
+  }
 }
