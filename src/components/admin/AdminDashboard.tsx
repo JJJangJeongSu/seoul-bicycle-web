@@ -1,0 +1,226 @@
+import { Users, Bike, MapPin, TrendingUp } from 'lucide-react';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+
+export function AdminDashboard() {
+  // Mock data
+  const stats = {
+    totalUsers: 1248,
+    todayRentals: 342,
+    monthlyRentals: 8956,
+    avgDailyRentals: 298,
+  };
+
+  const monthlyData = [
+    { month: '1월', 대여: 7200 },
+    { month: '2월', 대여: 7800 },
+    { month: '3월', 대여: 8400 },
+    { month: '4월', 대여: 9200 },
+    { month: '5월', 대여: 8900 },
+    { month: '6월', 대여: 8956 },
+  ];
+
+  const hourlyData = [
+    { hour: '00', 이용: 45 },
+    { hour: '03', 이용: 12 },
+    { hour: '06', 이용: 89 },
+    { hour: '09', 이용: 234 },
+    { hour: '12', 이용: 189 },
+    { hour: '15', 이용: 156 },
+    { hour: '18', 이용: 312 },
+    { hour: '21', 이용: 178 },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-blue-500 text-white rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <Users className="w-10 h-10 opacity-80" />
+            <span className="text-2xl opacity-80">👥</span>
+          </div>
+          <p className="text-sm opacity-90 mb-1">총 회원 수</p>
+          <p className="text-3xl">{stats.totalUsers.toLocaleString()}</p>
+        </div>
+
+        <div className="bg-green-500 text-white rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <Bike className="w-10 h-10 opacity-80" />
+            <span className="text-2xl opacity-80">🚲</span>
+          </div>
+          <p className="text-sm opacity-90 mb-1">오늘 대여 건수</p>
+          <p className="text-3xl">{stats.todayRentals.toLocaleString()}</p>
+        </div>
+
+        <div className="bg-purple-500 text-white rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <TrendingUp className="w-10 h-10 opacity-80" />
+            <span className="text-2xl opacity-80">📈</span>
+          </div>
+          <p className="text-sm opacity-90 mb-1">이번 달 대여</p>
+          <p className="text-3xl">{stats.monthlyRentals.toLocaleString()}</p>
+        </div>
+
+        <div className="bg-orange-500 text-white rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <MapPin className="w-10 h-10 opacity-80" />
+            <span className="text-2xl opacity-80">📍</span>
+          </div>
+          <p className="text-sm opacity-90 mb-1">일평균 대여</p>
+          <p className="text-3xl">{stats.avgDailyRentals.toLocaleString()}</p>
+        </div>
+      </div>
+
+      {/* Charts */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Monthly Trend */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg mb-4">월별 대여 트렌드</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={monthlyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="대여" stroke="#3b82f6" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Hourly Usage */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg mb-4">시간대별 이용량</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={hourlyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="hour" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="이용" fill="#10b981" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h3 className="text-lg mb-4">📊 최근 활동</h3>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-sm">홍길동님이 자전거를 대여했습니다</span>
+            </div>
+            <span className="text-sm text-gray-500">5분 전</span>
+          </div>
+
+          <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span className="text-sm">김철수님이 자전거를 반납했습니다</span>
+            </div>
+            <span className="text-sm text-gray-500">12분 전</span>
+          </div>
+
+          <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+              <span className="text-sm">새로운 고장 신고가 접수되었습니다</span>
+            </div>
+            <span className="text-sm text-gray-500">23분 전</span>
+          </div>
+
+          <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <span className="text-sm">이영희님이 회원가입했습니다</span>
+            </div>
+            <span className="text-sm text-gray-500">1시간 전</span>
+          </div>
+        </div>
+      </div>
+
+      {/* System Status */}
+      <div className="grid md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="mb-4">🚲 자전거 현황</h4>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">정상</span>
+              <span>850대 (85%)</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-green-500 h-2 rounded-full" style={{ width: '85%' }}></div>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">대여중</span>
+              <span>120대 (12%)</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-blue-500 h-2 rounded-full" style={{ width: '12%' }}></div>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">고장</span>
+              <span>30대 (3%)</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-red-500 h-2 rounded-full" style={{ width: '3%' }}></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="mb-4">📍 대여소 현황</h4>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">운영중</span>
+              <span>14개 (93%)</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-green-500 h-2 rounded-full" style={{ width: '93%' }}></div>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">폐쇄</span>
+              <span>1개 (7%)</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-gray-500 h-2 rounded-full" style={{ width: '7%' }}></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="mb-4">🔧 고장 신고</h4>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">처리 대기</span>
+              <span>3건</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-red-500 h-2 rounded-full" style={{ width: '30%' }}></div>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">처리중</span>
+              <span>5건</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '50%' }}></div>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">완료</span>
+              <span>2건</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-green-500 h-2 rounded-full" style={{ width: '20%' }}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
