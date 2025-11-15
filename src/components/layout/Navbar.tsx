@@ -1,16 +1,12 @@
 import { Bike, User as UserIcon, Menu, X, MapPin, MessageSquare, Wrench, LayoutDashboard, Route, Sparkles } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { User, Rental } from '../../App';
 import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useRental } from '../../contexts/RentalContext';
 
-type NavbarProps = {
-  user: User | null;
-  onLoginClick: () => void;
-  onLogout: () => void;
-  currentRental: Rental | null;
-};
-
-export function Navbar({ user, onLoginClick, onLogout, currentRental }: NavbarProps) {
+export function Navbar() {
+  const { user, logout, setShowLoginModal } = useAuth();
+  const { currentRental } = useRental();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -118,7 +114,7 @@ export function Navbar({ user, onLoginClick, onLogout, currentRental }: NavbarPr
                     <div className="text-xs opacity-90">{user.role === 'admin' ? '✨ 관리자' : '💖 일반 회원'}</div>
                   </div>
                   <button
-                    onClick={onLogout}
+                    onClick={logout}
                     className="px-5 py-2 bg-white text-primary rounded-full hover:bg-muted transition-all hover:scale-105 shadow-md"
                   >
                     로그아웃
@@ -127,7 +123,7 @@ export function Navbar({ user, onLoginClick, onLogout, currentRental }: NavbarPr
               </>
             ) : (
               <button
-                onClick={onLoginClick}
+                onClick={() => setShowLoginModal(true)}
                 className="px-6 py-2 bg-white text-primary rounded-full hover:bg-muted transition-all hover:scale-105 shadow-md"
               >
                 로그인
@@ -216,7 +212,7 @@ export function Navbar({ user, onLoginClick, onLogout, currentRental }: NavbarPr
                   <div className="px-3 py-3 border-t border-white/30 mt-2">
                     <div className="mb-2">{user.name} ({user.role === 'admin' ? '✨ 관리자' : '💖 일반 회원'})</div>
                     <button
-                      onClick={() => { onLogout(); setMobileMenuOpen(false); }}
+                      onClick={() => { logout(); setMobileMenuOpen(false); }}
                       className="mt-2 px-4 py-2 bg-white text-primary rounded-full hover:bg-muted w-full transition-all shadow-md"
                     >
                       로그아웃
@@ -225,7 +221,7 @@ export function Navbar({ user, onLoginClick, onLogout, currentRental }: NavbarPr
                 </>
               ) : (
                 <button
-                  onClick={() => { onLoginClick(); setMobileMenuOpen(false); }}
+                  onClick={() => { setShowLoginModal(true); setMobileMenuOpen(false); }}
                   className="mx-3 py-2 bg-white text-primary rounded-full hover:bg-muted shadow-md transition-all"
                 >
                   로그인

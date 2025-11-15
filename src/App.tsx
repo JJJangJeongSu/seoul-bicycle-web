@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { HomePage } from './components/pages/HomePage';
 import { MyPage } from './components/pages/MyPage';
@@ -10,132 +9,38 @@ import { RoutePage } from './components/pages/RoutePage';
 import { AICourseRecommendPage } from './components/pages/AICourseRecommendPage';
 import { LoginModal } from './components/auth/LoginModal';
 import { SignupModal } from './components/auth/SignupModal';
+import { useAuth } from './contexts/AuthContext';
 
-export type User = {
-  id: string;
-  email: string;
-  name: string;
-  role: 'user' | 'admin';
-  phone: string;
-};
-
-export type Station = {
-  id: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  bikeCount: number;
-  status: 'active' | 'inactive';
-};
-
-export type Rental = {
-  id: string;
-  userId: string;
-  bikeId: string;
-  startStationId: string;
-  endStationId?: string;
-  rentalTime: Date;
-  returnTime?: Date;
-  distance?: number;
-  duration?: number;
-  status: 'rented' | 'returned';
-};
+// Re-export types for backward compatibility
+export type { User, Station, Rental } from './types';
 
 export default function App() {
-  const [user, setUser] = useState<User | null>(null);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignupModal, setShowSignupModal] = useState(false);
-  const [currentRental, setCurrentRental] = useState<Rental | null>(null);
-  const navigate = useNavigate();
-
-  const handleLogin = (email: string, password: string) => {
-    // Mock login
-    const mockUser: User = {
-      id: '1',
-      email,
-      name: email === 'admin@test.com' ? '관리자' : '홍길동',
-      role: email === 'admin@test.com' ? 'admin' : 'user',
-      phone: '010-1234-5678',
-    };
-    setUser(mockUser);
-    setShowLoginModal(false);
-  };
-
-  const handleSignup = (data: any) => {
-    const newUser: User = {
-      id: Date.now().toString(),
-      email: data.email,
-      name: data.name,
-      role: 'user',
-      phone: data.phone,
-    };
-    setUser(newUser);
-    setShowSignupModal(false);
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setCurrentRental(null);
-    navigate('/');
-  };
+  const { user, showLoginModal, showSignupModal, login, signup, setShowLoginModal, setShowSignupModal } = useAuth();
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar
-        user={user}
-        onLoginClick={() => setShowLoginModal(true)}
-        onLogout={handleLogout}
-        currentRental={currentRental}
-      />
+      <Navbar />
 
       <main>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <HomePage
-                user={user}
-                currentRental={currentRental}
-                onRent={setCurrentRental}
-                onLoginRequired={() => setShowLoginModal(true)}
-              />
-            }
-          />
+          <Route path="/" element={<HomePage />} />
 
           <Route
             path="/mypage"
             element={
               user && user.role !== 'admin'
-                ? <MyPage user={user} />
+                ? <MyPage />
                 : <Navigate to="/" replace />
             }
           />
 
-          <Route
-            path="/board"
-            element={<BoardPage user={user} />}
-          />
+          <Route path="/board" element={<BoardPage />} />
 
-          <Route
-            path="/repair"
-            element={
-              <RepairPage
-                user={user}
-                onLoginRequired={() => setShowLoginModal(true)}
-              />
-            }
-          />
+          <Route path="/repair" element={<RepairPage />} />
 
-          <Route
-            path="/route"
-            element={<RoutePage />}
-          />
+          <Route path="/route" element={<RoutePage />} />
 
-          <Route
-            path="/ai-course"
-            element={<AICourseRecommendPage />}
-          />
+          <Route path="/ai-course" element={<AICourseRecommendPage />} />
 
           <Route
             path="/admin/*"
@@ -154,7 +59,7 @@ export default function App() {
       {showLoginModal && (
         <LoginModal
           onClose={() => setShowLoginModal(false)}
-          onLogin={handleLogin}
+          onLogin={login}
           onSignupClick={() => {
             setShowLoginModal(false);
             setShowSignupModal(true);
@@ -165,7 +70,7 @@ export default function App() {
       {showSignupModal && (
         <SignupModal
           onClose={() => setShowSignupModal(false)}
-          onSignup={handleSignup}
+          onSignup={signup}
           onLoginClick={() => {
             setShowSignupModal(false);
             setShowLoginModal(true);

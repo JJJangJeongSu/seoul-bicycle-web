@@ -1,20 +1,16 @@
 import { useState } from 'react';
-import { User } from '../../App';
 import { Plus, List } from 'lucide-react';
 import { RepairForm } from '../repair/RepairForm';
 import { RepairList } from '../repair/RepairList';
+import { useAuth } from '../../contexts/AuthContext';
 
-type RepairPageProps = {
-  user: User | null;
-  onLoginRequired: () => void;
-};
-
-export function RepairPage({ user, onLoginRequired }: RepairPageProps) {
+export function RepairPage() {
+  const { user, setShowLoginModal } = useAuth();
   const [activeView, setActiveView] = useState<'list' | 'form'>('list');
 
   const handleCreateReport = () => {
     if (!user) {
-      onLoginRequired();
+      setShowLoginModal(true);
       return;
     }
     setActiveView('form');
@@ -57,12 +53,11 @@ export function RepairPage({ user, onLoginRequired }: RepairPageProps) {
       {/* Content */}
       {activeView === 'form' ? (
         <RepairForm
-          user={user!}
           onSuccess={() => setActiveView('list')}
           onCancel={() => setActiveView('list')}
         />
       ) : (
-        <RepairList user={user} />
+        <RepairList />
       )}
     </div>
   );

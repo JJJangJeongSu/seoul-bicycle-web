@@ -1,10 +1,10 @@
 import { X, MapPin, Phone, Clock, Bike, Navigation } from 'lucide-react';
-import { Station, User, Rental } from '../../App';
+import type { Station } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
+import { useRental } from '../../contexts/RentalContext';
 
 type StationDetailModalProps = {
   station: Station;
-  user: User | null;
-  currentRental: Rental | null;
   onClose: () => void;
   onRent: (stationId: string) => void;
   onReturn: (stationId: string) => void;
@@ -12,12 +12,12 @@ type StationDetailModalProps = {
 
 export function StationDetailModal({
   station,
-  user,
-  currentRental,
   onClose,
   onRent,
   onReturn,
 }: StationDetailModalProps) {
+  const { user } = useAuth();
+  const { currentRental } = useRental();
   const canRent = user && !currentRental && station.bikeCount > 0 && station.status === 'active';
   const canReturn = user && currentRental && station.status === 'active';
 

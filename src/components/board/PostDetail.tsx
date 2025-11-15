@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Eye, ThumbsUp, MessageSquare, Share2, Edit, Trash2 } from 'lucide-react';
-import { User } from '../../App';
 import { mockPosts } from '../../lib/mockData';
+import type { Post } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
 
 type PostDetailProps = {
   postId: string;
-  user: User | null;
   onBack: () => void;
 };
 
-export function PostDetail({ postId, user, onBack }: PostDetailProps) {
-  const [postData, setPostData] = useState<any>(null);
+export function PostDetail({ postId, onBack }: PostDetailProps) {
+  const { user } = useAuth();
+  const [postData, setPostData] = useState<Post | null>(null);
   const [liked, setLiked] = useState(false);
   const [userLikedPosts, setUserLikedPosts] = useState<string[]>([]);
 
@@ -19,8 +20,8 @@ export function PostDetail({ postId, user, onBack }: PostDetailProps) {
     const loadPost = () => {
       // Check if it's a saved post
       const savedPosts = localStorage.getItem('board_posts');
-      const posts = savedPosts ? JSON.parse(savedPosts) : [];
-      let foundPost = posts.find((p: any) => p.id === postId);
+      const posts: Post[] = savedPosts ? JSON.parse(savedPosts) : [];
+      let foundPost = posts.find(p => p.id === postId);
 
       if (foundPost) {
         foundPost = {
@@ -173,10 +174,10 @@ export function PostDetail({ postId, user, onBack }: PostDetailProps) {
 
     // Load existing posts
     const savedPosts = localStorage.getItem('board_posts');
-    const posts = savedPosts ? JSON.parse(savedPosts) : [];
+    const posts: Post[] = savedPosts ? JSON.parse(savedPosts) : [];
 
     // Remove the post
-    const updatedPosts = posts.filter((p: any) => p.id !== postData.id);
+    const updatedPosts = posts.filter(p => p.id !== postData.id);
     localStorage.setItem('board_posts', JSON.stringify(updatedPosts));
 
     // Also remove likes data for this post

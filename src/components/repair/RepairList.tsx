@@ -1,13 +1,10 @@
 import { useState, useMemo } from 'react';
-import { User } from '../../App';
 import { mockRepairs } from '../../lib/mockData';
 import { Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
-type RepairListProps = {
-  user: User | null;
-};
-
-export function RepairList({ user }: RepairListProps) {
+export function RepairList() {
+  const { user } = useAuth();
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'in-progress' | 'completed'>('all');
 
   const filteredRepairs = useMemo(() => {
