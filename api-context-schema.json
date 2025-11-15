@@ -1,0 +1,1023 @@
+{
+  "schemaVersion": "2.0.0",
+  "lastUpdated": "2025-11-15",
+
+  "project": {
+    "name": "서울 따릉이 시뮬레이션 플랫폼",
+    "version": "1.0.0",
+    "type": "frontend-simulation",
+    "hasBackend": false,
+    "description": "서울 공공자전거 따릉이 시스템을 시뮬레이션하는 프론트엔드 전용 웹 애플리케이션",
+    "figmaDesign": "https://www.figma.com/design/aJfOnTQZwtUneqKjGGYkcj/Simulation-Platform-Design",
+    "technology": {
+      "framework": "React 18.3.1",
+      "buildTool": "Vite 6.3.5",
+      "compiler": "@vitejs/plugin-react-swc",
+      "styling": "TailwindCSS v4",
+      "uiLibrary": "shadcn/ui + Radix UI",
+      "charts": "Recharts 2.15.2",
+      "icons": "Lucide React",
+      "forms": "React Hook Form 7.55.0"
+    }
+  },
+
+  "frontend": {
+    "architecture": {
+      "pattern": "Component-based SPA",
+      "stateManagement": {
+        "type": "React local state only",
+        "libraries": [],
+        "description": "No global state management library. All state managed via useState in App.tsx and page components.",
+        "stateOwners": {
+          "App.tsx": ["user", "currentPage", "currentRental", "showLoginModal", "showSignupModal"],
+          "pages": "각 페이지는 자체 local state 관리 (activeTab, selectedItem, etc.)"
+        },
+        "dataFlow": "Props drilling from App.tsx to child components"
+      },
+      "routing": {
+        "type": "Manual client-side routing",
+        "implementation": "currentPage state in App.tsx",
+        "description": "No React Router. Page navigation via setCurrentPage() callback",
+        "pages": ["home", "mypage", "board", "repair", "admin", "route", "aicourserecommend"],
+        "urlBased": false,
+        "browserHistory": false
+      },
+      "authentication": {
+        "type": "Mock authentication",
+        "location": "App.tsx handleLogin() function",
+        "logic": {
+          "adminEmail": "admin@test.com",
+          "adminRole": "Any email === 'admin@test.com' → role: 'admin'",
+          "userRole": "Any other email → role: 'user'",
+          "passwordValidation": "No validation (mock system)"
+        },
+        "storage": "In-memory only (user state in App.tsx)",
+        "persistence": "None (resets on page reload)"
+      },
+      "dataSource": {
+        "type": "Mock data",
+        "location": "src/lib/mockData.ts",
+        "pattern": "Import mock arrays → Copy to local state → Mutate locally",
+        "persistence": "None (changes lost on reload)",
+        "apiCalls": "None (100% client-side)"
+      }
+    },
+
+    "typeDefinitions": {
+      "location": "src/App.tsx (lines 13-42)",
+      "types": {
+        "User": {
+          "file": "src/App.tsx",
+          "lines": "13-19",
+          "fields": {
+            "id": "string",
+            "email": "string",
+            "name": "string",
+            "role": "'user' | 'admin'",
+            "phone": "string"
+          }
+        },
+        "Station": {
+          "file": "src/App.tsx",
+          "lines": "21-29",
+          "fields": {
+            "id": "string",
+            "name": "string",
+            "address": "string",
+            "latitude": "number",
+            "longitude": "number",
+            "bikeCount": "number",
+            "status": "'active' | 'inactive'"
+          }
+        },
+        "Rental": {
+          "file": "src/App.tsx",
+          "lines": "31-42",
+          "fields": {
+            "id": "string",
+            "userId": "string",
+            "bikeId": "string",
+            "startStationId": "string",
+            "endStationId": "string | undefined",
+            "rentalTime": "Date",
+            "returnTime": "Date | undefined",
+            "distance": "number | undefined",
+            "duration": "number | undefined",
+            "status": "'rented' | 'returned'"
+          }
+        }
+      },
+      "importPattern": "import { User, Station, Rental } from '../../App'",
+      "note": "Additional types defined in page components (Post, Comment, Repair, CourseInfo, etc.)"
+    },
+
+    "components": {
+      "structure": {
+        "root": "src/App.tsx",
+        "entry": "src/main.tsx",
+        "layout": ["src/components/layout/Navbar.tsx"],
+        "pages": "src/components/pages/*.tsx (7 page components)",
+        "features": {
+          "auth": ["src/components/auth/LoginModal.tsx", "src/components/auth/SignupModal.tsx"],
+          "home": ["src/components/home/MapView.tsx", "src/components/home/ListView.tsx", "src/components/home/StationDetailModal.tsx"],
+          "mypage": ["src/components/mypage/RentalHistory.tsx", "src/components/mypage/UserStats.tsx", "src/components/mypage/UserSettings.tsx"],
+          "board": ["src/components/board/BoardList.tsx", "src/components/board/PostDetail.tsx", "src/components/board/PostEditor.tsx"],
+          "repair": ["src/components/repair/RepairForm.tsx", "src/components/repair/RepairList.tsx"],
+          "admin": ["src/components/admin/AdminDashboard.tsx", "src/components/admin/AdminUsers.tsx", "src/components/admin/AdminStations.tsx", "src/components/admin/AdminBikes.tsx", "src/components/admin/AdminRepairs.tsx"]
+        },
+        "ui": {
+          "location": "src/components/ui/*.tsx",
+          "count": "50+ components",
+          "library": "shadcn/ui + Radix UI",
+          "editPolicy": "DO NOT EDIT (pre-built UI components)"
+        }
+      },
+
+      "hierarchy": {
+        "App.tsx": {
+          "state": ["user", "currentPage", "currentRental", "showLoginModal", "showSignupModal"],
+          "renders": ["Navbar", "CurrentPage (conditional)", "LoginModal (conditional)", "SignupModal (conditional)"],
+          "children": {
+            "Navbar": {
+              "props": ["user", "currentPage", "onPageChange", "onLoginClick", "onLogout", "currentRental"],
+              "responsibilities": ["Navigation", "User status display", "Rental indicator"]
+            },
+            "HomePage": {
+              "props": ["user", "currentRental", "onRent", "onLoginRequired"],
+              "state": ["viewMode", "searchTerm", "selectedDistrict", "bikeFilter", "selectedStation", "stations"],
+              "children": ["MapView", "ListView", "StationDetailModal"]
+            },
+            "MyPage": {
+              "props": ["user"],
+              "state": ["activeTab"],
+              "children": ["RentalHistory", "UserStats", "UserSettings"],
+              "accessControl": "user.role !== 'admin' required"
+            },
+            "BoardPage": {
+              "props": ["user"],
+              "state": ["selectedPostId", "isWriting"],
+              "children": ["BoardList", "PostDetail", "PostEditor"]
+            },
+            "RepairPage": {
+              "props": ["user", "onLoginRequired"],
+              "state": ["activeView"],
+              "children": ["RepairForm", "RepairList"]
+            },
+            "RoutePage": {
+              "props": [],
+              "state": ["currentLocation", "destination", "routeResult"],
+              "features": ["Haversine distance calculation", "Mock geocoding", "Nearest station finder"]
+            },
+            "AICourseRecommendPage": {
+              "props": [],
+              "state": ["prompt", "courseInfo", "loading"],
+              "features": ["Keyword-based mock AI recommendations"]
+            },
+            "AdminPage": {
+              "props": [],
+              "state": ["activeTab"],
+              "children": ["AdminDashboard", "AdminUsers", "AdminStations", "AdminBikes", "AdminRepairs"],
+              "accessControl": "user.role === 'admin' required (checked in App.tsx)"
+            }
+          }
+        }
+      }
+    },
+
+    "pages": [
+      {
+        "name": "HomePage",
+        "route": "currentPage === 'home'",
+        "file": "src/components/pages/HomePage.tsx",
+        "description": "대여소 현황 조회 및 자전거 대여/반납",
+        "props": {
+          "user": "User | null",
+          "currentRental": "Rental | null",
+          "onRent": "(rental: Rental) => void",
+          "onLoginRequired": "() => void"
+        },
+        "features": [
+          "Map view / List view toggle",
+          "Station search (name/address)",
+          "District filter (25 Seoul districts)",
+          "Bike availability filter (all/available/unavailable)",
+          "Station detail modal",
+          "Bike rental action (creates currentRental)",
+          "Auto-refresh option (mock real-time updates)"
+        ],
+        "mockData": ["mockStations", "seoulDistricts"],
+        "stateFlow": {
+          "rental": "StationDetailModal → HomePage.onRent → App.setCurrentRental → Navbar (displays rental status)"
+        }
+      },
+      {
+        "name": "MyPage",
+        "route": "currentPage === 'mypage'",
+        "file": "src/components/pages/MyPage.tsx",
+        "description": "마이페이지 (대여 이력, 통계, 설정)",
+        "props": {
+          "user": "User (required, non-admin only)"
+        },
+        "features": [
+          "3 tabs: 대여 이력 / 이용 통계 / 설정",
+          "Rental history with charts (Recharts)",
+          "User statistics (total distance, duration, count)",
+          "User settings management"
+        ],
+        "mockData": ["mockRentals"],
+        "accessControl": "Rendered only if user && user.role !== 'admin'"
+      },
+      {
+        "name": "BoardPage",
+        "route": "currentPage === 'board'",
+        "file": "src/components/pages/BoardPage.tsx",
+        "description": "커뮤니티 게시판",
+        "props": {
+          "user": "User | null"
+        },
+        "features": [
+          "Post list (categories: notice, info, question, free)",
+          "Post detail view",
+          "Post editor (requires login)",
+          "Search, filter by category",
+          "View counts, likes, comments"
+        ],
+        "mockData": ["mockPosts"],
+        "views": ["list", "detail", "editor"],
+        "navigation": "State-based view switching (selectedPostId, isWriting)"
+      },
+      {
+        "name": "RepairPage",
+        "route": "currentPage === 'repair'",
+        "file": "src/components/pages/RepairPage.tsx",
+        "description": "자전거/대여소 고장 신고",
+        "props": {
+          "user": "User | null",
+          "onLoginRequired": "() => void"
+        },
+        "features": [
+          "Repair report list",
+          "Repair form (requires login)",
+          "Categories: brake, tire, chain, light, seat, bell, other",
+          "Status: pending, in-progress, completed"
+        ],
+        "mockData": ["mockRepairs"],
+        "views": ["list", "form"]
+      },
+      {
+        "name": "RoutePage",
+        "route": "currentPage === 'route'",
+        "file": "src/components/pages/RoutePage.tsx",
+        "description": "길찾기 및 경로 안내",
+        "props": {},
+        "features": [
+          "Start/End location input",
+          "Mock geocoding (address → coordinates)",
+          "Nearest station finder (Haversine formula)",
+          "Route calculation (distance, duration, walking distance)",
+          "Station selection from list"
+        ],
+        "algorithms": [
+          "Haversine formula for distance calculation",
+          "Mock geocoding (hash-based coordinate generation)"
+        ],
+        "mockData": ["mockStations"]
+      },
+      {
+        "name": "AICourseRecommendPage",
+        "route": "currentPage === 'aicourserecommend'",
+        "file": "src/components/pages/AICourseRecommendPage.tsx",
+        "description": "AI 기반 자전거 코스 추천",
+        "props": {},
+        "features": [
+          "Natural language prompt input",
+          "Keyword-based mock AI recommendations",
+          "Course info: name, description, duration, calories, difficulty, distance, highlights",
+          "Difficulty levels: 최하, 하, 중, 상, 최상",
+          "Loading state simulation (2 second delay)"
+        ],
+        "keywords": ["한강", "강변", "남산", "야간", "밤", "초보", "쉬운"],
+        "mockAPI": "Simulated AI response with 2s delay"
+      },
+      {
+        "name": "AdminPage",
+        "route": "currentPage === 'admin'",
+        "file": "src/components/pages/AdminPage.tsx",
+        "description": "관리자 대시보드",
+        "props": {},
+        "features": [
+          "5 tabs: 대시보드 / 회원 관리 / 대여소 관리 / 자전거 관리 / 고장 처리",
+          "Statistics with charts (Recharts)",
+          "CRUD operations for users, stations, bikes, repairs",
+          "All operations are mock (local state only)"
+        ],
+        "mockData": ["mockStations", "mockRentals", "mockRepairs"],
+        "accessControl": "Rendered only if user?.role === 'admin' (checked in App.tsx line 114)"
+      }
+    ],
+
+    "stateFlows": {
+      "authentication": {
+        "login": [
+          "User clicks login button in Navbar",
+          "Navbar calls onLoginClick()",
+          "App.tsx sets showLoginModal = true",
+          "LoginModal renders",
+          "User submits credentials",
+          "LoginModal calls onLogin(email, password)",
+          "App.tsx handleLogin() creates mock user",
+          "App.tsx sets user state",
+          "LoginModal closes (showLoginModal = false)",
+          "Navbar re-renders with user info"
+        ],
+        "logout": [
+          "User clicks logout in Navbar",
+          "Navbar calls onLogout()",
+          "App.tsx sets user = null, currentRental = null, currentPage = 'home'",
+          "All components re-render with no user"
+        ]
+      },
+      "bikeRental": {
+        "rent": [
+          "User views station detail in HomePage",
+          "User clicks '대여' button",
+          "StationDetailModal validates (user logged in, bike available)",
+          "StationDetailModal creates Rental object",
+          "Calls onRent(newRental)",
+          "HomePage forwards to App.tsx",
+          "App.tsx sets currentRental state",
+          "Navbar displays rental indicator"
+        ],
+        "return": [
+          "User clicks return in Navbar or StationDetailModal",
+          "Updates currentRental with endStation, returnTime, distance, duration",
+          "App.tsx sets currentRental = null",
+          "Rental added to user's history (mock)"
+        ]
+      },
+      "navigation": {
+        "pageChange": [
+          "User clicks navigation button in Navbar",
+          "Navbar calls onPageChange(newPage)",
+          "App.tsx sets currentPage = newPage",
+          "App.tsx conditionally renders new page component",
+          "Navbar highlights active page"
+        ]
+      },
+      "dataManagement": {
+        "pattern": "Mock data → Local state → Mutations → Display",
+        "example": [
+          "import { mockStations } from '@/lib/mockData'",
+          "const [stations, setStations] = useState(mockStations)",
+          "// Simulate CRUD: setStations([...stations, newStation])",
+          "// No persistence, resets on reload"
+        ]
+      }
+    }
+  },
+
+  "data": {
+    "mockData": {
+      "location": "src/lib/mockData.ts",
+      "description": "All mock data for the simulation",
+      "exports": {
+        "mockStations": {
+          "type": "Station[]",
+          "count": 15,
+          "description": "서울 주요 지역 대여소 15개",
+          "includes": ["가산디지털단지역", "강남역", "여의도한강공원", "서울역", "홍대입구역", "광화문광장", "잠실종합운동장", "이태원역", "반포한강공원", "건대입구역", "코엑스", "명동역", "신촌역", "청계천", "북한산국립공원"]
+        },
+        "mockRentals": {
+          "type": "Rental[]",
+          "count": 11,
+          "description": "User ID '1'의 대여 이력 11건 (2~75일 전)",
+          "details": "각 rental은 출발지, 도착지, 시간, 거리, 소요시간 포함"
+        },
+        "mockPosts": {
+          "type": "Post[]",
+          "count": 5,
+          "description": "커뮤니티 게시글 5개",
+          "categories": ["notice", "info", "question", "free"],
+          "includes": ["시스템 업데이트 안내", "한강 야간 라이딩 코스 추천", "대여 시 결제 문의", "날씨 관련 자유글", "이용 팁"]
+        },
+        "mockRepairs": {
+          "type": "Repair[]",
+          "count": 3,
+          "description": "고장 신고 3건",
+          "statuses": ["completed", "in-progress", "pending"],
+          "categories": ["brake", "chain", "tire"]
+        },
+        "seoulDistricts": {
+          "type": "string[]",
+          "count": 25,
+          "description": "서울시 25개 구",
+          "usage": "대여소 필터링에 사용"
+        },
+        "recommendedRoutes": {
+          "type": "Route[]",
+          "count": 4,
+          "description": "추천 라이딩 코스 4개",
+          "difficulties": ["easy", "medium", "hard"],
+          "includes": ["한강 야경 라이딩", "서울 도심 투어", "홍대-이대-신촌 캠퍼스 투어", "한강 종주 도전"]
+        }
+      },
+      "usagePattern": {
+        "import": "import { mockStations } from '@/lib/mockData'",
+        "initialization": "const [stations, setStations] = useState(mockStations)",
+        "mutation": "setStations(prevStations => [...prevStations, newStation])",
+        "persistence": "None - all changes lost on page reload"
+      }
+    },
+
+    "typeDefinitions": {
+      "coreTypes": {
+        "location": "src/App.tsx",
+        "types": ["User", "Station", "Rental"],
+        "import": "import { User, Station, Rental } from '../../App'"
+      },
+      "pageSpecificTypes": {
+        "Post": {
+          "location": "src/lib/mockData.ts (inferred from data)",
+          "fields": {
+            "id": "string",
+            "category": "'notice' | 'info' | 'question' | 'free'",
+            "title": "string",
+            "content": "string",
+            "author": "string",
+            "authorId": "string",
+            "views": "number",
+            "likes": "number",
+            "comments": "number",
+            "createdAt": "Date",
+            "isPinned": "boolean | undefined"
+          }
+        },
+        "Repair": {
+          "location": "src/lib/mockData.ts (inferred from data)",
+          "fields": {
+            "id": "string",
+            "type": "'bike' | 'station'",
+            "bikeId": "string | undefined",
+            "stationId": "string | undefined",
+            "category": "'brake' | 'chain' | 'tire' | 'light' | 'seat' | 'bell' | 'other'",
+            "description": "string",
+            "reporter": "string",
+            "reporterId": "string",
+            "status": "'pending' | 'in-progress' | 'completed'",
+            "createdAt": "Date",
+            "completedAt": "Date | undefined",
+            "adminNote": "string | undefined"
+          }
+        },
+        "CourseInfo": {
+          "location": "src/components/pages/AICourseRecommendPage.tsx",
+          "fields": {
+            "name": "string",
+            "description": "string",
+            "duration": "number (minutes)",
+            "calories": "number (kcal)",
+            "difficulty": "'최하' | '하' | '중' | '상' | '최상'",
+            "distance": "number (km)",
+            "highlights": "string[]"
+          }
+        },
+        "Route": {
+          "location": "src/lib/mockData.ts (recommendedRoutes)",
+          "fields": {
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "stations": "string[] (station IDs)",
+            "distance": "number (km)",
+            "duration": "number (minutes)",
+            "difficulty": "'easy' | 'medium' | 'hard'",
+            "tags": "string[]"
+          }
+        }
+      }
+    },
+
+    "dataFlow": {
+      "pattern": "Unidirectional data flow via props",
+      "globalState": {
+        "owner": "App.tsx",
+        "variables": {
+          "user": {
+            "type": "User | null",
+            "flow": "App → Navbar, HomePage, MyPage, BoardPage, RepairPage",
+            "updates": "Login/Logout only"
+          },
+          "currentRental": {
+            "type": "Rental | null",
+            "flow": "App → HomePage, Navbar",
+            "updates": "Rent bike (HomePage) / Return bike (Navbar or StationDetail)"
+          },
+          "currentPage": {
+            "type": "'home' | 'mypage' | 'board' | 'repair' | 'admin' | 'route' | 'aicourserecommend'",
+            "flow": "App → Navbar (display) / App → conditional page render",
+            "updates": "Navigation button clicks in Navbar"
+          }
+        }
+      },
+      "localState": {
+        "pattern": "Each page component manages its own state",
+        "examples": {
+          "HomePage": ["viewMode", "searchTerm", "selectedDistrict", "bikeFilter", "selectedStation", "stations"],
+          "MyPage": ["activeTab"],
+          "BoardPage": ["selectedPostId", "isWriting"],
+          "RepairPage": ["activeView"],
+          "AdminPage": ["activeTab"]
+        }
+      },
+      "callbackPattern": {
+        "description": "Child components receive callbacks to update parent state",
+        "examples": {
+          "onRent": "HomePage → App.tsx (updates currentRental)",
+          "onPageChange": "Navbar → App.tsx (updates currentPage)",
+          "onLoginRequired": "HomePage/RepairPage → App.tsx (shows login modal)",
+          "onLogin": "LoginModal → App.tsx (updates user)",
+          "onLogout": "Navbar → App.tsx (clears user)"
+        }
+      }
+    }
+  },
+
+  "api": {
+    "status": "planned",
+    "implementationStatus": "Not implemented - all endpoints are future specifications",
+    "currentBehavior": "No API calls are made. All data is from mockData.ts and managed in local state.",
+    "migrationNote": "When backend is implemented, replace mock data imports with API calls to these endpoints",
+    "baseUrl": "/api",
+
+    "endpoints": [
+      {
+        "category": "Authentication",
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/auth/login",
+            "description": "사용자 로그인",
+            "currentImplementation": "App.tsx handleLogin() - mock logic",
+            "requestBody": {
+              "email": "string",
+              "password": "string"
+            },
+            "response": {
+              "user": "User",
+              "token": "string"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/auth/signup",
+            "description": "회원가입",
+            "currentImplementation": "App.tsx handleSignup() - mock logic",
+            "requestBody": {
+              "email": "string",
+              "password": "string",
+              "name": "string",
+              "phone": "string"
+            },
+            "response": {
+              "user": "User",
+              "token": "string"
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/auth/check-email",
+            "description": "이메일 중복 확인",
+            "currentImplementation": "Not implemented",
+            "queryParams": {
+              "email": "string"
+            },
+            "response": {
+              "available": "boolean"
+            }
+          }
+        ]
+      },
+      {
+        "category": "Stations",
+        "endpoints": [
+          {
+            "method": "GET",
+            "path": "/stations",
+            "description": "대여소 목록 조회",
+            "currentImplementation": "mockStations from mockData.ts",
+            "response": "Station[]"
+          },
+          {
+            "method": "GET",
+            "path": "/stations/status",
+            "description": "대여소 실시간 현황 갱신",
+            "currentImplementation": "HomePage auto-refresh (simulated)",
+            "response": "StationStatus[]"
+          },
+          {
+            "method": "GET",
+            "path": "/stations/nearest",
+            "description": "가장 가까운 대여소 찾기",
+            "currentImplementation": "RoutePage findNearestStation() - Haversine formula",
+            "queryParams": {
+              "lat": "number",
+              "lon": "number"
+            },
+            "response": "Station"
+          }
+        ]
+      },
+      {
+        "category": "Rentals",
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/rentals",
+            "description": "자전거 대여",
+            "currentImplementation": "StationDetailModal creates rental object, updates App.tsx currentRental state",
+            "requestBody": {
+              "userId": "string (from auth)",
+              "stationId": "string (from selection)"
+            },
+            "response": "Rental"
+          },
+          {
+            "method": "PUT",
+            "path": "/rentals/:rentalId/return",
+            "description": "자전거 반납",
+            "currentImplementation": "Updates currentRental then sets to null in App.tsx",
+            "requestBody": {
+              "endStationId": "string (from selection)",
+              "returnTime": "string (auto-generated)"
+            },
+            "response": "RentalComplete"
+          },
+          {
+            "method": "GET",
+            "path": "/users/:userId/rentals",
+            "description": "사용자 대여 이력 조회",
+            "currentImplementation": "mockRentals filtered by userId",
+            "queryParams": {
+              "page": "number (default: 1)",
+              "limit": "number (default: 10)"
+            },
+            "response": "RentalsListResponse"
+          }
+        ]
+      },
+      {
+        "category": "Board",
+        "endpoints": [
+          {
+            "method": "GET",
+            "path": "/board/posts",
+            "description": "게시글 목록 조회",
+            "currentImplementation": "mockPosts from mockData.ts",
+            "queryParams": {
+              "page": "number (default: 1)",
+              "limit": "number (default: 20)",
+              "search": "string (optional)",
+              "category": "string (optional)"
+            },
+            "response": "PostsListResponse"
+          },
+          {
+            "method": "POST",
+            "path": "/board/posts",
+            "description": "게시글 작성",
+            "currentImplementation": "Local state mutation in BoardList",
+            "requestBody": {
+              "title": "string",
+              "content": "string",
+              "authorId": "string (from auth)",
+              "category": "string (optional)"
+            },
+            "response": "Post"
+          },
+          {
+            "method": "GET",
+            "path": "/board/posts/:postId",
+            "description": "게시글 상세 조회",
+            "currentImplementation": "Find in mockPosts by ID",
+            "response": "Post"
+          },
+          {
+            "method": "PUT",
+            "path": "/board/posts/:postId",
+            "description": "게시글 수정",
+            "currentImplementation": "Local state mutation",
+            "requestBody": {
+              "title": "string (optional)",
+              "content": "string (optional)"
+            },
+            "response": "Post"
+          },
+          {
+            "method": "DELETE",
+            "path": "/board/posts/:postId",
+            "description": "게시글 삭제",
+            "currentImplementation": "Local state mutation",
+            "response": null
+          }
+        ]
+      },
+      {
+        "category": "Repairs",
+        "endpoints": [
+          {
+            "method": "GET",
+            "path": "/repairs/my",
+            "description": "내 신고 내역 조회",
+            "currentImplementation": "mockRepairs filtered by userId",
+            "queryParams": {
+              "userId": "string (from auth)"
+            },
+            "response": "Repair[]"
+          },
+          {
+            "method": "POST",
+            "path": "/repairs",
+            "description": "고장 신고 등록",
+            "currentImplementation": "Local state mutation in RepairList",
+            "requestBody": {
+              "bikeId": "string",
+              "stationId": "string",
+              "userId": "string (from auth)",
+              "category": "'brake' | 'tire' | 'chain' | 'light' | 'seat' | 'bell' | 'other'",
+              "description": "string",
+              "photos": "string[] (optional)"
+            },
+            "response": "Repair"
+          },
+          {
+            "method": "GET",
+            "path": "/repairs/:repairId",
+            "description": "신고 상세 조회",
+            "currentImplementation": "Find in mockRepairs by ID",
+            "response": "Repair"
+          }
+        ]
+      },
+      {
+        "category": "Routes & AI",
+        "endpoints": [
+          {
+            "method": "GET",
+            "path": "/geocode",
+            "description": "주소를 좌표로 변환",
+            "currentImplementation": "RoutePage addressToCoordinates() - hash-based mock",
+            "queryParams": {
+              "address": "string"
+            },
+            "response": "Coordinates { lat: number, lon: number }"
+          },
+          {
+            "method": "POST",
+            "path": "/routes/calculate",
+            "description": "최적 경로 계산",
+            "currentImplementation": "RoutePage local calculation with Haversine",
+            "requestBody": {
+              "startLat": "number",
+              "startLon": "number",
+              "endLat": "number",
+              "endLon": "number"
+            },
+            "response": "RouteInfo"
+          },
+          {
+            "method": "POST",
+            "path": "/ai/recommend-course",
+            "description": "AI 코스 추천",
+            "currentImplementation": "AICourseRecommendPage fetchCourseRecommendation() - keyword matching",
+            "requestBody": {
+              "prompt": "string",
+              "userId": "string (optional)",
+              "preferences": {
+                "difficulty": "'최하' | '하' | '중' | '상' | '최상'",
+                "duration": "number (optional)",
+                "distance": "number (optional)"
+              }
+            },
+            "response": "CourseInfo"
+          }
+        ]
+      },
+      {
+        "category": "Admin",
+        "endpoints": [
+          {
+            "method": "GET",
+            "path": "/admin/statistics",
+            "description": "전체 시스템 통계 조회",
+            "currentImplementation": "AdminDashboard - hardcoded stats",
+            "queryParams": {
+              "startDate": "string (optional)",
+              "endDate": "string (optional)"
+            },
+            "response": "AdminStatistics"
+          },
+          {
+            "method": "GET",
+            "path": "/admin/users",
+            "description": "회원 목록 조회",
+            "currentImplementation": "AdminUsers - mock user list",
+            "queryParams": {
+              "page": "number (default: 1)",
+              "limit": "number (default: 20)",
+              "search": "string (optional)"
+            },
+            "response": "UsersListResponse"
+          },
+          {
+            "method": "PUT",
+            "path": "/admin/users/:userId/status",
+            "description": "회원 상태 변경",
+            "currentImplementation": "Local state mutation",
+            "requestBody": {
+              "status": "'active' | 'blocked'"
+            },
+            "response": "User"
+          },
+          {
+            "method": "DELETE",
+            "path": "/admin/users/:userId",
+            "description": "회원 삭제",
+            "currentImplementation": "Local state mutation",
+            "response": null
+          },
+          {
+            "method": "POST",
+            "path": "/admin/stations",
+            "description": "대여소 추가",
+            "currentImplementation": "AdminStations - local state mutation",
+            "requestBody": {
+              "name": "string",
+              "address": "string",
+              "latitude": "number",
+              "longitude": "number",
+              "capacity": "number"
+            },
+            "response": "Station"
+          },
+          {
+            "method": "PUT",
+            "path": "/admin/stations/:stationId",
+            "description": "대여소 정보 수정",
+            "currentImplementation": "Local state mutation",
+            "requestBody": {
+              "name": "string (optional)",
+              "address": "string (optional)",
+              "bikeCount": "number (optional)",
+              "status": "'active' | 'inactive' (optional)"
+            },
+            "response": "Station"
+          },
+          {
+            "method": "DELETE",
+            "path": "/admin/stations/:stationId",
+            "description": "대여소 삭제",
+            "currentImplementation": "Local state mutation",
+            "response": null
+          },
+          {
+            "method": "GET",
+            "path": "/admin/repairs",
+            "description": "고장 신고 목록 조회",
+            "currentImplementation": "AdminRepairs - mockRepairs",
+            "queryParams": {
+              "status": "'pending' | 'in-progress' | 'completed' (optional)",
+              "page": "number (default: 1)"
+            },
+            "response": "RepairsListResponse"
+          },
+          {
+            "method": "PUT",
+            "path": "/admin/repairs/:repairId",
+            "description": "고장 처리 상태 업데이트",
+            "currentImplementation": "Local state mutation",
+            "requestBody": {
+              "status": "'pending' | 'in-progress' | 'completed'",
+              "adminNote": "string (optional)"
+            },
+            "response": "Repair"
+          }
+        ]
+      },
+      {
+        "category": "User Profile",
+        "endpoints": [
+          {
+            "method": "GET",
+            "path": "/users/:userId",
+            "description": "사용자 정보 조회",
+            "currentImplementation": "user state from App.tsx",
+            "response": "User"
+          },
+          {
+            "method": "PUT",
+            "path": "/users/:userId",
+            "description": "사용자 정보 수정",
+            "currentImplementation": "UserSettings - local state mutation",
+            "requestBody": {
+              "name": "string (optional)",
+              "phone": "string (optional)",
+              "email": "string (optional)"
+            },
+            "response": "User"
+          },
+          {
+            "method": "PUT",
+            "path": "/users/:userId/password",
+            "description": "비밀번호 변경",
+            "currentImplementation": "Not implemented",
+            "requestBody": {
+              "currentPassword": "string",
+              "newPassword": "string"
+            },
+            "response": null
+          },
+          {
+            "method": "GET",
+            "path": "/users/:userId/statistics",
+            "description": "사용자 통계 조회",
+            "currentImplementation": "UserStats - calculated from mockRentals",
+            "response": {
+              "totalRentals": "number",
+              "totalDistance": "number",
+              "totalDuration": "number",
+              "averageDistance": "number",
+              "averageDuration": "number"
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "development": {
+    "setup": {
+      "install": "npm i",
+      "dev": "npm run dev (starts on port 3000, auto-opens browser)",
+      "build": "npm run build (outputs to /build directory)"
+    },
+    "configuration": {
+      "vite": {
+        "file": "vite.config.ts",
+        "server": {
+          "port": 3000,
+          "open": true
+        },
+        "pathAlias": {
+          "@": "./src"
+        },
+        "build": {
+          "target": "esnext",
+          "outDir": "build"
+        }
+      }
+    },
+    "testing": {
+      "status": "No tests configured",
+      "framework": "None"
+    },
+    "linting": {
+      "status": "No linter configured",
+      "formatter": "None"
+    }
+  },
+
+  "notes": {
+    "forDevelopers": [
+      "This is a 100% frontend simulation with no backend",
+      "All data is hardcoded in mockData.ts and managed in local state",
+      "No API calls are made - all 'API endpoints' in this schema are future specs",
+      "State resets on page reload (no persistence)",
+      "Use admin@test.com to get admin role, any other email gets user role",
+      "UI components in src/components/ui/ are from shadcn/ui - do not edit",
+      "Types are defined in App.tsx, not separate type files",
+      "Routing is manual via currentPage state, not React Router"
+    ],
+    "forAI": [
+      "Always check mockData.ts first when looking for data",
+      "Types are in App.tsx (User, Station, Rental)",
+      "State is in App.tsx for global, page components for local",
+      "No routing library - look for currentPage state",
+      "UI components are read-only - don't edit shadcn/ui files",
+      "When implementing features, simulate API calls with local state mutations",
+      "Remember: no backend exists, all operations are client-side only"
+    ],
+    "futureWork": [
+      "Implement actual backend API",
+      "Add database for persistence",
+      "Replace mock data with API calls",
+      "Add proper authentication with JWT",
+      "Implement real geocoding API",
+      "Add actual AI integration for course recommendations",
+      "Add React Router for URL-based routing",
+      "Add global state management (if needed)",
+      "Add unit tests and E2E tests",
+      "Add TypeScript strict mode",
+      "Add ESLint and Prettier"
+    ]
+  }
+}
