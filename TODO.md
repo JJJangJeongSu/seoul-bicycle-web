@@ -8,18 +8,18 @@
 ## 📋 Phase 1: 기반 구조 구축 ✅
 
 ### 1.1 Mock 모드 토글 시스템
-- [ ] ApiModeContext 생성 (`src/contexts/ApiModeContext.tsx`)
+- [x] ApiModeContext 생성 (`src/contexts/ApiModeContext.tsx`)
   - useMockMode 상태 관리
   - localStorage 기반 설정 저장/복원
   - toggleMockMode 함수
-- [ ] Navbar에 Mock 모드 토글 UI 추가
+- [x] Navbar에 Mock 모드 토글 UI 추가
   - 개발 환경에서만 표시 (import.meta.env.DEV)
   - Switch 컴포넌트 사용
   - 🔧 Mock / 🌐 API 모드 표시
-- [ ] main.tsx에 ApiModeProvider 적용
+- [x] main.tsx에 ApiModeProvider 적용
 
 ### 1.2 Service Layer 구조
-- [ ] 디렉토리 구조 생성
+- [x] 디렉토리 구조 생성
   ```
   src/services/
   ├── api/
@@ -34,43 +34,43 @@
   ├── admin.service.ts
   └── mock.service.ts
   ```
-- [ ] API 클라이언트 기본 설정 (client.ts)
+- [x] API 클라이언트 기본 설정 (client.ts)
   - Axios 인스턴스 생성
   - Request/Response 인터셉터
   - 에러 핸들링
-- [ ] CodeGenerator Configuration 통합
+- [x] CodeGenerator Configuration 통합
 
 ### 1.3 환경 변수 설정
-- [ ] `.env.example` 파일 생성
-- [ ] `.env.local` 파일 생성 (gitignore)
-- [ ] API Base URL 설정
+- [x] `.env.example` 파일 생성
+- [x] `.env.local` 파일 생성 (gitignore)
+- [x] API Base URL 설정
 
 ---
 
-## 📋 Phase 2: CodeGenerator 통합
+## 📋 Phase 2: CodeGenerator 통합 ✅
 
 ### 2.1 API 서비스 구현
-- [ ] **AuthService** (우선순위: 높음)
+- [x] **AuthService** (우선순위: 높음)
   - login()
   - signup()
   - logout()
   - checkEmailAvailability()
   - Mock 모드 대응
 
-- [ ] **StationService** (우선순위: 높음)
+- [x] **StationService** (우선순위: 높음)
   - getAllStations()
   - getStationById()
   - getNearestStation()
   - getStationsStatus()
   - Mock 모드 대응
 
-- [ ] **RentalService**
+- [x] **RentalService**
   - createRental()
   - returnRental()
   - getUserRentals()
   - Mock 모드 대응
 
-- [ ] **BoardService**
+- [x] **BoardService**
   - getAllPosts()
   - getPostById()
   - createPost()
@@ -78,58 +78,65 @@
   - deletePost()
   - Mock 모드 대응
 
-- [ ] **RepairService**
+- [x] **RepairService**
   - createRepair()
   - getMyRepairs()
   - getAllRepairs() (Admin)
   - updateRepairStatus() (Admin)
   - Mock 모드 대응
 
-- [ ] **AdminService**
+- [x] **AdminService**
   - getStatistics()
   - getAllUsers()
   - updateUserStatus()
   - Mock 모드 대응
 
+- [x] **UserService**
+  - getUserStatistics()
+  - Mock 모드 대응
+
 ### 2.2 Mock Service 구현
-- [ ] mockData.ts를 기반으로 Mock Service 구현
-- [ ] 각 API 메서드와 동일한 인터페이스 제공
-- [ ] 지연 시뮬레이션 (setTimeout으로 실제 API처럼)
+- [x] mockData.ts를 기반으로 Mock Service 구현
+- [x] 각 API 메서드와 동일한 인터페이스 제공
+- [x] 지연 시뮬레이션 (setTimeout으로 실제 API처럼)
 
 ---
 
-## 📋 Phase 3: Context & Hooks 개선
+## 📋 Phase 3: Context & Hooks 개선 ✅
 
 ### 3.1 새로운 Context 생성
-- [ ] StationContext
-  - stations 상태
-  - fetchStations()
-  - refreshStations()
+- [x] ApiModeContext (Mock/Real 모드 전환)
+- [ ] StationContext (선택사항 - 현재 컴포넌트 레벨에서 처리)
 - [ ] BoardContext (선택사항)
 - [ ] RepairContext (선택사항)
 
 ### 3.2 Custom Hooks
-- [ ] useAsync Hook
+- [x] useServices Hook ⭐
+  - 모든 서비스에 대한 통합 접근
+  - ApiModeContext 자동 연동
+  - Memoization으로 성능 최적화
+- [ ] useAsync Hook (선택사항 - 필요시 추가)
   - loading, error, data 상태 관리
   - 재시도 로직
-- [ ] useStations Hook
-- [ ] useRentals Hook
 
 ---
 
-## 📋 Phase 4: 페이지/컴포넌트 마이그레이션
+## 📋 Phase 4: 페이지/컴포넌트 마이그레이션 🚧
 
-### 4.1 우선순위 높음
-- [ ] **HomePage** 마이그레이션
+### 4.1 우선순위 높음 ✅
+- [x] **HomePage** 마이그레이션 ⭐
   - mockStations import 제거
   - StationService 사용
   - 로딩/에러 상태 처리
-- [ ] **AuthContext** 개선
+  - handleRent/handleReturn을 async로 변경
+  - RentalService 통합
+- [x] **AuthContext** 개선 ⭐
   - AuthService 연동
   - 토큰 관리
   - 로그인 상태 유지
+  - LoginModal/SignupModal async 지원
 
-### 4.2 우선순위 중간
+### 4.2 우선순위 중간 (TODO - 필요시 진행)
 - [ ] **MyPage** 마이그레이션
   - RentalHistory → RentalService
   - UserStats → UserService
@@ -140,7 +147,7 @@
   - RepairList → RepairService
   - RepairForm → RepairService
 
-### 4.3 우선순위 낮음
+### 4.3 우선순위 낮음 (TODO - 필요시 진행)
 - [ ] **AdminPage** 마이그레이션
   - AdminDashboard → AdminService
   - AdminUsers → AdminService
@@ -303,7 +310,46 @@ VITE_AI_SERVICE_URL=http://localhost:5000
 
 ---
 
+## ✅ 완료 요약 (2024-11-16)
+
+### 핵심 성과
+1. **✅ Mock/API 모드 토글 시스템 완성**
+   - ApiModeContext 구현
+   - Navbar UI 통합
+   - localStorage 기반 상태 저장
+
+2. **✅ 완전한 Service Layer 구축**
+   - 7개 서비스 클래스 (Auth, Station, Rental, Board, Repair, Admin, User)
+   - Mock Service 완전 구현
+   - Real API Service 구조 완성
+   - useServices Hook 제공
+
+3. **✅ HomePage 완전 마이그레이션**
+   - StationService 사용
+   - RentalService 통합
+   - 로딩/에러 상태 처리
+   - Async operations
+
+4. **✅ AuthContext 완전 마이그레이션**
+   - AuthService 사용
+   - Token 관리
+   - LoginModal/SignupModal async 지원
+
+### 기술 스택
+- **Service Layer**: Axios, TypeScript
+- **State Management**: React Context API
+- **API Client**: Auto-generated from OpenAPI spec
+- **Mock/Real Switching**: Factory Pattern
+
+### 프로젝트 상태
+- **완료**: Phase 1, 2, 3, 4.1
+- **남은 작업**: Phase 4.2, 4.3 (선택사항), Phase 5, 6
+- **다음 단계**: 나머지 페이지 마이그레이션 (필요시)
+
+---
+
 ## 🔄 변경 이력
 
 - 2024-11-16: 초기 TODO 문서 작성
 - 2024-11-16: CodeGenerator 통합 완료
+- 2024-11-16: Phase 1-4.1 완료 (Service Layer + HomePage + Auth 마이그레이션)
