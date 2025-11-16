@@ -1,24 +1,48 @@
-import { useState, useMemo } from 'react';
-import { Search, Filter, Map as MapIcon, List, RefreshCw } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Search, Filter, Map as MapIcon, List, RefreshCw, Loader2 } from 'lucide-react';
 import type { Station, Rental } from '../../types';
-import { mockStations, seoulDistricts } from '../../lib/mockData';
+import { seoulDistricts } from '../../lib/mockData';
 import { MapView } from '../home/MapView';
 import { ListView } from '../home/ListView';
 import { StationDetailModal } from '../home/StationDetailModal';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRental } from '../../contexts/RentalContext';
+import { useServices } from '../../hooks/useServices';
 
 export function HomePage() {
   const { user, setShowLoginModal } = useAuth();
   const { currentRental, setCurrentRental } = useRental();
+  const { stationService, rentalService } = useServices();
+
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('전체');
   const [bikeFilter, setBikeFilter] = useState<'all' | 'available' | 'unavailable'>('all');
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
-  const [stations, setStations] = useState<Station[]>(mockStations);
+  const [stations, setStations] = useState<Station[]>([]);
   const [lastUpdate, setLastUpdate] = useState(new Date());
-  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch stations on mount
+  useEffect(() => {
+    loadStations();
+  }, []);
+
+  const loadStations = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await stationService.getAllStations();
+      setStations(data);
+      setLastUpdate(new Date());
+    } catch (err) {
+      setError('정류소 데이터를 불러오는데 실패했습니다.');
+      console.error('Failed to load stations:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Filter stations
   const filteredStations = useMemo(() => {
@@ -47,12 +71,10 @@ export function HomePage() {
   }, [stations, searchTerm, selectedDistrict, bikeFilter]);
 
   const handleRefresh = () => {
-    // Simulate data refresh
-    setLastUpdate(new Date());
-    // In real app, this would fetch from API
+    loadStations();
   };
 
-  const handleRent = (stationId: string) => {
+  const handleRent = async (stationId: string) => {
     if (!user) {
       setShowLoginModal(true);
       return;
@@ -74,27 +96,28 @@ export function HomePage() {
       return;
     }
 
-    // Create rental
-    const newRental: Rental = {
-      id: `R-${Date.now()}`,
-      userId: user.id,
-      bikeId: `SPB-${Math.floor(Math.random() * 90000) + 10000}`,
-      startStationId: stationId,
-      rentalTime: new Date(),
-      status: 'rented',
-    };
+    try {
+      // Create rental via service
+      const newRental = await rentalService.createRental(user.id, stationId);
 
-    // Update station bike count
-    setStations(prev => prev.map(s =>
-      s.id === stationId ? { ...s, bikeCount: s.bikeCount - 1 } : s
-    ));
+      // Update station bike count
+      await stationService.updateStationBikeCount(stationId, station.bikeCount - 1);
 
-    setCurrentRental(newRental);
-    setSelectedStation(null);
-    alert(`✅ 대여 완료!\n자전거 번호: ${newRental.bikeId}\n출발 대여소: ${station.name}`);
+      // Refresh stations to reflect updated count
+      setStations(prev => prev.map(s =>
+        s.id === stationId ? { ...s, bikeCount: s.bikeCount - 1 } : s
+      ));
+
+      setCurrentRental(newRental);
+      setSelectedStation(null);
+      alert(`✅ 대여 완료!\n자전거 번호: ${newRental.bikeId}\n출발 대여소: ${station.name}`);
+    } catch (err) {
+      console.error('Failed to rent bike:', err);
+      alert('자전거 대여에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
-  const handleReturn = (stationId: string) => {
+  const handleReturn = async (stationId: string) => {
     if (!currentRental) {
       alert('대여 중인 자전거가 없습니다');
       return;
@@ -105,45 +128,79 @@ export function HomePage() {
 
     // Calculate duration (in minutes)
     const duration = Math.floor((new Date().getTime() - currentRental.rentalTime.getTime()) / 60000);
-    
+
     // Calculate distance (mock - using random value)
     const distance = parseFloat((Math.random() * 10 + 1).toFixed(1));
 
-    // Create completed rental record
-    const completedRental: Rental = {
-      ...currentRental,
-      endStationId: stationId,
-      returnTime: new Date(),
-      duration,
-      distance,
-      status: 'returned',
-    };
+    try {
+      // Return rental via service
+      const completedRental = await rentalService.returnRental(
+        currentRental.id,
+        stationId,
+        distance,
+        duration
+      );
 
-    // Save to localStorage
-    const existingHistory = localStorage.getItem('rental_history');
-    const history: Rental[] = existingHistory ? JSON.parse(existingHistory) : [];
-    
-    // Add new rental to history (with serialized dates)
-    const rentalToSave = {
-      ...completedRental,
-      rentalTime: completedRental.rentalTime.toISOString(),
-      returnTime: completedRental.returnTime?.toISOString(),
-    };
-    history.push(rentalToSave);
-    localStorage.setItem('rental_history', JSON.stringify(history));
+      // Save to localStorage for history
+      const existingHistory = localStorage.getItem('rental_history');
+      const history: Rental[] = existingHistory ? JSON.parse(existingHistory) : [];
 
-    // Update station bike count
-    setStations(prev => prev.map(s =>
-      s.id === stationId ? { ...s, bikeCount: s.bikeCount + 1 } : s
-    ));
+      const rentalToSave = {
+        ...completedRental,
+        rentalTime: completedRental.rentalTime.toISOString(),
+        returnTime: completedRental.returnTime?.toISOString(),
+      };
+      history.push(rentalToSave);
+      localStorage.setItem('rental_history', JSON.stringify(history));
 
-    const startStation = stations.find(s => s.id === currentRental.startStationId);
+      // Update station bike count
+      await stationService.updateStationBikeCount(stationId, station.bikeCount + 1);
 
-    alert(`✅ 반납 완료!\n\n출발: ${startStation?.name}\n도착: ${station.name}\n이용 시간: ${duration}분\n이동 거리: ${distance}km`);
+      setStations(prev => prev.map(s =>
+        s.id === stationId ? { ...s, bikeCount: s.bikeCount + 1 } : s
+      ));
 
-    setCurrentRental(null);
-    setSelectedStation(null);
+      const startStation = stations.find(s => s.id === currentRental.startStationId);
+
+      alert(`✅ 반납 완료!\n\n출발: ${startStation?.name}\n도착: ${station.name}\n이용 시간: ${duration}분\n이동 거리: ${distance}km`);
+
+      setCurrentRental(null);
+      setSelectedStation(null);
+    } catch (err) {
+      console.error('Failed to return bike:', err);
+      alert('자전거 반납에 실패했습니다. 다시 시도해주세요.');
+    }
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+          <p className="text-gray-600">정류소 정보를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="text-destructive mb-4 text-xl">⚠️</div>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={loadStations}
+            className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all"
+          >
+            다시 시도
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-6">

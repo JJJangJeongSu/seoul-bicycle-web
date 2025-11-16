@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Eye, ThumbsUp, MessageSquare, Share2, Edit, Trash2 } from 'lucide-react';
-import { mockPosts } from '../../lib/mockData';
+import { ArrowLeft, Eye, ThumbsUp, MessageSquare, Share2, Edit, Trash2, Loader2 } from 'lucide-react';
 import type { Post } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
+import { useServices } from '../../hooks/useServices';
 
 type PostDetailProps = {
   postId: string;
@@ -11,37 +11,53 @@ type PostDetailProps = {
 
 export function PostDetail({ postId, onBack }: PostDetailProps) {
   const { user } = useAuth();
+  const { boardService } = useServices();
   const [postData, setPostData] = useState<Post | null>(null);
   const [liked, setLiked] = useState(false);
   const [userLikedPosts, setUserLikedPosts] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Load post data
   useEffect(() => {
-    const loadPost = () => {
-      // Check if it's a saved post
-      const savedPosts = localStorage.getItem('board_posts');
-      const posts: Post[] = savedPosts ? JSON.parse(savedPosts) : [];
-      let foundPost = posts.find(p => p.id === postId);
+    const loadPost = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      if (foundPost) {
-        foundPost = {
-          ...foundPost,
-          createdAt: new Date(foundPost.createdAt),
-        };
-      } else {
-        // Check mock posts
-        foundPost = mockPosts.find(p => p.id === postId);
-      }
+        // Load post from service
+        let foundPost = await boardService.getPostById(postId);
 
-      if (foundPost) {
-        // Load likes data
-        const savedLikes = localStorage.getItem('post_likes');
-        const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
-        
-        setPostData({
-          ...foundPost,
-          likes: likesMap[foundPost.id] !== undefined ? likesMap[foundPost.id] : foundPost.likes,
-        });
+        // Also check localStorage for backwards compatibility
+        if (!foundPost) {
+          const savedPosts = localStorage.getItem('board_posts');
+          const posts: Post[] = savedPosts ? JSON.parse(savedPosts) : [];
+          foundPost = posts.find(p => p.id === postId) || null;
+          if (foundPost) {
+            foundPost = {
+              ...foundPost,
+              createdAt: new Date(foundPost.createdAt),
+            };
+          }
+        }
+
+        if (foundPost) {
+          // Load likes data from localStorage
+          const savedLikes = localStorage.getItem('post_likes');
+          const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
+
+          setPostData({
+            ...foundPost,
+            likes: likesMap[foundPost.id] !== undefined ? likesMap[foundPost.id] : foundPost.likes,
+          });
+        } else {
+          setError('게시글을 찾을 수 없습니다.');
+        }
+      } catch (err) {
+        console.error('Failed to load post:', err);
+        setError('게시글을 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -52,7 +68,7 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
       const userLikes = localStorage.getItem(`user_likes_${user.id}`);
       setUserLikedPosts(userLikes ? JSON.parse(userLikes) : []);
     }
-  }, [postId, user]);
+  }, [postId, user, boardService]);
 
   // Check if user already liked this post
   useEffect(() => {
@@ -82,10 +98,22 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
   const [newComment, setNewComment] = useState('');
   const [replyTo, setReplyTo] = useState<string | null>(null);
 
-  if (!postData) {
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+        <p className="text-gray-600">게시글을 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  // Show error state or not found
+  if (error || !postData) {
     return (
       <div className="bg-white rounded-lg shadow p-12 text-center">
-        <p className="text-gray-500">게시글을 찾을 수 없습니다</p>
+        <div className="text-destructive mb-4 text-xl">⚠️</div>
+        <p className="text-gray-500 mb-4">{error || '게시글을 찾을 수 없습니다'}</p>
         <button onClick={onBack} className="mt-4 text-blue-600 hover:underline">
           목록으로 돌아가기
         </button>
@@ -163,8 +191,8 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
     alert('댓글이 등록되었습니다');
   };
 
-  const handleDelete = () => {
-    if (!user) {
+  const handleDelete = async () => {
+    if (!user || !postData) {
       alert('로그인이 필요합니다');
       return;
     }
@@ -172,25 +200,31 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
     const confirmDelete = window.confirm('정말로 이 게시글을 삭제하시겠습니까?');
     if (!confirmDelete) return;
 
-    // Load existing posts
-    const savedPosts = localStorage.getItem('board_posts');
-    const posts: Post[] = savedPosts ? JSON.parse(savedPosts) : [];
+    try {
+      // Delete post via service
+      await boardService.deletePost(postData.id);
 
-    // Remove the post
-    const updatedPosts = posts.filter(p => p.id !== postData.id);
-    localStorage.setItem('board_posts', JSON.stringify(updatedPosts));
+      // Also remove from localStorage (for backwards compatibility)
+      const savedPosts = localStorage.getItem('board_posts');
+      const posts: Post[] = savedPosts ? JSON.parse(savedPosts) : [];
+      const updatedPosts = posts.filter(p => p.id !== postData.id);
+      localStorage.setItem('board_posts', JSON.stringify(updatedPosts));
 
-    // Also remove likes data for this post
-    const savedLikes = localStorage.getItem('post_likes');
-    const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
-    delete likesMap[postData.id];
-    localStorage.setItem('post_likes', JSON.stringify(likesMap));
+      // Also remove likes data for this post
+      const savedLikes = localStorage.getItem('post_likes');
+      const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
+      delete likesMap[postData.id];
+      localStorage.setItem('post_likes', JSON.stringify(likesMap));
 
-    // Dispatch event to notify other components
-    window.dispatchEvent(new Event('board_updated'));
+      // Dispatch event to notify other components
+      window.dispatchEvent(new Event('board_updated'));
 
-    alert('게시글이 삭제되었습니다');
-    onBack();
+      alert('게시글이 삭제되었습니다');
+      onBack();
+    } catch (err) {
+      console.error('Failed to delete post:', err);
+      alert('게시글 삭제에 실패했습니다.');
+    }
   };
 
   const getCategoryBadge = (cat: string) => {

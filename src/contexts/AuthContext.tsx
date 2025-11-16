@@ -1,12 +1,15 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { User, SignupData } from '../types';
+import { useApiMode } from './ApiModeContext';
+import { AuthService } from '../services/auth.service';
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => void;
-  signup: (data: SignupData) => void;
-  logout: () => void;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (data: SignupData) => Promise<void>;
+  logout: () => Promise<void>;
   showLoginModal: boolean;
   showSignupModal: boolean;
   setShowLoginModal: (show: boolean) => void;
@@ -21,42 +24,61 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const { useMockMode } = useApiMode();
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const navigate = useNavigate();
 
-  const login = useCallback((email: string, password: string) => {
-    // Mock login
-    const mockUser: User = {
-      id: '1',
-      email,
-      name: email === 'admin@test.com' ? '관리자' : '홍길동',
-      role: email === 'admin@test.com' ? 'admin' : 'user',
-      phone: '010-1234-5678',
-    };
-    setUser(mockUser);
-    setShowLoginModal(false);
-  }, []);
+  const login = useCallback(async (email: string, password: string) => {
+    try {
+      setLoading(true);
+      const authService = new AuthService(useMockMode);
+      const { user: loggedInUser } = await authService.login(email, password);
+      setUser(loggedInUser);
+      setShowLoginModal(false);
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('로그인에 실패했습니다. 다시 시도해주세요.');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [useMockMode]);
 
-  const signup = useCallback((data: SignupData) => {
-    const newUser: User = {
-      id: Date.now().toString(),
-      email: data.email,
-      name: data.name,
-      role: 'user',
-      phone: data.phone,
-    };
-    setUser(newUser);
-    setShowSignupModal(false);
-  }, []);
+  const signup = useCallback(async (data: SignupData) => {
+    try {
+      setLoading(true);
+      const authService = new AuthService(useMockMode);
+      const { user: newUser } = await authService.signup(data);
+      setUser(newUser);
+      setShowSignupModal(false);
+    } catch (error) {
+      console.error('Signup failed:', error);
+      alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [useMockMode]);
 
-  const logout = useCallback(() => {
-    setUser(null);
-    // Dispatch custom event for RentalContext to listen
-    window.dispatchEvent(new CustomEvent('auth:logout'));
-    navigate('/');
-  }, [navigate]);
+  const logout = useCallback(async () => {
+    try {
+      const authService = new AuthService(useMockMode);
+      await authService.logout();
+      setUser(null);
+      // Dispatch custom event for RentalContext to listen
+      window.dispatchEvent(new CustomEvent('auth:logout'));
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Still clear user even if API call fails
+      setUser(null);
+      window.dispatchEvent(new CustomEvent('auth:logout'));
+      navigate('/');
+    }
+  }, [useMockMode, navigate]);
 
   const openLoginModal = useCallback(() => {
     setShowLoginModal(true);
@@ -66,6 +88,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     <AuthContext.Provider
       value={{
         user,
+        loading,
         login,
         signup,
         logout,

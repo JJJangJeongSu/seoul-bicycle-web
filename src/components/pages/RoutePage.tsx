@@ -2,6 +2,28 @@ import { useState } from 'react';
 import { Navigation, Clock, MapPin, Route as RouteIcon, Bike, ArrowRight, MapPinned, Search } from 'lucide-react';
 import { mockStations } from '../../lib/mockData';
 
+/**
+ * TODO: 실제 지도 API 연동
+ *
+ * 현재 상태: Mock 데이터 및 간단한 거리 계산만 구현
+ *
+ * 필요한 작업:
+ * 1. 지도 API 선택 및 통합 (Kakao Maps / Naver Maps / Google Maps)
+ * 2. Geocoding API 연동 (주소 → 좌표 변환)
+ * 3. 실시간 경로 안내 기능
+ *    - 현재 위치 추적 (Geolocation API)
+ *    - 경로 그리기 및 시각화
+ *    - 턴바이턴 네비게이션
+ * 4. 정류소 마커 표시 및 클러스터링
+ * 5. 실시간 교통 정보 통합
+ * 6. 예상 소요 시간 정확도 개선
+ *
+ * 환경 변수 필요:
+ * - VITE_KAKAO_MAP_KEY 또는
+ * - VITE_NAVER_MAP_CLIENT_ID 또는
+ * - VITE_GOOGLE_MAP_KEY
+ */
+
 type Station = {
   id: string;
   name: string;
@@ -40,6 +62,10 @@ export function RoutePage() {
     return R * c;
   };
 
+  // TODO: 실제 지도 API 연동 필요
+  // - Kakao Maps / Naver Maps / Google Maps Geocoding API 사용
+  // - 실제 주소를 정확한 좌표로 변환
+  // - 에러 핸들링 (주소를 찾을 수 없는 경우)
   // 주소를 임의의 좌표로 변환 (실제로는 Geocoding API 사용)
   const addressToCoordinates = (address: string): { lat: number; lon: number } => {
     // Mock implementation - 실제로는 Kakao Map Geocoding API 등을 사용

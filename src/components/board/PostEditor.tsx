@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowLeft, Save, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useServices } from '../../hooks/useServices';
 
 type PostEditorProps = {
   onBack: () => void;
@@ -9,17 +10,20 @@ type PostEditorProps = {
 
 export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
   const { user } = useAuth();
+  const { boardService } = useServices();
+  const [submitting, setSubmitting] = useState(false);
 
   if (!user) {
     return null;
   }
+
   const [formData, setFormData] = useState({
     category: 'free',
     title: '',
     content: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.title.trim()) {
@@ -32,32 +36,39 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
       return;
     }
 
-    // Create new post
-    const newPost = {
-      id: `P-${Date.now()}`,
-      category: formData.category,
-      title: formData.title,
-      content: formData.content,
-      author: user.name,
-      authorId: user.id,
-      views: 0,
-      likes: 0,
-      comments: 0,
-      createdAt: new Date().toISOString(),
-      isPinned: false,
-    };
+    try {
+      setSubmitting(true);
 
-    // Save to localStorage
-    const savedPosts = localStorage.getItem('board_posts');
-    const posts = savedPosts ? JSON.parse(savedPosts) : [];
-    posts.push(newPost);
-    localStorage.setItem('board_posts', JSON.stringify(posts));
+      // Create new post via service
+      const newPost = await boardService.createPost({
+        category: formData.category,
+        title: formData.title,
+        content: formData.content,
+        author: user.name,
+        authorId: user.id,
+        isPinned: false,
+      });
 
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new Event('board_updated'));
+      // Also save to localStorage (for backwards compatibility)
+      const savedPosts = localStorage.getItem('board_posts');
+      const posts = savedPosts ? JSON.parse(savedPosts) : [];
+      posts.push({
+        ...newPost,
+        createdAt: new Date(newPost.createdAt).toISOString(),
+      });
+      localStorage.setItem('board_posts', JSON.stringify(posts));
 
-    alert('게시글이 등록되었습니다');
-    onSubmit();
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new Event('board_updated'));
+
+      alert('게시글이 등록되었습니다');
+      onSubmit();
+    } catch (err) {
+      console.error('Failed to create post:', err);
+      alert('게시글 등록에 실패했습니다.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const categories = user.role === 'admin'
@@ -167,15 +178,17 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
           <div className="flex gap-3 pt-4 border-t">
             <button
               type="submit"
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              disabled={submitting}
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="w-5 h-5" />
-              등록하기
+              {submitting ? '등록 중...' : '등록하기'}
             </button>
             <button
               type="button"
               onClick={onBack}
-              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              disabled={submitting}
+              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               취소
             </button>

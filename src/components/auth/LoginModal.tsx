@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 type LoginModalProps = {
   onClose: () => void;
-  onLogin: (email: string, password: string) => void;
+  onLogin: (email: string, password: string) => Promise<void>;
   onSignupClick: () => void;
 };
 
@@ -11,20 +11,29 @@ export function LoginModal({ onClose, onLogin, onSignupClick }: LoginModalProps)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       setError('이메일과 비밀번호를 입력하세요');
       return;
     }
 
-    onLogin(email, password);
+    try {
+      setLoading(true);
+      setError('');
+      await onLogin(email, password);
+    } catch (err) {
+      setError('로그인에 실패했습니다');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 임시 비밀번호 발송 함수

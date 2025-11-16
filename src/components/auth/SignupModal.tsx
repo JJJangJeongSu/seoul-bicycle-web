@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 type SignupModalProps = {
   onClose: () => void;
-  onSignup: (data: SignupData) => void;
+  onSignup: (data: SignupData) => Promise<void>;
   onLoginClick: () => void;
 };
 
@@ -23,6 +23,7 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
   });
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -59,11 +60,18 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      onSignup(formData);
+      try {
+        setLoading(true);
+        await onSignup(formData);
+      } catch (err) {
+        setErrors({ ...errors, general: '회원가입에 실패했습니다' });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 

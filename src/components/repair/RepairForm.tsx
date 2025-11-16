@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { AlertCircle, Image as ImageIcon, Send } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useServices } from '../../hooks/useServices';
 
 type RepairFormProps = {
   onSuccess: () => void;
@@ -7,15 +9,23 @@ type RepairFormProps = {
 };
 
 export function RepairForm({ onSuccess, onCancel }: RepairFormProps) {
+  const { user } = useAuth();
+  const { repairService } = useServices();
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    type: 'bike',
+    type: 'bike' as 'bike' | 'station',
     bikeId: '',
     category: 'brake',
     description: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user) {
+      alert('로그인이 필요합니다');
+      return;
+    }
 
     if (formData.type === 'bike' && !formData.bikeId) {
       alert('자전거 번호를 입력하세요');
@@ -27,9 +37,27 @@ export function RepairForm({ onSuccess, onCancel }: RepairFormProps) {
       return;
     }
 
-    const reportId = `REP-${Date.now()}`;
-    alert(`✅ 신고가 접수되었습니다\n\n신고 번호: ${reportId}\n자전거 번호: ${formData.bikeId}\n\n관리자가 확인 후 처리 예정입니다.`);
-    onSuccess();
+    try {
+      setSubmitting(true);
+
+      // Create repair via service
+      const newRepair = await repairService.createRepair({
+        type: formData.type,
+        bikeId: formData.bikeId,
+        category: formData.category,
+        description: formData.description,
+        reporter: user.name,
+        reporterId: user.id,
+      });
+
+      alert(`✅ 신고가 접수되었습니다\n\n신고 번호: ${newRepair.id}\n자전거 번호: ${formData.bikeId}\n\n관리자가 확인 후 처리 예정입니다.`);
+      onSuccess();
+    } catch (err) {
+      console.error('Failed to create repair:', err);
+      alert('신고 접수에 실패했습니다.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -144,15 +172,17 @@ export function RepairForm({ onSuccess, onCancel }: RepairFormProps) {
         <div className="flex gap-3 pt-4 border-t">
           <button
             type="submit"
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            disabled={submitting}
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send className="w-5 h-5" />
-            신고 접수
+            {submitting ? '접수 중...' : '신고 접수'}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            disabled={submitting}
+            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             취소
           </button>
