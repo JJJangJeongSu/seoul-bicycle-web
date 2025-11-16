@@ -1,12 +1,15 @@
-import { Bike, User as UserIcon, Menu, X, MapPin, MessageSquare, Wrench, LayoutDashboard, Route, Sparkles } from 'lucide-react';
+import { Bike, User as UserIcon, Menu, X, MapPin, MessageSquare, Wrench, LayoutDashboard, Route, Sparkles, Hammer } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRental } from '../../contexts/RentalContext';
+import { useApiMode } from '../../contexts/ApiModeContext';
+import { Switch } from '../ui/switch';
 
 export function Navbar() {
   const { user, logout, setShowLoginModal } = useAuth();
   const { currentRental } = useRental();
+  const { useMockMode, toggleMockMode } = useApiMode();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -80,6 +83,32 @@ export function Navbar() {
                 <Wrench className="w-5 h-5" />
                 고장 신고
               </button>
+            )}
+
+            {/* Mock Mode Toggle (Dev Only) */}
+            {import.meta.env.DEV && (
+              <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
+                <Switch
+                  checked={useMockMode}
+                  onCheckedChange={toggleMockMode}
+                  className="data-[state=checked]:bg-accent"
+                />
+                <div className="flex items-center gap-1.5">
+                  {useMockMode ? (
+                    <>
+                      <Hammer className="w-4 h-4" />
+                      <span className="text-sm font-medium">Mock</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-4 h-4 flex items-center justify-center">
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                      </div>
+                      <span className="text-sm font-medium">API</span>
+                    </>
+                  )}
+                </div>
+              </div>
             )}
 
             {user ? (
