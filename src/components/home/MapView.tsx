@@ -6,6 +6,38 @@ type MapViewProps = {
   onStationClick: (station: Station) => void;
 };
 
+/**
+ * TODO: Mock 지도를 실제 지도 API로 교체
+ *
+ * 현재 상태: 간단한 좌표 기반 시각화만 구현
+ *
+ * 필요한 작업:
+ * 1. 지도 라이브러리 통합
+ *    - Kakao Maps API (추천: 한국 지도 데이터 우수)
+ *    - Naver Maps API (대안)
+ *    - Google Maps API (대안)
+ *    - Leaflet.js (오픈소스 대안)
+ *
+ * 2. 고급 지도 기능
+ *    - 확대/축소 (Zoom in/out)
+ *    - 드래그/이동 (Pan)
+ *    - 현재 위치 표시
+ *    - 정류소 마커 클러스터링 (많은 마커 처리)
+ *
+ * 3. 실시간 업데이트
+ *    - 정류소별 자전거 현황 실시간 반영
+ *    - WebSocket 또는 Polling으로 자동 갱신
+ *    - 마커 색상 실시간 변경
+ *
+ * 4. 사용자 경험 개선
+ *    - 정류소 검색 시 자동 지도 이동
+ *    - 정류소 클릭 시 상세 정보 팝업
+ *    - 경로 표시 (출발지 → 목적지)
+ *
+ * 환경 변수 필요:
+ * - VITE_KAKAO_MAP_KEY
+ */
+
 export function MapView({ stations, onStationClick }: MapViewProps) {
   // This is a simplified map view. In production, you would use a real map library like Leaflet or Google Maps
   

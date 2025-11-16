@@ -1,6 +1,43 @@
 import { useState } from 'react';
 import { Navigation, Clock, MapPin, Sparkles, Flame, Mountain, Info, Loader2, MapPinned } from 'lucide-react';
 
+/**
+ * TODO: AI 코스 추천 API 연동
+ *
+ * 현재 상태: 키워드 기반 단순 매칭만 구현
+ *
+ * 필요한 작업:
+ * 1. AI 추천 시스템 구축
+ *    - OpenAI GPT API 또는 자체 ML 모델 통합
+ *    - 사용자 선호도 분석 알고리즘
+ *    - 개인화된 추천 로직
+ *
+ * 2. 날씨 정보 통합
+ *    - OpenWeatherMap API 연동
+ *    - 실시간 날씨 기반 코스 조정
+ *    - 미세먼지 정보 고려
+ *
+ * 3. 실시간 데이터 활용
+ *    - 현재 교통량 정보
+ *    - 정류소별 자전거 현황
+ *    - 시간대별 혼잡도
+ *
+ * 4. 사용자 프로필 관리
+ *    - 과거 라이딩 이력 분석
+ *    - 체력 수준 측정
+ *    - 선호 지역/코스 타입 학습
+ *
+ * 5. 경로 최적화
+ *    - A* 알고리즘 또는 Dijkstra 알고리즘 적용
+ *    - 경사도, 신호등, 도로 상태 고려
+ *    - 실시간 교통 정보 반영
+ *
+ * 환경 변수 필요:
+ * - VITE_OPENAI_API_KEY (AI 추천)
+ * - VITE_WEATHER_API_KEY (날씨 정보)
+ * - VITE_AI_SERVICE_URL (자체 AI 서비스 URL)
+ */
+
 type CourseInfo = {
   name: string;
   description: string;
