@@ -1,55 +1,34 @@
-import { useState, useMemo } from 'react';
-import { Search, Eye, Ban, X, CheckCircle } from 'lucide-react';
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  rentals: number;
-  joinedAt: Date;
-  role: string;
-  status: 'active' | 'suspended';
-};
+import { useState, useMemo, useEffect } from 'react';
+import { Search, Eye, Ban, X, CheckCircle, Loader2 } from 'lucide-react';
+import { useServices } from '../../hooks/useServices';
+import type { User } from '../../types';
 
 export function AdminUsers() {
+  const { adminService } = useServices();
   const [searchTerm, setSearchTerm] = useState('');
   const [viewingUser, setViewingUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const initialUsers: User[] = [
-    {
-      id: '1',
-      name: '홍길동',
-      email: 'hong@email.com',
-      phone: '010-1234-5678',
-      rentals: 45,
-      joinedAt: new Date('2024-01-15'),
-      role: 'user',
-      status: 'active',
-    },
-    {
-      id: '2',
-      name: '김철수',
-      email: 'kim@email.com',
-      phone: '010-9876-5432',
-      rentals: 12,
-      joinedAt: new Date('2024-03-20'),
-      role: 'user',
-      status: 'active',
-    },
-    {
-      id: '3',
-      name: '이영희',
-      email: 'lee@email.com',
-      phone: '010-5555-6666',
-      rentals: 78,
-      joinedAt: new Date('2023-11-05'),
-      role: 'user',
-      status: 'active',
-    },
-  ];
+  // Load users on mount
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await adminService.getAllUsers();
+        setUsers(data);
+      } catch (err) {
+        console.error('Failed to load users:', err);
+        setError('회원 목록을 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const [users, setUsers] = useState<User[]>(initialUsers);
+    loadUsers();
+  }, [adminService]);
 
   const filteredUsers = useMemo(() => {
     if (!searchTerm) return users;
@@ -65,21 +44,59 @@ export function AdminUsers() {
     setViewingUser(user);
   };
 
-  const handleToggleSuspend = (user: User) => {
+  const handleToggleSuspend = async (user: User) => {
     const newStatus = user.status === 'active' ? 'suspended' : 'active';
     const action = newStatus === 'suspended' ? '정지' : '정지 해제';
-    
+
     const confirmed = window.confirm(`정말로 ${user.name} 회원을 ${action}하시겠습니까?`);
     if (!confirmed) return;
 
-    setUsers(users.map(u => 
-      u.id === user.id 
-        ? { ...u, status: newStatus }
-        : u
-    ));
-    
-    alert(`${user.name} 회원이 ${action}되었습니다`);
+    try {
+      // Update via service (this will throw in mock mode)
+      try {
+        await adminService.updateUserStatus(user.id, newStatus);
+      } catch (err: any) {
+        if (err.message?.includes('not supported in mock mode')) {
+          // In mock mode, just update local state
+          console.log('Mock mode: updating local state only');
+        } else {
+          throw err;
+        }
+      }
+
+      // Update local state
+      setUsers(users.map(u =>
+        u.id === user.id
+          ? { ...u, status: newStatus }
+          : u
+      ));
+
+      alert(`${user.name} 회원이 ${action}되었습니다`);
+    } catch (err) {
+      console.error('Failed to update user status:', err);
+      alert('회원 상태 업데이트에 실패했습니다.');
+    }
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+        <p className="text-gray-600">회원 목록을 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <div className="text-destructive mb-4 text-xl">⚠️</div>
+        <p className="text-gray-600 mb-4">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

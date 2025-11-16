@@ -1,14 +1,37 @@
-import { Users, Bike, MapPin, TrendingUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Users, Bike, MapPin, TrendingUp, Loader2 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useServices } from '../../hooks/useServices';
 
 export function AdminDashboard() {
-  // Mock data
-  const stats = {
-    totalUsers: 1248,
-    todayRentals: 342,
-    monthlyRentals: 8956,
-    avgDailyRentals: 298,
-  };
+  const { adminService } = useServices();
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalStations: 0,
+    totalRentals: 0,
+    activeRentals: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load statistics on mount
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await adminService.getStatistics();
+        setStats(data);
+      } catch (err) {
+        console.error('Failed to load statistics:', err);
+        setError('통계 데이터를 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStats();
+  }, [adminService]);
 
   const monthlyData = [
     { month: '1월', 대여: 7200 },
@@ -30,6 +53,26 @@ export function AdminDashboard() {
     { hour: '21', 이용: 178 },
   ];
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+        <p className="text-gray-600">통계 데이터를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <div className="text-destructive mb-4 text-xl">⚠️</div>
+        <p className="text-gray-600 mb-4">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
@@ -48,8 +91,8 @@ export function AdminDashboard() {
             <Bike className="w-10 h-10 opacity-80" />
             <span className="text-2xl opacity-80">🚲</span>
           </div>
-          <p className="text-sm opacity-90 mb-1">오늘 대여 건수</p>
-          <p className="text-3xl">{stats.todayRentals.toLocaleString()}</p>
+          <p className="text-sm opacity-90 mb-1">총 대여소</p>
+          <p className="text-3xl">{stats.totalStations.toLocaleString()}</p>
         </div>
 
         <div className="bg-purple-500 text-white rounded-lg p-6">
@@ -57,8 +100,8 @@ export function AdminDashboard() {
             <TrendingUp className="w-10 h-10 opacity-80" />
             <span className="text-2xl opacity-80">📈</span>
           </div>
-          <p className="text-sm opacity-90 mb-1">이번 달 대여</p>
-          <p className="text-3xl">{stats.monthlyRentals.toLocaleString()}</p>
+          <p className="text-sm opacity-90 mb-1">총 대여 건수</p>
+          <p className="text-3xl">{stats.totalRentals.toLocaleString()}</p>
         </div>
 
         <div className="bg-orange-500 text-white rounded-lg p-6">
@@ -66,8 +109,8 @@ export function AdminDashboard() {
             <MapPin className="w-10 h-10 opacity-80" />
             <span className="text-2xl opacity-80">📍</span>
           </div>
-          <p className="text-sm opacity-90 mb-1">일평균 대여</p>
-          <p className="text-3xl">{stats.avgDailyRentals.toLocaleString()}</p>
+          <p className="text-sm opacity-90 mb-1">현재 대여중</p>
+          <p className="text-3xl">{stats.activeRentals.toLocaleString()}</p>
         </div>
       </div>
 

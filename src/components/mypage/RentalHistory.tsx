@@ -1,48 +1,68 @@
 import { useState, useMemo, useEffect } from 'react';
-import { MapPin, Clock, Navigation, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
-import { mockRentals, mockStations } from '../../lib/mockData';
-import { Rental } from '../../App';
+import { MapPin, Clock, Navigation, Calendar, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { Rental, Station } from '../../App';
+import { useServices } from '../../hooks/useServices';
 
 type RentalHistoryProps = {
   userId: string;
 };
 
 export function RentalHistory({ userId }: RentalHistoryProps) {
+  const { rentalService, stationService } = useServices();
   const [period, setPeriod] = useState<'week' | 'month' | 'all'>('all');
   const [sortOrder, setSortOrder] = useState<'latest' | 'oldest'>('latest');
   const [allRentals, setAllRentals] = useState<Rental[]>([]);
+  const [stations, setStations] = useState<Station[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Load rental history from localStorage on mount
+  // Load rental history and stations on mount
   useEffect(() => {
-    const loadRentalHistory = () => {
-      const existingHistory = localStorage.getItem('rental_history');
-      const savedRentals: Rental[] = existingHistory ? JSON.parse(existingHistory) : [];
-      
-      // Convert date strings back to Date objects
-      const parsedRentals = savedRentals.map(rental => ({
-        ...rental,
-        rentalTime: new Date(rental.rentalTime),
-        returnTime: rental.returnTime ? new Date(rental.returnTime) : undefined,
-      }));
-      
-      // Combine mock data with saved rentals
-      setAllRentals([...mockRentals, ...parsedRentals]);
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Load rentals from service
+        const rentals = await rentalService.getUserRentals(userId);
+
+        // Also load from localStorage (for backwards compatibility)
+        const existingHistory = localStorage.getItem('rental_history');
+        const savedRentals: Rental[] = existingHistory ? JSON.parse(existingHistory) : [];
+        const parsedRentals = savedRentals.map(rental => ({
+          ...rental,
+          rentalTime: new Date(rental.rentalTime),
+          returnTime: rental.returnTime ? new Date(rental.returnTime) : undefined,
+        }));
+
+        // Combine API rentals with localStorage rentals
+        setAllRentals([...rentals, ...parsedRentals]);
+
+        // Load stations for displaying names
+        const stationsData = await stationService.getAllStations();
+        setStations(stationsData);
+      } catch (err) {
+        console.error('Failed to load rental history:', err);
+        setError('대여 이력을 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    loadRentalHistory();
+    loadData();
 
-    // Optional: Listen for storage changes (if multiple tabs are open)
+    // Listen for storage changes
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'rental_history') {
-        loadRentalHistory();
+        loadData();
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+  }, [userId, rentalService, stationService]);
 
   const filteredRentals = useMemo(() => {
     let rentals = allRentals.filter(r => r.userId === userId && r.status === 'returned');
@@ -86,7 +106,7 @@ export function RentalHistory({ userId }: RentalHistoryProps) {
   };
 
   const getStationName = (stationId: string) => {
-    const station = mockStations.find(s => s.id === stationId);
+    const station = stations.find(s => s.id === stationId);
     return station?.name || stationId;
   };
 
@@ -106,6 +126,26 @@ export function RentalHistory({ userId }: RentalHistoryProps) {
       timeLine: `${period} ${displayHours}:${displayMinutes}`,
     };
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+        <p className="text-gray-600">대여 이력을 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <div className="text-destructive mb-4 text-xl">⚠️</div>
+        <p className="text-gray-600 mb-4">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
