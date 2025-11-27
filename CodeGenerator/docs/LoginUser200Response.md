@@ -5,8 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**status** | **string** | 응답 상태 | [default to undefined]
-**data** | [**Login1**](Login1.md) |  | [default to undefined]
+**success** | **boolean** | 응답 상태 | [optional] [default to undefined]
+**message** | **string** |  | [default to undefined]
+**data** | [**DataAuthLogin**](DataAuthLogin.md) |  | [default to undefined]
 
 ## Example
 
@@ -14,7 +15,8 @@ Name | Type | Description | Notes
 import { LoginUser200Response } from './api';
 
 const instance: LoginUser200Response = {
-    status,
+    success,
+    message,
     data,
 };
 ```

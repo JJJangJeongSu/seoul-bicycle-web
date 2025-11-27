@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Nearest } from './nearest';
+import type { DataStationsNearest } from './data-stations-nearest';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

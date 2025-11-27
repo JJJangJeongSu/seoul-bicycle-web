@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { PostDetail } from './post-detail';
+import type { DataPostDetail } from './data-post-detail';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

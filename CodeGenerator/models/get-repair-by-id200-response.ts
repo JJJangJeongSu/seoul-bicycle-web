@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { RepairDetail } from './repair-detail';
+import type { DataRepairDetail } from './data-repair-detail';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

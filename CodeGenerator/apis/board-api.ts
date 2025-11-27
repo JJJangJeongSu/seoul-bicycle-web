@@ -22,7 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { Create1 } from '../models';
+import type { CreatePost } from '../models';
 // @ts-ignore
 import type { CreatePost201Response } from '../models';
 // @ts-ignore
@@ -30,7 +30,7 @@ import type { GetAllPosts200Response } from '../models';
 // @ts-ignore
 import type { GetPostById200Response } from '../models';
 // @ts-ignore
-import type { Update1 } from '../models';
+import type { UpdatePost } from '../models';
 /**
  * BoardApi - axios parameter creator
  * @export
@@ -40,13 +40,13 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
          * @summary 게시글 작성
-         * @param {Create1} create1 
+         * @param {CreatePost} createPost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createPost: async (create1: Create1, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'create1' is not null or undefined
-            assertParamExists('createPost', 'create1', create1)
+        createPost: async (createPost: CreatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createPost' is not null or undefined
+            assertParamExists('createPost', 'createPost', createPost)
             const localVarPath = `/board/posts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -66,7 +66,7 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(create1, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createPost, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -76,13 +76,13 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
          * @summary 게시글 작성
-         * @param {Create1} create1 
+         * @param {CreatePost} createPost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createPost_1: async (create1: Create1, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'create1' is not null or undefined
-            assertParamExists('createPost_1', 'create1', create1)
+        createPost_1: async (createPost: CreatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createPost' is not null or undefined
+            assertParamExists('createPost_1', 'createPost', createPost)
             const localVarPath = `/board/posts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -102,7 +102,7 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(create1, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createPost, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -349,15 +349,15 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
          * 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
          * @summary 게시글 수정
          * @param {string} postId 게시글 ID
-         * @param {Update1} update1 
+         * @param {UpdatePost} updatePost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePost: async (postId: string, update1: Update1, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updatePost: async (postId: string, updatePost: UpdatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'postId' is not null or undefined
             assertParamExists('updatePost', 'postId', postId)
-            // verify required parameter 'update1' is not null or undefined
-            assertParamExists('updatePost', 'update1', update1)
+            // verify required parameter 'updatePost' is not null or undefined
+            assertParamExists('updatePost', 'updatePost', updatePost)
             const localVarPath = `/board/posts/{postId}`
                 .replace(`{${"postId"}}`, encodeURIComponent(String(postId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -378,7 +378,7 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(update1, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updatePost, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -389,15 +389,15 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
          * 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
          * @summary 게시글 수정
          * @param {string} postId 게시글 ID
-         * @param {Update1} update1 
+         * @param {UpdatePost} updatePost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePost_5: async (postId: string, update1: Update1, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updatePost_5: async (postId: string, updatePost: UpdatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'postId' is not null or undefined
             assertParamExists('updatePost_5', 'postId', postId)
-            // verify required parameter 'update1' is not null or undefined
-            assertParamExists('updatePost_5', 'update1', update1)
+            // verify required parameter 'updatePost' is not null or undefined
+            assertParamExists('updatePost_5', 'updatePost', updatePost)
             const localVarPath = `/board/posts/{postId}`
                 .replace(`{${"postId"}}`, encodeURIComponent(String(postId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -418,7 +418,7 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(update1, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updatePost, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -438,12 +438,12 @@ export const BoardApiFp = function(configuration?: Configuration) {
         /**
          * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
          * @summary 게시글 작성
-         * @param {Create1} create1 
+         * @param {CreatePost} createPost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createPost(create1: Create1, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost(create1, options);
+        async createPost(createPost: CreatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost(createPost, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BoardApi.createPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -451,12 +451,12 @@ export const BoardApiFp = function(configuration?: Configuration) {
         /**
          * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
          * @summary 게시글 작성
-         * @param {Create1} create1 
+         * @param {CreatePost} createPost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createPost_1(create1: Create1, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost_1(create1, options);
+        async createPost_1(createPost: CreatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost_1(createPost, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BoardApi.createPost_1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -549,12 +549,12 @@ export const BoardApiFp = function(configuration?: Configuration) {
          * 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
          * @summary 게시글 수정
          * @param {string} postId 게시글 ID
-         * @param {Update1} update1 
+         * @param {UpdatePost} updatePost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePost(postId: string, update1: Update1, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updatePost(postId, update1, options);
+        async updatePost(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updatePost(postId, updatePost, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BoardApi.updatePost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -563,12 +563,12 @@ export const BoardApiFp = function(configuration?: Configuration) {
          * 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
          * @summary 게시글 수정
          * @param {string} postId 게시글 ID
-         * @param {Update1} update1 
+         * @param {UpdatePost} updatePost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePost_5(postId: string, update1: Update1, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updatePost_5(postId, update1, options);
+        async updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updatePost_5(postId, updatePost, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BoardApi.updatePost_5']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -586,22 +586,22 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
         /**
          * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
          * @summary 게시글 작성
-         * @param {Create1} create1 
+         * @param {CreatePost} createPost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createPost(create1: Create1, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
-            return localVarFp.createPost(create1, options).then((request) => request(axios, basePath));
+        createPost(createPost: CreatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
+            return localVarFp.createPost(createPost, options).then((request) => request(axios, basePath));
         },
         /**
          * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
          * @summary 게시글 작성
-         * @param {Create1} create1 
+         * @param {CreatePost} createPost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createPost_1(create1: Create1, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
-            return localVarFp.createPost_1(create1, options).then((request) => request(axios, basePath));
+        createPost_1(createPost: CreatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
+            return localVarFp.createPost_1(createPost, options).then((request) => request(axios, basePath));
         },
         /**
          * 게시글을 삭제합니다. 작성자 본인 또는 관리자만 삭제할 수 있습니다.
@@ -673,23 +673,23 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
          * 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
          * @summary 게시글 수정
          * @param {string} postId 게시글 ID
-         * @param {Update1} update1 
+         * @param {UpdatePost} updatePost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePost(postId: string, update1: Update1, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
-            return localVarFp.updatePost(postId, update1, options).then((request) => request(axios, basePath));
+        updatePost(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
+            return localVarFp.updatePost(postId, updatePost, options).then((request) => request(axios, basePath));
         },
         /**
          * 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
          * @summary 게시글 수정
          * @param {string} postId 게시글 ID
-         * @param {Update1} update1 
+         * @param {UpdatePost} updatePost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePost_5(postId: string, update1: Update1, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
-            return localVarFp.updatePost_5(postId, update1, options).then((request) => request(axios, basePath));
+        updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
+            return localVarFp.updatePost_5(postId, updatePost, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -704,25 +704,25 @@ export class BoardApi extends BaseAPI {
     /**
      * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
      * @summary 게시글 작성
-     * @param {Create1} create1 
+     * @param {CreatePost} createPost 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public createPost(create1: Create1, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).createPost(create1, options).then((request) => request(this.axios, this.basePath));
+    public createPost(createPost: CreatePost, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).createPost(createPost, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
      * @summary 게시글 작성
-     * @param {Create1} create1 
+     * @param {CreatePost} createPost 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public createPost_1(create1: Create1, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).createPost_1(create1, options).then((request) => request(this.axios, this.basePath));
+    public createPost_1(createPost: CreatePost, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).createPost_1(createPost, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -807,26 +807,26 @@ export class BoardApi extends BaseAPI {
      * 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
      * @summary 게시글 수정
      * @param {string} postId 게시글 ID
-     * @param {Update1} update1 
+     * @param {UpdatePost} updatePost 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public updatePost(postId: string, update1: Update1, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).updatePost(postId, update1, options).then((request) => request(this.axios, this.basePath));
+    public updatePost(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).updatePost(postId, updatePost, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
      * @summary 게시글 수정
      * @param {string} postId 게시글 ID
-     * @param {Update1} update1 
+     * @param {UpdatePost} updatePost 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public updatePost_5(postId: string, update1: Update1, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).updatePost_5(postId, update1, options).then((request) => request(this.axios, this.basePath));
+    public updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).updatePost_5(postId, updatePost, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

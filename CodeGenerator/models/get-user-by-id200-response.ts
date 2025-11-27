@@ -15,10 +15,10 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Success } from './success';
+import type { EntityUser } from './entity-user';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { User1 } from './user1';
+import type { Success } from './success';
 
 /**
  * @type GetUserById200Response

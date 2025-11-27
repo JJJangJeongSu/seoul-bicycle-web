@@ -116,7 +116,7 @@ No authorization required
 # **loginUser**
 > LoginUser200Response loginUser(login)
 
-이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
 
 ### Example
 
@@ -169,7 +169,7 @@ No authorization required
 # **loginUser_0**
 > LoginUser200Response loginUser_0(login)
 
-이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
 
 ### Example
 

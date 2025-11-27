@@ -112,7 +112,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
          * @summary 사용자 로그인
          * @param {Login} login 
          * @param {*} [options] Override http request option.
@@ -148,7 +148,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
          * @summary 사용자 로그인
          * @param {Login} login 
          * @param {*} [options] Override http request option.
@@ -292,7 +292,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
          * @summary 사용자 로그인
          * @param {Login} login 
          * @param {*} [options] Override http request option.
@@ -305,7 +305,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
          * @summary 사용자 로그인
          * @param {Login} login 
          * @param {*} [options] Override http request option.
@@ -374,7 +374,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.checkEmailAvailability_1(email, options).then((request) => request(axios, basePath));
         },
         /**
-         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
          * @summary 사용자 로그인
          * @param {Login} login 
          * @param {*} [options] Override http request option.
@@ -384,7 +384,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.loginUser(login, options).then((request) => request(axios, basePath));
         },
         /**
-         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+         * 이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
          * @summary 사용자 로그인
          * @param {Login} login 
          * @param {*} [options] Override http request option.
@@ -448,7 +448,7 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * 이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+     * 이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
      * @summary 사용자 로그인
      * @param {Login} login 
      * @param {*} [options] Override http request option.
@@ -460,7 +460,7 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * 이메일과 비밀번호를 사용하여 로그인합니다. admin@admin.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
+     * 이메일과 비밀번호를 사용하여 로그인합니다. admin@test.com으로 로그인하면 관리자 권한을 부여받습니다. 성공 시 JWT 토큰과 사용자 정보를 반환합니다.
      * @summary 사용자 로그인
      * @param {Login} login 
      * @param {*} [options] Override http request option.

@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Repair1 } from './repair1';
+import type { EntityRepair } from './entity-repair';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

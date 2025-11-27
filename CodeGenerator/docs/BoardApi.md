@@ -16,7 +16,7 @@ All URIs are relative to *http://localhost*
 |[**updatePost_0**](#updatepost_0) | **PUT** /board/posts/{postId} | 게시글 수정|
 
 # **createPost**
-> CreatePost201Response createPost(create1)
+> CreatePost201Response createPost(createPost)
 
 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
 
@@ -26,16 +26,16 @@ All URIs are relative to *http://localhost*
 import {
     BoardApi,
     Configuration,
-    Create1
+    CreatePost
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new BoardApi(configuration);
 
-let create1: Create1; //
+let createPost: CreatePost; //
 
 const { status, data } = await apiInstance.createPost(
-    create1
+    createPost
 );
 ```
 
@@ -43,7 +43,7 @@ const { status, data } = await apiInstance.createPost(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **create1** | **Create1**|  | |
+| **createPost** | **CreatePost**|  | |
 
 
 ### Return type
@@ -70,7 +70,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createPost_0**
-> CreatePost201Response createPost_0(create1)
+> CreatePost201Response createPost_0(createPost)
 
 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
 
@@ -80,16 +80,16 @@ No authorization required
 import {
     BoardApi,
     Configuration,
-    Create1
+    CreatePost
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new BoardApi(configuration);
 
-let create1: Create1; //
+let createPost: CreatePost; //
 
 const { status, data } = await apiInstance.createPost_0(
-    create1
+    createPost
 );
 ```
 
@@ -97,7 +97,7 @@ const { status, data } = await apiInstance.createPost_0(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **create1** | **Create1**|  | |
+| **createPost** | **CreatePost**|  | |
 
 
 ### Return type
@@ -456,7 +456,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updatePost**
-> CreatePost201Response updatePost(update1)
+> CreatePost201Response updatePost(updatePost)
 
 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
 
@@ -466,18 +466,18 @@ No authorization required
 import {
     BoardApi,
     Configuration,
-    Update1
+    UpdatePost
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new BoardApi(configuration);
 
 let postId: string; //게시글 ID (default to undefined)
-let update1: Update1; //
+let updatePost: UpdatePost; //
 
 const { status, data } = await apiInstance.updatePost(
     postId,
-    update1
+    updatePost
 );
 ```
 
@@ -485,7 +485,7 @@ const { status, data } = await apiInstance.updatePost(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **update1** | **Update1**|  | |
+| **updatePost** | **UpdatePost**|  | |
 | **postId** | [**string**] | 게시글 ID | defaults to undefined|
 
 
@@ -514,7 +514,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updatePost_0**
-> CreatePost201Response updatePost_0(update1)
+> CreatePost201Response updatePost_0(updatePost)
 
 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
 
@@ -524,18 +524,18 @@ No authorization required
 import {
     BoardApi,
     Configuration,
-    Update1
+    UpdatePost
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new BoardApi(configuration);
 
 let postId: string; //게시글 ID (default to undefined)
-let update1: Update1; //
+let updatePost: UpdatePost; //
 
 const { status, data } = await apiInstance.updatePost_0(
     postId,
-    update1
+    updatePost
 );
 ```
 
@@ -543,7 +543,7 @@ const { status, data } = await apiInstance.updatePost_0(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **update1** | **Update1**|  | |
+| **updatePost** | **UpdatePost**|  | |
 | **postId** | [**string**] | 게시글 ID | defaults to undefined|
 
 

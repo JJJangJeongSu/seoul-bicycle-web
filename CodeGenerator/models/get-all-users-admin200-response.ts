@@ -15,13 +15,10 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Pagination } from './pagination';
+import type { GetAllUsersAdmin200ResponseAllOfData } from './get-all-users-admin200-response-all-of-data';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { User1 } from './user1';
 
 /**
  * @type GetAllUsersAdmin200Response

@@ -12,7 +12,7 @@ All URIs are relative to *http://localhost*
 |[**getRepairById_0**](#getrepairbyid_0) | **GET** /repairs/{repairId} | 신고 상세 조회|
 
 # **createRepair**
-> CreateRepair201Response createRepair(create2)
+> CreateRepair201Response createRepair(createRepair)
 
 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
 
@@ -22,16 +22,16 @@ All URIs are relative to *http://localhost*
 import {
     RepairsApi,
     Configuration,
-    Create2
+    CreateRepair
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RepairsApi(configuration);
 
-let create2: Create2; //
+let createRepair: CreateRepair; //
 
 const { status, data } = await apiInstance.createRepair(
-    create2
+    createRepair
 );
 ```
 
@@ -39,7 +39,7 @@ const { status, data } = await apiInstance.createRepair(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **create2** | **Create2**|  | |
+| **createRepair** | **CreateRepair**|  | |
 
 
 ### Return type
@@ -66,7 +66,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createRepair_0**
-> CreateRepair201Response createRepair_0(create2)
+> CreateRepair201Response createRepair_0(createRepair)
 
 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
 
@@ -76,16 +76,16 @@ No authorization required
 import {
     RepairsApi,
     Configuration,
-    Create2
+    CreateRepair
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RepairsApi(configuration);
 
-let create2: Create2; //
+let createRepair: CreateRepair; //
 
 const { status, data } = await apiInstance.createRepair_0(
-    create2
+    createRepair
 );
 ```
 
@@ -93,7 +93,7 @@ const { status, data } = await apiInstance.createRepair_0(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **create2** | **Create2**|  | |
+| **createRepair** | **CreateRepair**|  | |
 
 
 ### Return type

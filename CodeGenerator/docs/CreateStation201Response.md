@@ -5,8 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**status** | **string** | 응답 상태 | [default to undefined]
-**data** | [**Station1**](Station1.md) |  | [default to undefined]
+**success** | **boolean** | 응답 상태 | [optional] [default to undefined]
+**message** | **string** |  | [default to undefined]
+**data** | [**EntityStation**](EntityStation.md) |  | [default to undefined]
 
 ## Example
 
@@ -14,7 +15,8 @@ Name | Type | Description | Notes
 import { CreateStation201Response } from './api';
 
 const instance: CreateStation201Response = {
-    status,
+    success,
+    message,
     data,
 };
 ```

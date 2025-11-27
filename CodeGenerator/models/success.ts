@@ -22,22 +22,15 @@
 export interface Success {
     /**
      * 응답 상태
+     * @type {boolean}
+     * @memberof Success
+     */
+    'success'?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof Success
      */
-    'status': SuccessStatusEnum;
-    /**
-     * 응답 데이터 (구체적인 타입은 각 엔드포인트별로 정의됨)
-     * @type {object}
-     * @memberof Success
-     */
-    'data': object;
+    'message': string;
 }
-
-export const SuccessStatusEnum = {
-    Success: 'success'
-} as const;
-
-export type SuccessStatusEnum = typeof SuccessStatusEnum[keyof typeof SuccessStatusEnum];
-
 

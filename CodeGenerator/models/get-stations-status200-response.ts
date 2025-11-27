@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { StationStatus } from './station-status';
+import type { GetStationsStatus200ResponseAllOfData } from './get-stations-status200-response-all-of-data';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

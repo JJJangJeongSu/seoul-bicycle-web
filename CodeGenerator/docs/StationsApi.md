@@ -141,8 +141,8 @@ import {
 const configuration = new Configuration();
 const apiInstance = new StationsApi(configuration);
 
-let lat: number; //위도 (latitude) (default to undefined)
-let lon: number; //경도 (longitude) (default to undefined)
+let lat: string; //위도 (latitude) (default to undefined)
+let lon: string; //경도 (longitude) (default to undefined)
 
 const { status, data } = await apiInstance.getNearestStation(
     lat,
@@ -154,8 +154,8 @@ const { status, data } = await apiInstance.getNearestStation(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **lat** | [**number**] | 위도 (latitude) | defaults to undefined|
-| **lon** | [**number**] | 경도 (longitude) | defaults to undefined|
+| **lat** | [**string**] | 위도 (latitude) | defaults to undefined|
+| **lon** | [**string**] | 경도 (longitude) | defaults to undefined|
 
 
 ### Return type
@@ -195,8 +195,8 @@ import {
 const configuration = new Configuration();
 const apiInstance = new StationsApi(configuration);
 
-let lat: number; //위도 (latitude) (default to undefined)
-let lon: number; //경도 (longitude) (default to undefined)
+let lat: string; //위도 (latitude) (default to undefined)
+let lon: string; //경도 (longitude) (default to undefined)
 
 const { status, data } = await apiInstance.getNearestStation_0(
     lat,
@@ -208,8 +208,8 @@ const { status, data } = await apiInstance.getNearestStation_0(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **lat** | [**number**] | 위도 (latitude) | defaults to undefined|
-| **lon** | [**number**] | 경도 (longitude) | defaults to undefined|
+| **lat** | [**string**] | 위도 (latitude) | defaults to undefined|
+| **lon** | [**string**] | 경도 (longitude) | defaults to undefined|
 
 
 ### Return type

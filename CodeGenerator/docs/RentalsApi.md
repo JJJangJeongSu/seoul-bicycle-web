@@ -12,7 +12,7 @@ All URIs are relative to *http://localhost*
 |[**returnRental_0**](#returnrental_0) | **PUT** /rentals/{rentalId}/return | 자전거 반납|
 
 # **createRental**
-> CreateRental201Response createRental(create)
+> CreateRental201Response createRental(createRental)
 
 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
 
@@ -22,16 +22,16 @@ All URIs are relative to *http://localhost*
 import {
     RentalsApi,
     Configuration,
-    Create
+    CreateRental
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
-let create: Create; //
+let createRental: CreateRental; //
 
 const { status, data } = await apiInstance.createRental(
-    create
+    createRental
 );
 ```
 
@@ -39,7 +39,7 @@ const { status, data } = await apiInstance.createRental(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **create** | **Create**|  | |
+| **createRental** | **CreateRental**|  | |
 
 
 ### Return type
@@ -67,7 +67,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createRental_0**
-> CreateRental201Response createRental_0(create)
+> CreateRental201Response createRental_0(createRental)
 
 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
 
@@ -77,16 +77,16 @@ No authorization required
 import {
     RentalsApi,
     Configuration,
-    Create
+    CreateRental
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
-let create: Create; //
+let createRental: CreateRental; //
 
 const { status, data } = await apiInstance.createRental_0(
-    create
+    createRental
 );
 ```
 
@@ -94,7 +94,7 @@ const { status, data } = await apiInstance.createRental_0(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **create** | **Create**|  | |
+| **createRental** | **CreateRental**|  | |
 
 
 ### Return type
@@ -240,7 +240,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **returnRental**
-> ReturnRental200Response returnRental(_return)
+> ReturnRental200Response returnRental(returnRental)
 
 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
 
@@ -250,18 +250,18 @@ No authorization required
 import {
     RentalsApi,
     Configuration,
-    Return
+    ReturnRental
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
-let rentalId: string; //대여 ID (default to undefined)
-let _return: Return; //
+let rentalId: string; // (default to undefined)
+let returnRental: ReturnRental; //
 
 const { status, data } = await apiInstance.returnRental(
     rentalId,
-    _return
+    returnRental
 );
 ```
 
@@ -269,8 +269,8 @@ const { status, data } = await apiInstance.returnRental(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **_return** | **Return**|  | |
-| **rentalId** | [**string**] | 대여 ID | defaults to undefined|
+| **returnRental** | **ReturnRental**|  | |
+| **rentalId** | [**string**] |  | defaults to undefined|
 
 
 ### Return type
@@ -298,7 +298,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **returnRental_0**
-> ReturnRental200Response returnRental_0(_return)
+> ReturnRental200Response returnRental_0(returnRental)
 
 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
 
@@ -308,18 +308,18 @@ No authorization required
 import {
     RentalsApi,
     Configuration,
-    Return
+    ReturnRental
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
-let rentalId: string; //대여 ID (default to undefined)
-let _return: Return; //
+let rentalId: string; // (default to undefined)
+let returnRental: ReturnRental; //
 
 const { status, data } = await apiInstance.returnRental_0(
     rentalId,
-    _return
+    returnRental
 );
 ```
 
@@ -327,8 +327,8 @@ const { status, data } = await apiInstance.returnRental_0(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **_return** | **Return**|  | |
-| **rentalId** | [**string**] | 대여 ID | defaults to undefined|
+| **returnRental** | **ReturnRental**|  | |
+| **rentalId** | [**string**] |  | defaults to undefined|
 
 
 ### Return type

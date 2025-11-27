@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**status** | **string** | 응답 상태 | [default to undefined]
-**data** | **object** | 응답 데이터 (구체적인 타입은 각 엔드포인트별로 정의됨) | [default to undefined]
+**success** | **boolean** | 응답 상태 | [optional] [default to undefined]
+**message** | **string** |  | [default to undefined]
 
 ## Example
 
@@ -14,8 +14,8 @@ Name | Type | Description | Notes
 import { Success } from './api';
 
 const instance: Success = {
-    status,
-    data,
+    success,
+    message,
 };
 ```
 

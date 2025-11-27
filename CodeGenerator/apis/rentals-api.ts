@@ -22,13 +22,13 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { Create } from '../models';
+import type { CreateRental } from '../models';
 // @ts-ignore
 import type { CreateRental201Response } from '../models';
 // @ts-ignore
 import type { GetUserRentals200Response } from '../models';
 // @ts-ignore
-import type { Return } from '../models';
+import type { ReturnRental } from '../models';
 // @ts-ignore
 import type { ReturnRental200Response } from '../models';
 /**
@@ -40,13 +40,13 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
          * @summary 자전거 대여
-         * @param {Create} create 
+         * @param {CreateRental} createRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createRental: async (create: Create, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'create' is not null or undefined
-            assertParamExists('createRental', 'create', create)
+        createRental: async (createRental: CreateRental, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createRental' is not null or undefined
+            assertParamExists('createRental', 'createRental', createRental)
             const localVarPath = `/rentals`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -66,7 +66,7 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(create, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createRental, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -76,13 +76,13 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
          * @summary 자전거 대여
-         * @param {Create} create 
+         * @param {CreateRental} createRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createRental_1: async (create: Create, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'create' is not null or undefined
-            assertParamExists('createRental_1', 'create', create)
+        createRental_1: async (createRental: CreateRental, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createRental' is not null or undefined
+            assertParamExists('createRental_1', 'createRental', createRental)
             const localVarPath = `/rentals`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -102,7 +102,7 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(create, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createRental, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -200,16 +200,16 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
          * @summary 자전거 반납
-         * @param {string} rentalId 대여 ID
-         * @param {Return} _return 
+         * @param {string} rentalId 
+         * @param {ReturnRental} returnRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        returnRental: async (rentalId: string, _return: Return, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        returnRental: async (rentalId: string, returnRental: ReturnRental, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'rentalId' is not null or undefined
             assertParamExists('returnRental', 'rentalId', rentalId)
-            // verify required parameter '_return' is not null or undefined
-            assertParamExists('returnRental', '_return', _return)
+            // verify required parameter 'returnRental' is not null or undefined
+            assertParamExists('returnRental', 'returnRental', returnRental)
             const localVarPath = `/rentals/{rentalId}/return`
                 .replace(`{${"rentalId"}}`, encodeURIComponent(String(rentalId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -230,7 +230,7 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(_return, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(returnRental, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -240,16 +240,16 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
          * @summary 자전거 반납
-         * @param {string} rentalId 대여 ID
-         * @param {Return} _return 
+         * @param {string} rentalId 
+         * @param {ReturnRental} returnRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        returnRental_3: async (rentalId: string, _return: Return, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        returnRental_3: async (rentalId: string, returnRental: ReturnRental, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'rentalId' is not null or undefined
             assertParamExists('returnRental_3', 'rentalId', rentalId)
-            // verify required parameter '_return' is not null or undefined
-            assertParamExists('returnRental_3', '_return', _return)
+            // verify required parameter 'returnRental' is not null or undefined
+            assertParamExists('returnRental_3', 'returnRental', returnRental)
             const localVarPath = `/rentals/{rentalId}/return`
                 .replace(`{${"rentalId"}}`, encodeURIComponent(String(rentalId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -270,7 +270,7 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(_return, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(returnRental, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -290,12 +290,12 @@ export const RentalsApiFp = function(configuration?: Configuration) {
         /**
          * 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
          * @summary 자전거 대여
-         * @param {Create} create 
+         * @param {CreateRental} createRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createRental(create: Create, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateRental201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createRental(create, options);
+        async createRental(createRental: CreateRental, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateRental201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createRental(createRental, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RentalsApi.createRental']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -303,12 +303,12 @@ export const RentalsApiFp = function(configuration?: Configuration) {
         /**
          * 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
          * @summary 자전거 대여
-         * @param {Create} create 
+         * @param {CreateRental} createRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createRental_1(create: Create, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateRental201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createRental_1(create, options);
+        async createRental_1(createRental: CreateRental, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateRental201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createRental_1(createRental, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RentalsApi.createRental_1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -346,13 +346,13 @@ export const RentalsApiFp = function(configuration?: Configuration) {
         /**
          * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
          * @summary 자전거 반납
-         * @param {string} rentalId 대여 ID
-         * @param {Return} _return 
+         * @param {string} rentalId 
+         * @param {ReturnRental} returnRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async returnRental(rentalId: string, _return: Return, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ReturnRental200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.returnRental(rentalId, _return, options);
+        async returnRental(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ReturnRental200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.returnRental(rentalId, returnRental, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RentalsApi.returnRental']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -360,13 +360,13 @@ export const RentalsApiFp = function(configuration?: Configuration) {
         /**
          * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
          * @summary 자전거 반납
-         * @param {string} rentalId 대여 ID
-         * @param {Return} _return 
+         * @param {string} rentalId 
+         * @param {ReturnRental} returnRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async returnRental_3(rentalId: string, _return: Return, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ReturnRental200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.returnRental_3(rentalId, _return, options);
+        async returnRental_3(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ReturnRental200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.returnRental_3(rentalId, returnRental, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RentalsApi.returnRental_3']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -384,22 +384,22 @@ export const RentalsApiFactory = function (configuration?: Configuration, basePa
         /**
          * 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
          * @summary 자전거 대여
-         * @param {Create} create 
+         * @param {CreateRental} createRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createRental(create: Create, options?: RawAxiosRequestConfig): AxiosPromise<CreateRental201Response> {
-            return localVarFp.createRental(create, options).then((request) => request(axios, basePath));
+        createRental(createRental: CreateRental, options?: RawAxiosRequestConfig): AxiosPromise<CreateRental201Response> {
+            return localVarFp.createRental(createRental, options).then((request) => request(axios, basePath));
         },
         /**
          * 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
          * @summary 자전거 대여
-         * @param {Create} create 
+         * @param {CreateRental} createRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createRental_1(create: Create, options?: RawAxiosRequestConfig): AxiosPromise<CreateRental201Response> {
-            return localVarFp.createRental_1(create, options).then((request) => request(axios, basePath));
+        createRental_1(createRental: CreateRental, options?: RawAxiosRequestConfig): AxiosPromise<CreateRental201Response> {
+            return localVarFp.createRental_1(createRental, options).then((request) => request(axios, basePath));
         },
         /**
          * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
@@ -428,24 +428,24 @@ export const RentalsApiFactory = function (configuration?: Configuration, basePa
         /**
          * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
          * @summary 자전거 반납
-         * @param {string} rentalId 대여 ID
-         * @param {Return} _return 
+         * @param {string} rentalId 
+         * @param {ReturnRental} returnRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        returnRental(rentalId: string, _return: Return, options?: RawAxiosRequestConfig): AxiosPromise<ReturnRental200Response> {
-            return localVarFp.returnRental(rentalId, _return, options).then((request) => request(axios, basePath));
+        returnRental(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig): AxiosPromise<ReturnRental200Response> {
+            return localVarFp.returnRental(rentalId, returnRental, options).then((request) => request(axios, basePath));
         },
         /**
          * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
          * @summary 자전거 반납
-         * @param {string} rentalId 대여 ID
-         * @param {Return} _return 
+         * @param {string} rentalId 
+         * @param {ReturnRental} returnRental 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        returnRental_3(rentalId: string, _return: Return, options?: RawAxiosRequestConfig): AxiosPromise<ReturnRental200Response> {
-            return localVarFp.returnRental_3(rentalId, _return, options).then((request) => request(axios, basePath));
+        returnRental_3(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig): AxiosPromise<ReturnRental200Response> {
+            return localVarFp.returnRental_3(rentalId, returnRental, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -460,25 +460,25 @@ export class RentalsApi extends BaseAPI {
     /**
      * 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
      * @summary 자전거 대여
-     * @param {Create} create 
+     * @param {CreateRental} createRental 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RentalsApi
      */
-    public createRental(create: Create, options?: RawAxiosRequestConfig) {
-        return RentalsApiFp(this.configuration).createRental(create, options).then((request) => request(this.axios, this.basePath));
+    public createRental(createRental: CreateRental, options?: RawAxiosRequestConfig) {
+        return RentalsApiFp(this.configuration).createRental(createRental, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
      * @summary 자전거 대여
-     * @param {Create} create 
+     * @param {CreateRental} createRental 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RentalsApi
      */
-    public createRental_1(create: Create, options?: RawAxiosRequestConfig) {
-        return RentalsApiFp(this.configuration).createRental_1(create, options).then((request) => request(this.axios, this.basePath));
+    public createRental_1(createRental: CreateRental, options?: RawAxiosRequestConfig) {
+        return RentalsApiFp(this.configuration).createRental_1(createRental, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -512,27 +512,27 @@ export class RentalsApi extends BaseAPI {
     /**
      * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
      * @summary 자전거 반납
-     * @param {string} rentalId 대여 ID
-     * @param {Return} _return 
+     * @param {string} rentalId 
+     * @param {ReturnRental} returnRental 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RentalsApi
      */
-    public returnRental(rentalId: string, _return: Return, options?: RawAxiosRequestConfig) {
-        return RentalsApiFp(this.configuration).returnRental(rentalId, _return, options).then((request) => request(this.axios, this.basePath));
+    public returnRental(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig) {
+        return RentalsApiFp(this.configuration).returnRental(rentalId, returnRental, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
      * @summary 자전거 반납
-     * @param {string} rentalId 대여 ID
-     * @param {Return} _return 
+     * @param {string} rentalId 
+     * @param {ReturnRental} returnRental 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RentalsApi
      */
-    public returnRental_3(rentalId: string, _return: Return, options?: RawAxiosRequestConfig) {
-        return RentalsApiFp(this.configuration).returnRental_3(rentalId, _return, options).then((request) => request(this.axios, this.basePath));
+    public returnRental_3(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig) {
+        return RentalsApiFp(this.configuration).returnRental_3(rentalId, returnRental, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

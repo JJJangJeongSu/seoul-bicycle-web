@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **status** | **string** |  | [default to undefined]
 **error** | [**ErrorError**](ErrorError.md) |  | [default to undefined]
-**metadata** | **object** |  | [default to undefined]
+**metadata** | [**CommonMetadata**](CommonMetadata.md) |  | [default to undefined]
 
 ## Example
 

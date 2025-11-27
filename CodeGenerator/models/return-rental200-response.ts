@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { RentalReturn } from './rental-return';
+import type { DataRentalReturn } from './data-rental-return';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

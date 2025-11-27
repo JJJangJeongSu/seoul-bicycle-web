@@ -5,8 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**status** | **string** | 응답 상태 | [default to undefined]
-**data** | [**Array&lt;StationStatus&gt;**](StationStatus.md) |  | [default to undefined]
+**success** | **boolean** | 응답 상태 | [optional] [default to undefined]
+**message** | **string** |  | [default to undefined]
+**data** | [**GetStationsStatus200ResponseAllOfData**](GetStationsStatus200ResponseAllOfData.md) |  | [default to undefined]
 
 ## Example
 
@@ -14,7 +15,8 @@ Name | Type | Description | Notes
 import { GetStationsStatus200Response } from './api';
 
 const instance: GetStationsStatus200Response = {
-    status,
+    success,
+    message,
     data,
 };
 ```

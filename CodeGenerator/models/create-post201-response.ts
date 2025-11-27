@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Post1 } from './post1';
+import type { EntityPost } from './entity-post';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

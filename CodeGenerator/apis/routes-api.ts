@@ -22,7 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { Calculate } from '../models';
+import type { CalculateRoute } from '../models';
 // @ts-ignore
 import type { CalculateRoute200Response } from '../models';
 // @ts-ignore
@@ -36,13 +36,13 @@ export const RoutesApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
          * @summary 최적 경로 계산
-         * @param {Calculate} calculate 
+         * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        calculateRoute: async (calculate: Calculate, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'calculate' is not null or undefined
-            assertParamExists('calculateRoute', 'calculate', calculate)
+        calculateRoute: async (calculateRoute: CalculateRoute, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'calculateRoute' is not null or undefined
+            assertParamExists('calculateRoute', 'calculateRoute', calculateRoute)
             const localVarPath = `/routes/calculate`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -62,7 +62,7 @@ export const RoutesApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(calculate, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(calculateRoute, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -72,13 +72,13 @@ export const RoutesApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
          * @summary 최적 경로 계산
-         * @param {Calculate} calculate 
+         * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        calculateRoute_1: async (calculate: Calculate, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'calculate' is not null or undefined
-            assertParamExists('calculateRoute_1', 'calculate', calculate)
+        calculateRoute_1: async (calculateRoute: CalculateRoute, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'calculateRoute' is not null or undefined
+            assertParamExists('calculateRoute_1', 'calculateRoute', calculateRoute)
             const localVarPath = `/routes/calculate`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -98,7 +98,7 @@ export const RoutesApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(calculate, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(calculateRoute, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -192,12 +192,12 @@ export const RoutesApiFp = function(configuration?: Configuration) {
         /**
          * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
          * @summary 최적 경로 계산
-         * @param {Calculate} calculate 
+         * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async calculateRoute(calculate: Calculate, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CalculateRoute200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.calculateRoute(calculate, options);
+        async calculateRoute(calculateRoute: CalculateRoute, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CalculateRoute200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.calculateRoute(calculateRoute, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RoutesApi.calculateRoute']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -205,12 +205,12 @@ export const RoutesApiFp = function(configuration?: Configuration) {
         /**
          * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
          * @summary 최적 경로 계산
-         * @param {Calculate} calculate 
+         * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async calculateRoute_1(calculate: Calculate, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CalculateRoute200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.calculateRoute_1(calculate, options);
+        async calculateRoute_1(calculateRoute: CalculateRoute, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CalculateRoute200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.calculateRoute_1(calculateRoute, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RoutesApi.calculateRoute_1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -254,22 +254,22 @@ export const RoutesApiFactory = function (configuration?: Configuration, basePat
         /**
          * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
          * @summary 최적 경로 계산
-         * @param {Calculate} calculate 
+         * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        calculateRoute(calculate: Calculate, options?: RawAxiosRequestConfig): AxiosPromise<CalculateRoute200Response> {
-            return localVarFp.calculateRoute(calculate, options).then((request) => request(axios, basePath));
+        calculateRoute(calculateRoute: CalculateRoute, options?: RawAxiosRequestConfig): AxiosPromise<CalculateRoute200Response> {
+            return localVarFp.calculateRoute(calculateRoute, options).then((request) => request(axios, basePath));
         },
         /**
          * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
          * @summary 최적 경로 계산
-         * @param {Calculate} calculate 
+         * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        calculateRoute_1(calculate: Calculate, options?: RawAxiosRequestConfig): AxiosPromise<CalculateRoute200Response> {
-            return localVarFp.calculateRoute_1(calculate, options).then((request) => request(axios, basePath));
+        calculateRoute_1(calculateRoute: CalculateRoute, options?: RawAxiosRequestConfig): AxiosPromise<CalculateRoute200Response> {
+            return localVarFp.calculateRoute_1(calculateRoute, options).then((request) => request(axios, basePath));
         },
         /**
          * 주소 문자열을 위도/경도 좌표로 변환합니다. 현재는 해시 기반 모의 지오코딩을 사용합니다.
@@ -304,25 +304,25 @@ export class RoutesApi extends BaseAPI {
     /**
      * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
      * @summary 최적 경로 계산
-     * @param {Calculate} calculate 
+     * @param {CalculateRoute} calculateRoute 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RoutesApi
      */
-    public calculateRoute(calculate: Calculate, options?: RawAxiosRequestConfig) {
-        return RoutesApiFp(this.configuration).calculateRoute(calculate, options).then((request) => request(this.axios, this.basePath));
+    public calculateRoute(calculateRoute: CalculateRoute, options?: RawAxiosRequestConfig) {
+        return RoutesApiFp(this.configuration).calculateRoute(calculateRoute, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
      * @summary 최적 경로 계산
-     * @param {Calculate} calculate 
+     * @param {CalculateRoute} calculateRoute 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RoutesApi
      */
-    public calculateRoute_1(calculate: Calculate, options?: RawAxiosRequestConfig) {
-        return RoutesApiFp(this.configuration).calculateRoute_1(calculate, options).then((request) => request(this.axios, this.basePath));
+    public calculateRoute_1(calculateRoute: CalculateRoute, options?: RawAxiosRequestConfig) {
+        return RoutesApiFp(this.configuration).calculateRoute_1(calculateRoute, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

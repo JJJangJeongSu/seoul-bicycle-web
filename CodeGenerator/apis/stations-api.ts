@@ -126,12 +126,12 @@ export const StationsApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.
          * @summary 가장 가까운 대여소 찾기
-         * @param {number} lat 위도 (latitude)
-         * @param {number} lon 경도 (longitude)
+         * @param {string} lat 위도 (latitude)
+         * @param {string} lon 경도 (longitude)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNearestStation: async (lat: number, lon: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getNearestStation: async (lat: string, lon: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'lat' is not null or undefined
             assertParamExists('getNearestStation', 'lat', lat)
             // verify required parameter 'lon' is not null or undefined
@@ -170,12 +170,12 @@ export const StationsApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.
          * @summary 가장 가까운 대여소 찾기
-         * @param {number} lat 위도 (latitude)
-         * @param {number} lon 경도 (longitude)
+         * @param {string} lat 위도 (latitude)
+         * @param {string} lon 경도 (longitude)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNearestStation_2: async (lat: number, lon: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getNearestStation_2: async (lat: string, lon: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'lat' is not null or undefined
             assertParamExists('getNearestStation_2', 'lat', lat)
             // verify required parameter 'lon' is not null or undefined
@@ -314,12 +314,12 @@ export const StationsApiFp = function(configuration?: Configuration) {
         /**
          * 주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.
          * @summary 가장 가까운 대여소 찾기
-         * @param {number} lat 위도 (latitude)
-         * @param {number} lon 경도 (longitude)
+         * @param {string} lat 위도 (latitude)
+         * @param {string} lon 경도 (longitude)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNearestStation(lat: number, lon: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetNearestStation200Response>> {
+        async getNearestStation(lat: string, lon: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetNearestStation200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getNearestStation(lat, lon, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['StationsApi.getNearestStation']?.[localVarOperationServerIndex]?.url;
@@ -328,12 +328,12 @@ export const StationsApiFp = function(configuration?: Configuration) {
         /**
          * 주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.
          * @summary 가장 가까운 대여소 찾기
-         * @param {number} lat 위도 (latitude)
-         * @param {number} lon 경도 (longitude)
+         * @param {string} lat 위도 (latitude)
+         * @param {string} lon 경도 (longitude)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNearestStation_2(lat: number, lon: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetNearestStation200Response>> {
+        async getNearestStation_2(lat: string, lon: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetNearestStation200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getNearestStation_2(lat, lon, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['StationsApi.getNearestStation_2']?.[localVarOperationServerIndex]?.url;
@@ -400,23 +400,23 @@ export const StationsApiFactory = function (configuration?: Configuration, baseP
         /**
          * 주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.
          * @summary 가장 가까운 대여소 찾기
-         * @param {number} lat 위도 (latitude)
-         * @param {number} lon 경도 (longitude)
+         * @param {string} lat 위도 (latitude)
+         * @param {string} lon 경도 (longitude)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNearestStation(lat: number, lon: number, options?: RawAxiosRequestConfig): AxiosPromise<GetNearestStation200Response> {
+        getNearestStation(lat: string, lon: string, options?: RawAxiosRequestConfig): AxiosPromise<GetNearestStation200Response> {
             return localVarFp.getNearestStation(lat, lon, options).then((request) => request(axios, basePath));
         },
         /**
          * 주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.
          * @summary 가장 가까운 대여소 찾기
-         * @param {number} lat 위도 (latitude)
-         * @param {number} lon 경도 (longitude)
+         * @param {string} lat 위도 (latitude)
+         * @param {string} lon 경도 (longitude)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNearestStation_2(lat: number, lon: number, options?: RawAxiosRequestConfig): AxiosPromise<GetNearestStation200Response> {
+        getNearestStation_2(lat: string, lon: string, options?: RawAxiosRequestConfig): AxiosPromise<GetNearestStation200Response> {
             return localVarFp.getNearestStation_2(lat, lon, options).then((request) => request(axios, basePath));
         },
         /**
@@ -478,26 +478,26 @@ export class StationsApi extends BaseAPI {
     /**
      * 주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.
      * @summary 가장 가까운 대여소 찾기
-     * @param {number} lat 위도 (latitude)
-     * @param {number} lon 경도 (longitude)
+     * @param {string} lat 위도 (latitude)
+     * @param {string} lon 경도 (longitude)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof StationsApi
      */
-    public getNearestStation(lat: number, lon: number, options?: RawAxiosRequestConfig) {
+    public getNearestStation(lat: string, lon: string, options?: RawAxiosRequestConfig) {
         return StationsApiFp(this.configuration).getNearestStation(lat, lon, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 주어진 좌표로부터 가장 가까운 대여소를 찾습니다. Haversine 공식을 사용하여 직선 거리를 계산합니다.
      * @summary 가장 가까운 대여소 찾기
-     * @param {number} lat 위도 (latitude)
-     * @param {number} lon 경도 (longitude)
+     * @param {string} lat 위도 (latitude)
+     * @param {string} lon 경도 (longitude)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof StationsApi
      */
-    public getNearestStation_2(lat: number, lon: number, options?: RawAxiosRequestConfig) {
+    public getNearestStation_2(lat: string, lon: string, options?: RawAxiosRequestConfig) {
         return StationsApiFp(this.configuration).getNearestStation_2(lat, lon, options).then((request) => request(this.axios, this.basePath));
     }
 

@@ -15,6 +15,9 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
+import type { CommonMetadata } from './common-metadata';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { ErrorError } from './error-error';
 
 /**
@@ -37,10 +40,10 @@ export interface ModelError {
     'error': ErrorError;
     /**
      * 
-     * @type {object}
+     * @type {CommonMetadata}
      * @memberof ModelError
      */
-    'metadata': object;
+    'metadata': CommonMetadata;
 }
 
 export const ModelErrorStatusEnum = {

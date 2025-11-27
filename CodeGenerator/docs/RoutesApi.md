@@ -10,7 +10,7 @@ All URIs are relative to *http://localhost*
 |[**geocodeAddress_0**](#geocodeaddress_0) | **GET** /geocode | 주소를 좌표로 변환|
 
 # **calculateRoute**
-> CalculateRoute200Response calculateRoute(calculate)
+> CalculateRoute200Response calculateRoute(calculateRoute)
 
 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
 
@@ -20,16 +20,16 @@ All URIs are relative to *http://localhost*
 import {
     RoutesApi,
     Configuration,
-    Calculate
+    CalculateRoute
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RoutesApi(configuration);
 
-let calculate: Calculate; //
+let calculateRoute: CalculateRoute; //
 
 const { status, data } = await apiInstance.calculateRoute(
-    calculate
+    calculateRoute
 );
 ```
 
@@ -37,7 +37,7 @@ const { status, data } = await apiInstance.calculateRoute(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **calculate** | **Calculate**|  | |
+| **calculateRoute** | **CalculateRoute**|  | |
 
 
 ### Return type
@@ -63,7 +63,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **calculateRoute_0**
-> CalculateRoute200Response calculateRoute_0(calculate)
+> CalculateRoute200Response calculateRoute_0(calculateRoute)
 
 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
 
@@ -73,16 +73,16 @@ No authorization required
 import {
     RoutesApi,
     Configuration,
-    Calculate
+    CalculateRoute
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RoutesApi(configuration);
 
-let calculate: Calculate; //
+let calculateRoute: CalculateRoute; //
 
 const { status, data } = await apiInstance.calculateRoute_0(
-    calculate
+    calculateRoute
 );
 ```
 
@@ -90,7 +90,7 @@ const { status, data } = await apiInstance.calculateRoute_0(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **calculate** | **Calculate**|  | |
+| **calculateRoute** | **CalculateRoute**|  | |
 
 
 ### Return type

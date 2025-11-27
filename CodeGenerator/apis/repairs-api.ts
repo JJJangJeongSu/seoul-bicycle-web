@@ -22,7 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { Create2 } from '../models';
+import type { CreateRepair } from '../models';
 // @ts-ignore
 import type { CreateRepair201Response } from '../models';
 // @ts-ignore
@@ -38,13 +38,13 @@ export const RepairsApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
          * @summary 고장 신고 등록
-         * @param {Create2} create2 
+         * @param {CreateRepair} createRepair 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createRepair: async (create2: Create2, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'create2' is not null or undefined
-            assertParamExists('createRepair', 'create2', create2)
+        createRepair: async (createRepair: CreateRepair, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createRepair' is not null or undefined
+            assertParamExists('createRepair', 'createRepair', createRepair)
             const localVarPath = `/repairs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -64,7 +64,7 @@ export const RepairsApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(create2, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createRepair, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -74,13 +74,13 @@ export const RepairsApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
          * @summary 고장 신고 등록
-         * @param {Create2} create2 
+         * @param {CreateRepair} createRepair 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createRepair_1: async (create2: Create2, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'create2' is not null or undefined
-            assertParamExists('createRepair_1', 'create2', create2)
+        createRepair_1: async (createRepair: CreateRepair, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createRepair' is not null or undefined
+            assertParamExists('createRepair_1', 'createRepair', createRepair)
             const localVarPath = `/repairs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -100,7 +100,7 @@ export const RepairsApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(create2, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createRepair, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -258,12 +258,12 @@ export const RepairsApiFp = function(configuration?: Configuration) {
         /**
          * 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
          * @summary 고장 신고 등록
-         * @param {Create2} create2 
+         * @param {CreateRepair} createRepair 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createRepair(create2: Create2, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateRepair201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createRepair(create2, options);
+        async createRepair(createRepair: CreateRepair, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateRepair201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createRepair(createRepair, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RepairsApi.createRepair']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -271,12 +271,12 @@ export const RepairsApiFp = function(configuration?: Configuration) {
         /**
          * 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
          * @summary 고장 신고 등록
-         * @param {Create2} create2 
+         * @param {CreateRepair} createRepair 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createRepair_1(create2: Create2, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateRepair201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createRepair_1(create2, options);
+        async createRepair_1(createRepair: CreateRepair, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateRepair201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createRepair_1(createRepair, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RepairsApi.createRepair_1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -346,22 +346,22 @@ export const RepairsApiFactory = function (configuration?: Configuration, basePa
         /**
          * 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
          * @summary 고장 신고 등록
-         * @param {Create2} create2 
+         * @param {CreateRepair} createRepair 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createRepair(create2: Create2, options?: RawAxiosRequestConfig): AxiosPromise<CreateRepair201Response> {
-            return localVarFp.createRepair(create2, options).then((request) => request(axios, basePath));
+        createRepair(createRepair: CreateRepair, options?: RawAxiosRequestConfig): AxiosPromise<CreateRepair201Response> {
+            return localVarFp.createRepair(createRepair, options).then((request) => request(axios, basePath));
         },
         /**
          * 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
          * @summary 고장 신고 등록
-         * @param {Create2} create2 
+         * @param {CreateRepair} createRepair 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createRepair_1(create2: Create2, options?: RawAxiosRequestConfig): AxiosPromise<CreateRepair201Response> {
-            return localVarFp.createRepair_1(create2, options).then((request) => request(axios, basePath));
+        createRepair_1(createRepair: CreateRepair, options?: RawAxiosRequestConfig): AxiosPromise<CreateRepair201Response> {
+            return localVarFp.createRepair_1(createRepair, options).then((request) => request(axios, basePath));
         },
         /**
          * 현재 로그인한 사용자가 신고한 고장 내역을 조회합니다. 상태별 필터링을 지원합니다.
@@ -416,25 +416,25 @@ export class RepairsApi extends BaseAPI {
     /**
      * 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
      * @summary 고장 신고 등록
-     * @param {Create2} create2 
+     * @param {CreateRepair} createRepair 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RepairsApi
      */
-    public createRepair(create2: Create2, options?: RawAxiosRequestConfig) {
-        return RepairsApiFp(this.configuration).createRepair(create2, options).then((request) => request(this.axios, this.basePath));
+    public createRepair(createRepair: CreateRepair, options?: RawAxiosRequestConfig) {
+        return RepairsApiFp(this.configuration).createRepair(createRepair, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 자전거 또는 대여소의 고장을 신고합니다. 신고 유형(자전거/대여소), 카테고리(브레이크, 타이어 등), 상세 설명을 포함해야 합니다. 사진 첨부는 선택사항입니다.
      * @summary 고장 신고 등록
-     * @param {Create2} create2 
+     * @param {CreateRepair} createRepair 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RepairsApi
      */
-    public createRepair_1(create2: Create2, options?: RawAxiosRequestConfig) {
-        return RepairsApiFp(this.configuration).createRepair_1(create2, options).then((request) => request(this.axios, this.basePath));
+    public createRepair_1(createRepair: CreateRepair, options?: RawAxiosRequestConfig) {
+        return RepairsApiFp(this.configuration).createRepair_1(createRepair, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
