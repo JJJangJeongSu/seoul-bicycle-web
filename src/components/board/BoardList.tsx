@@ -1,55 +1,57 @@
 import { useState, useMemo, useEffect } from 'react';
-import { MessageSquare, Eye, ThumbsUp, Pin, Search } from 'lucide-react';
-import { mockPosts } from '../../lib/mockData';
-
-type Post = {
-  id: string;
-  category: string;
-  title: string;
-  content: string;
-  author: string;
-  authorId: string;
-  views: number;
-  likes: number;
-  comments: number;
-  createdAt: Date;
-  isPinned?: boolean;
-};
+import { MessageSquare, Eye, ThumbsUp, Pin, Search, Loader2 } from 'lucide-react';
+import type { Post } from '../../types';
+import { useServices } from '../../hooks/useServices';
 
 type BoardListProps = {
   onPostClick: (postId: string) => void;
 };
 
 export function BoardList({ onPostClick }: BoardListProps) {
+  const { boardService } = useServices();
   const [category, setCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'comments'>('latest');
   const [allPosts, setAllPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Load posts from localStorage on mount
+  // Load posts on mount and when boardService changes
   useEffect(() => {
-    const loadPosts = () => {
-      const savedPosts = localStorage.getItem('board_posts');
-      const posts: Post[] = savedPosts ? JSON.parse(savedPosts) : [];
-      
-      // Convert date strings back to Date objects
-      const parsedPosts = posts.map(post => ({
-        ...post,
-        createdAt: new Date(post.createdAt),
-      }));
+    const loadPosts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      // Load likes data
-      const savedLikes = localStorage.getItem('post_likes');
-      const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
+        // Load posts from service
+        const posts = await boardService.getAllPosts();
 
-      // Update mock posts with saved likes
-      const updatedMockPosts = mockPosts.map(post => ({
-        ...post,
-        likes: likesMap[post.id] !== undefined ? likesMap[post.id] : post.likes,
-      }));
-      
-      // Combine mock data with saved posts
-      setAllPosts([...updatedMockPosts, ...parsedPosts]);
+        // Also load from localStorage (for backwards compatibility)
+        const savedPosts = localStorage.getItem('board_posts');
+        const localPosts: Post[] = savedPosts ? JSON.parse(savedPosts) : [];
+        const parsedPosts = localPosts.map(post => ({
+          ...post,
+          createdAt: new Date(post.createdAt),
+        }));
+
+        // Load likes data from localStorage
+        const savedLikes = localStorage.getItem('post_likes');
+        const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
+
+        // Update posts with saved likes
+        const updatedPosts = posts.map(post => ({
+          ...post,
+          likes: likesMap[post.id] !== undefined ? likesMap[post.id] : post.likes,
+        }));
+
+        // Combine API posts with localStorage posts
+        setAllPosts([...updatedPosts, ...parsedPosts]);
+      } catch (err) {
+        console.error('Failed to load posts:', err);
+        setError('게시글을 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadPosts();
@@ -62,7 +64,7 @@ export function BoardList({ onPostClick }: BoardListProps) {
     };
 
     window.addEventListener('storage', handleStorageChange);
-    
+
     // Custom event for same-tab updates
     const handleCustomUpdate = () => {
       loadPosts();
@@ -73,7 +75,7 @@ export function BoardList({ onPostClick }: BoardListProps) {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('board_updated', handleCustomUpdate);
     };
-  }, []);
+  }, [boardService]);
 
   const categories = [
     { id: 'all', label: '전체' },
@@ -145,6 +147,26 @@ export function BoardList({ onPostClick }: BoardListProps) {
       }).format(date);
     }
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+        <p className="text-gray-600">게시글을 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <div className="text-destructive mb-4 text-xl">⚠️</div>
+        <p className="text-gray-600 mb-4">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

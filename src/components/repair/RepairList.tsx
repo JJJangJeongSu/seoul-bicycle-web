@@ -1,27 +1,50 @@
-import { useState, useMemo } from 'react';
-import { mockRepairs } from '../../lib/mockData';
-import { Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Clock, CheckCircle, AlertCircle, XCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useServices } from '../../hooks/useServices';
+import type { Repair } from '../../types';
 
 export function RepairList() {
   const { user } = useAuth();
+  const { repairService } = useServices();
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'in-progress' | 'completed'>('all');
+  const [allRepairs, setAllRepairs] = useState<Repair[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredRepairs = useMemo(() => {
-    // If user is not logged in, return empty array
+  // Load repairs when user changes
+  useEffect(() => {
     if (!user) {
-      return [];
+      setAllRepairs([]);
+      return;
     }
 
-    // Filter repairs to only show user's own reports
-    let repairs = mockRepairs.filter(r => r.reporterId === user.id);
+    const loadRepairs = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const repairs = await repairService.getMyRepairs(user.id);
+        setAllRepairs(repairs);
+      } catch (err) {
+        console.error('Failed to load repairs:', err);
+        setError('신고 내역을 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRepairs();
+  }, [user, repairService]);
+
+  const filteredRepairs = useMemo(() => {
+    let repairs = [...allRepairs];
 
     if (statusFilter !== 'all') {
       repairs = repairs.filter(r => r.status === statusFilter);
     }
 
     return repairs.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  }, [user, statusFilter]);
+  }, [allRepairs, statusFilter]);
 
   const getStatusBadge = (status: string) => {
     const badges = {
@@ -56,6 +79,26 @@ export function RepairList() {
     };
     return labels[category as keyof typeof labels] || category;
   };
+
+  // Show loading state
+  if (loading && user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+        <p className="text-gray-600">신고 내역을 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error && user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <div className="text-destructive mb-4 text-xl">⚠️</div>
+        <p className="text-gray-600 mb-4">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -1,45 +1,65 @@
 import { useMemo, useState, useEffect } from 'react';
-import { Bike, Navigation, Clock, TrendingUp, MapPin } from 'lucide-react';
-import { mockRentals, mockStations } from '../../lib/mockData';
-import { Rental } from '../../App';
+import { Bike, Navigation, Clock, TrendingUp, MapPin, Loader2 } from 'lucide-react';
+import { Rental, Station } from '../../App';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useServices } from '../../hooks/useServices';
 
 type UserStatsProps = {
   userId: string;
 };
 
 export function UserStats({ userId }: UserStatsProps) {
+  const { rentalService, stationService } = useServices();
   const [allRentals, setAllRentals] = useState<Rental[]>([]);
+  const [stations, setStations] = useState<Station[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Load rental history from localStorage on mount
+  // Load rental history and stations on mount
   useEffect(() => {
-    const loadRentalHistory = () => {
-      const existingHistory = localStorage.getItem('rental_history');
-      const savedRentals: Rental[] = existingHistory ? JSON.parse(existingHistory) : [];
-      
-      // Convert date strings back to Date objects
-      const parsedRentals = savedRentals.map(rental => ({
-        ...rental,
-        rentalTime: new Date(rental.rentalTime),
-        returnTime: rental.returnTime ? new Date(rental.returnTime) : undefined,
-      }));
-      
-      // Combine mock data with saved rentals
-      setAllRentals([...mockRentals, ...parsedRentals]);
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Load rentals from service
+        const rentals = await rentalService.getUserRentals(userId);
+
+        // Also load from localStorage (for backwards compatibility)
+        const existingHistory = localStorage.getItem('rental_history');
+        const savedRentals: Rental[] = existingHistory ? JSON.parse(existingHistory) : [];
+        const parsedRentals = savedRentals.map(rental => ({
+          ...rental,
+          rentalTime: new Date(rental.rentalTime),
+          returnTime: rental.returnTime ? new Date(rental.returnTime) : undefined,
+        }));
+
+        // Combine API rentals with localStorage rentals
+        setAllRentals([...rentals, ...parsedRentals]);
+
+        // Load stations for displaying names
+        const stationsData = await stationService.getAllStations();
+        setStations(stationsData);
+      } catch (err) {
+        console.error('Failed to load user statistics:', err);
+        setError('통계 데이터를 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    loadRentalHistory();
+    loadData();
 
     // Listen for storage changes
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'rental_history') {
-        loadRentalHistory();
+        loadData();
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+  }, [userId, rentalService, stationService]);
 
   const userRentals = useMemo(() => {
     return allRentals.filter(r => r.userId === userId && r.status === 'returned');
@@ -147,7 +167,7 @@ export function UserStats({ userId }: UserStatsProps) {
   // Most used stations
   const mostUsedStations = useMemo(() => {
     const stationMap = new Map<string, number>();
-    
+
     userRentals.forEach(rental => {
       stationMap.set(rental.startStationId, (stationMap.get(rental.startStationId) || 0) + 1);
       if (rental.endStationId) {
@@ -160,14 +180,34 @@ export function UserStats({ userId }: UserStatsProps) {
       .slice(0, 3);
 
     return sorted.map(([stationId, count]) => {
-      const station = mockStations.find(s => s.id === stationId);
+      const station = stations.find(s => s.id === stationId);
       return {
         stationId,
         name: station?.name || stationId,
         count,
       };
     });
-  }, [userRentals]);
+  }, [userRentals, stations]);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+        <p className="text-gray-600">통계 데이터를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <div className="text-destructive mb-4 text-xl">⚠️</div>
+        <p className="text-gray-600 mb-4">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
