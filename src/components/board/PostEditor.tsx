@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { ArrowLeft, Save, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useServices } from '../../hooks/useServices';
-
+import { PostCreate } from '../../types';
+  
 type PostEditorProps = {
   onBack: () => void;
   onSubmit: () => void;
@@ -17,7 +18,7 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
     return null;
   }
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PostCreate>({
     category: 'free',
     title: '',
     content: '',
@@ -25,47 +26,12 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!formData.title.trim()) {
-      alert('제목을 입력하세요');
-      return;
-    }
-
-    if (formData.content.length < 10) {
-      alert('내용을 10자 이상 입력하세요');
-      return;
-    }
-
+    setSubmitting(true);
     try {
-      setSubmitting(true);
-
-      // Create new post via service
-      const newPost = await boardService.createPost({
-        category: formData.category,
-        title: formData.title,
-        content: formData.content,
-        author: user.name,
-        authorId: user.id,
-        isPinned: false,
-      });
-
-      // Also save to localStorage (for backwards compatibility)
-      const savedPosts = localStorage.getItem('board_posts');
-      const posts = savedPosts ? JSON.parse(savedPosts) : [];
-      posts.push({
-        ...newPost,
-        createdAt: new Date(newPost.createdAt).toISOString(),
-      });
-      localStorage.setItem('board_posts', JSON.stringify(posts));
-
-      // Dispatch custom event to notify other components
-      window.dispatchEvent(new Event('board_updated'));
-
-      alert('게시글이 등록되었습니다');
+      await boardService.createPost(formData);
       onSubmit();
-    } catch (err) {
-      console.error('Failed to create post:', err);
-      alert('게시글 등록에 실패했습니다.');
+    } catch (error) {
+      console.error('Error creating post:', error);
     } finally {
       setSubmitting(false);
     }
@@ -73,10 +39,10 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
 
   const categories = user.role === 'admin'
     ? [
-        { id: 'notice', label: '공지사항' },
         { id: 'info', label: '정보공유' },
         { id: 'question', label: '질문' },
         { id: 'free', label: '자유' },
+        { id: 'notice', label: '공지' },
       ]
     : [
         { id: 'info', label: '정보공유' },
@@ -110,7 +76,7 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => setFormData({ ...formData, category: cat.id })}
+                  onClick={() => setFormData({ ...formData })}
                   className={`px-4 py-2 rounded-lg transition-colors ${
                     formData.category === cat.id
                       ? 'bg-blue-600 text-white'

@@ -56,6 +56,12 @@ export type Post = {
   isPinned?: boolean;
 };
 
+export type PostCreate = {
+  category: PostCategory;
+  title: string;
+  content: string;
+}
+
 export type Comment = {
   id: string;
   postId: string;
