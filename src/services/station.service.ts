@@ -2,98 +2,74 @@
  * Station Service
  *
  * Handles all station-related API calls
- * Automatically switches between mock and real API based on ApiModeContext
  */
 
 import type { Station } from '../types';
-import { apiClient } from './api/client';
-import { API_ENDPOINTS } from './api/config';
-import { MockStationService } from './mock.service';
-import { stationsApi } from '../api';
+import { mockStations } from '../lib/mockData';
 
-// Singleton instances
-const mockService = new MockStationService();
+const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
-/**
- * Real API Station Service
- */
-class RealStationService {
-  async getAllStations(): Promise<Station[]> {
-    const response = await stationsApi.getAllStations();
-    return (response.data as any).data || response.data;
-  }
+export const getAllStations = async (): Promise<Station[]> => {
+  await delay();
+  return [...mockStations];
+};
 
-  async getStationById(id: string): Promise<Station | null> {
-    try {
-      // getStationById is not in generated API yet
-      const response = await apiClient.get(API_ENDPOINTS.stations.getById(id));
-      return response.data.data || response.data;
-    } catch (error) {
-      return null;
+export const getStationById = async (id: string): Promise<Station | null> => {
+  await delay();
+  return mockStations.find(s => s.id === id) || null;
+};
+
+export const getNearestStation = async (latitude: number, longitude: number): Promise<Station | null> => {
+  await delay();
+
+  // Calculate distances and find nearest
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  const activeStations = mockStations.filter(s => s.status === 'active' && s.bikeCount > 0);
+  if (activeStations.length === 0) return null;
+
+  let nearest = activeStations[0];
+  let minDistance = calculateDistance(latitude, longitude, nearest.latitude, nearest.longitude);
+
+  for (const station of activeStations) {
+    const distance = calculateDistance(latitude, longitude, station.latitude, station.longitude);
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearest = station;
     }
   }
 
-  async getNearestStation(latitude: number, longitude: number): Promise<Station | null> {
-    try {
-      // API expects string for lat/lon
-      const response = await stationsApi.getNearestStation(latitude.toString(), longitude.toString());
-      return (response.data as any).data || response.data;
-    } catch (error) {
-      return null;
-    }
-  }
+  return nearest;
+};
 
-  async getStationsStatus(): Promise<{ total: number; active: number; inactive: number; available: number }> {
-    const response = await stationsApi.getStationsStatus();
-    return (response.data as any).data || response.data;
-  }
+export const getStationsStatus = async (): Promise<{ total: number; active: number; inactive: number; available: number }> => {
+  await delay();
 
-  async updateStationBikeCount(id: string, count: number): Promise<Station> {
-    // updateStationBikeCount is not in generated API yet
-    const response = await apiClient.patch(API_ENDPOINTS.stations.update(id), {
-      bikeCount: count,
-    });
-    return response.data.data || response.data;
-  }
-}
+  const total = mockStations.length;
+  const active = mockStations.filter(s => s.status === 'active').length;
+  const inactive = mockStations.filter(s => s.status === 'inactive').length;
+  const available = mockStations.filter(s => s.status === 'active' && s.bikeCount > 0).length;
 
-const realService = new RealStationService();
+  return { total, active, inactive, available };
+};
 
-/**
- * Station Service Factory
- *
- * Returns appropriate service based on mock mode
- */
-export class StationService {
-  constructor(private useMockMode: boolean) {}
+export const updateStationBikeCount = async (id: string, count: number): Promise<Station> => {
+  await delay();
 
-  getAllStations(): Promise<Station[]> {
-    return this.useMockMode
-      ? mockService.getAllStations()
-      : realService.getAllStations();
-  }
+  const index = mockStations.findIndex(s => s.id === id);
+  if (index === -1) throw new Error('Station not found');
 
-  getStationById(id: string): Promise<Station | null> {
-    return this.useMockMode
-      ? mockService.getStationById(id)
-      : realService.getStationById(id);
-  }
-
-  getNearestStation(latitude: number, longitude: number): Promise<Station | null> {
-    return this.useMockMode
-      ? mockService.getNearestStation(latitude, longitude)
-      : realService.getNearestStation(latitude, longitude);
-  }
-
-  getStationsStatus(): Promise<{ total: number; active: number; inactive: number; available: number }> {
-    return this.useMockMode
-      ? mockService.getStationsStatus()
-      : realService.getStationsStatus();
-  }
-
-  updateStationBikeCount(id: string, count: number): Promise<Station> {
-    return this.useMockMode
-      ? mockService.updateStationBikeCount(id, count)
-      : realService.updateStationBikeCount(id, count);
-  }
-}
+  // Note: This modifies the mock data in memory
+  mockStations[index] = { ...mockStations[index], bikeCount: count };
+  return mockStations[index];
+};

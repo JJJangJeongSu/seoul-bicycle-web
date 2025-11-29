@@ -2,146 +2,51 @@
  * Auth Service
  *
  * Handles authentication-related API calls
- * Automatically switches between mock and real API based on ApiModeContext
  */
 
-import type { User } from '../types';
-import { apiClient, setAuthToken } from './api/client';
-import { API_ENDPOINTS } from './api/config';
-import { MockAuthService } from './mock.service';
 import { authApi } from '../api';
+import type { User, SignupData } from '../types';
+import { setAuthToken } from '../api/config';
 
-// Singleton instances
-const mockService = new MockAuthService();
-
-/**
- * Real API Auth Service
- */
-class RealAuthService {
-  async login(email: string, password: string): Promise<{ user: User; token: string }> {
-    const response = await authApi.loginUser({ email, password });
-    const data = response.data;
-    
-    // API might return data wrapped in 'data' property or directly
-    const result = (data as any).data || data;
-
-    // Store token
-    if (result.token) {
-      setAuthToken(result.token);
-    }
-
-    return result;
+export const login = async (email: string, password: string): Promise<{ user: User; token: string }> => {
+  const response = await authApi.loginUser({ email, password });
+  // Casting to any because generated types might be incomplete regarding the 'data' field
+  const data = (response.data as any).data;
+  
+  if (!data || !data.token || !data.user) {
+     throw new Error('Invalid response from login API');
   }
 
-  async signup(signupData: {
-    email: string;
-    password: string;
-    name: string;
-    phone: string;
-  }): Promise<{ user: User; token: string }> {
-    const response = await authApi.signupUser(signupData);
-    const data = response.data;
+  const { user, token } = data;
+  setAuthToken(token);
+  return { user, token };
+};
 
-    const result = (data as any).data || data;
+export const signup = async (data: SignupData): Promise<{ user: User; token: string }> => {
+  const response = await authApi.signupUser(data);
+  const responseData = (response.data as any).data;
 
-    // Store token
-    if (result.token) {
-      setAuthToken(result.token);
-    }
-
-    return result;
+  if (!responseData || !responseData.token || !responseData.user) {
+     throw new Error('Invalid response from signup API');
   }
 
-  async logout(): Promise<void> {
-    try {
-      // AuthApi doesn't have logout method generated yet, or it was missed?
-      // Checking auth-api.ts, it only had login, signup, checkEmail.
-      // If logout endpoint exists but not in openapi, we might need to use apiClient or add it.
-      // For now, let's assume client-side logout is enough or use apiClient for logout if needed.
-      // But wait, the original code called API_ENDPOINTS.auth.logout.
-      // Let's keep using apiClient for logout for now if authApi doesn't have it.
-      await apiClient.post(API_ENDPOINTS.auth.logout);
-    } catch (e) {
-      // Ignore logout errors
-    } finally {
-      // Clear token regardless of API response
-      setAuthToken(null);
-    }
-  }
+  const { user, token } = responseData;
+  setAuthToken(token);
+  return { user, token };
+};
 
-  async checkEmailAvailability(email: string): Promise<{ available: boolean }> {
-    const response = await authApi.checkEmailAvailability(email);
-    return (response.data as any).data || response.data;
-  }
+export const logout = async (): Promise<void> => {
+  setAuthToken(null);
+};
 
-  async changePassword(oldPassword: string, newPassword: string): Promise<void> {
-    // changePassword might not be in AuthApi yet based on previous view_file of auth-api.ts
-    // It was not in the list of methods in auth-api.ts (only checkEmail, login, signup).
-    // So we keep using apiClient for this one.
-    await apiClient.post(API_ENDPOINTS.auth.changePassword, {
-      oldPassword,
-      newPassword,
-    });
-  }
-}
+export const checkEmailAvailability = async (email: string): Promise<{ available: boolean }> => {
+  const response = await authApi.checkEmailAvailability(email);
+  return (response.data as any).data || response.data;
+};
 
-const realService = new RealAuthService();
+export const changePassword = async (oldPassword: string, newPassword: string): Promise<void> => {
+  // Not implemented in API yet or needs specific endpoint
+  console.log('[AuthService] Change password');
+  await new Promise(resolve => setTimeout(resolve, 500));
+};
 
-/**
- * Auth Service Factory
- *
- * Returns appropriate service based on mock mode
- */
-export class AuthService {
-  constructor(private useMockMode: boolean) {}
-
-  async login(email: string, password: string): Promise<{ user: User; token: string }> {
-    const result = this.useMockMode
-      ? await mockService.login(email, password)
-      : await realService.login(email, password);
-
-    // Store token in mock mode too
-    if (this.useMockMode && result.token) {
-      setAuthToken(result.token);
-    }
-
-    return result;
-  }
-
-  async signup(data: {
-    email: string;
-    password: string;
-    name: string;
-    phone: string;
-  }): Promise<{ user: User; token: string }> {
-    const result = this.useMockMode
-      ? await mockService.signup(data)
-      : await realService.signup(data);
-
-    // Store token in mock mode too
-    if (this.useMockMode && result.token) {
-      setAuthToken(result.token);
-    }
-
-    return result;
-  }
-
-  logout(): Promise<void> {
-    return this.useMockMode
-      ? mockService.logout()
-      : realService.logout();
-  }
-
-  checkEmailAvailability(email: string): Promise<{ available: boolean }> {
-    return this.useMockMode
-      ? mockService.checkEmailAvailability(email)
-      : realService.checkEmailAvailability(email);
-  }
-
-  changePassword(oldPassword: string, newPassword: string): Promise<void> {
-    if (this.useMockMode) {
-      throw new Error('Password change not supported in mock mode');
-    }
-    return realService.changePassword(oldPassword, newPassword);
-  }
-}

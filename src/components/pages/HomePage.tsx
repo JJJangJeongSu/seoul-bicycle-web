@@ -150,7 +150,7 @@ export function HomePage() {
         rentalTime: completedRental.rentalTime.toISOString(),
         returnTime: completedRental.returnTime?.toISOString(),
       };
-      history.push(rentalToSave);
+      // history.push(rentalToSave);
       localStorage.setItem('rental_history', JSON.stringify(history));
 
       // Update station bike count

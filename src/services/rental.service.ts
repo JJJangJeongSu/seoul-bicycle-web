@@ -5,72 +5,50 @@
  */
 
 import type { Rental } from '../types';
-import { apiClient } from './api/client';
-import { API_ENDPOINTS } from './api/config';
-import { MockRentalService } from './mock.service';
-import { rentalsApi } from '../api';
+import { mockRentals } from '../lib/mockData';
 
-const mockService = new MockRentalService();
+const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
-class RealRentalService {
-  async createRental(userId: string, stationId: string): Promise<Rental> {
-    // userId is inferred from token in the generated API
-    const response = await rentalsApi.createRental({
-      stationId,
-    });
-    return (response.data as any).data || response.data;
-  }
+export const createRental = async (userId: string, stationId: string): Promise<Rental> => {
+  await delay();
 
-  async returnRental(rentalId: string, stationId: string, distance: number, duration: number): Promise<Rental> {
-    // distance and duration are calculated by backend
-    const response = await rentalsApi.returnRental(rentalId, {
-      endStationId: stationId,
-    });
-    return (response.data as any).data || response.data;
-  }
+  const rental: Rental = {
+    id: `R-${Date.now()}`,
+    userId,
+    bikeId: `SPB-${Math.floor(Math.random() * 90000) + 10000}`,
+    startStationId: stationId,
+    rentalTime: new Date(),
+    status: 'rented',
+  };
 
-  async getUserRentals(userId: string): Promise<Rental[]> {
-    const response = await rentalsApi.getUserRentals(userId);
-    return (response.data as any).data || response.data;
-  }
+  mockRentals.push(rental);
+  return rental;
+};
 
-  async getRentalById(id: string): Promise<Rental | null> {
-    try {
-      // getRentalById is not in generated API yet
-      const response = await apiClient.get(API_ENDPOINTS.rentals.getById(id));
-      return response.data.data || response.data;
-    } catch (error) {
-      return null;
-    }
-  }
-}
+export const returnRental = async (rentalId: string, stationId: string, distance: number, duration: number): Promise<Rental> => {
+  await delay();
 
-const realService = new RealRentalService();
+  const index = mockRentals.findIndex(r => r.id === rentalId);
+  if (index === -1) throw new Error('Rental not found');
 
-export class RentalService {
-  constructor(private useMockMode: boolean) {}
+  mockRentals[index] = {
+    ...mockRentals[index],
+    endStationId: stationId,
+    returnTime: new Date(),
+    distance,
+    duration,
+    status: 'returned',
+  };
 
-  createRental(userId: string, stationId: string): Promise<Rental> {
-    return this.useMockMode
-      ? mockService.createRental(userId, stationId)
-      : realService.createRental(userId, stationId);
-  }
+  return mockRentals[index];
+};
 
-  returnRental(rentalId: string, stationId: string, distance: number, duration: number): Promise<Rental> {
-    return this.useMockMode
-      ? mockService.returnRental(rentalId, stationId, distance, duration)
-      : realService.returnRental(rentalId, stationId, distance, duration);
-  }
+export const getUserRentals = async (userId: string): Promise<Rental[]> => {
+  await delay();
+  return mockRentals.filter(r => r.userId === userId);
+};
 
-  getUserRentals(userId: string): Promise<Rental[]> {
-    return this.useMockMode
-      ? mockService.getUserRentals(userId)
-      : realService.getUserRentals(userId);
-  }
-
-  getRentalById(id: string): Promise<Rental | null> {
-    return this.useMockMode
-      ? mockService.getRentalById(id)
-      : realService.getRentalById(id);
-  }
-}
+export const getRentalById = async (id: string): Promise<Rental | null> => {
+  await delay();
+  return mockRentals.find(r => r.id === id) || null;
+};

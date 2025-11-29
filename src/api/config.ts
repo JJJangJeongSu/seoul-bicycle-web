@@ -103,3 +103,11 @@ export const apiConfig = new Configuration({
     }
   }
 });
+
+export const setAuthToken = (token: string | null) => {
+  if (token) {
+    localStorage.setItem('accessToken', token);
+  } else {
+    localStorage.removeItem('accessToken');
+  }
+};

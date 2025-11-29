@@ -5,6 +5,7 @@ export type User = {
   name: string;
   role: 'user' | 'admin';
   phone: string;
+  createdAt: string;
 };
 
 export type SignupData = {

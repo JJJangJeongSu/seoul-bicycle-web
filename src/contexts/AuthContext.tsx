@@ -1,9 +1,8 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { User, SignupData } from '../types';
-import { useApiMode } from './ApiModeContext';
-import { AuthService } from '../services/auth.service';
-import { useLogin } from '../hooks/queries/useAuth';
+import * as authService from '../services/auth.service';
+import { useLogin, useSignup } from '../hooks/queries/useAuth';
 
 // AuthContextType 인터페이스 정의
 interface AuthContextType {
@@ -26,7 +25,6 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { useMockMode } = useApiMode();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -34,6 +32,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const navigate = useNavigate();
 
   const loginMutation = useLogin();
+  const signupMutation = useSignup();
 
   const login = useCallback(async (email: string, password: string) => {
     try {
@@ -53,22 +52,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signup = useCallback(async (data: SignupData) => {
     try {
       setLoading(true);
-      const authService = new AuthService(useMockMode);
-      const { user: newUser } = await authService.signup(data);
+      const { user: newUser } = await signupMutation.mutateAsync(data);
       setUser(newUser);
       setShowSignupModal(false);
     } catch (error) {
       console.error('Signup failed:', error);
+      // TODO: Error handling 
       alert('회원가입에 실패했습니다. 다시 시도해주세요.');
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [useMockMode]);
+  }, []);
 
   const logout = useCallback(async () => {
     try {
-      const authService = new AuthService(useMockMode);
       await authService.logout();
       setUser(null);
       // Dispatch custom event for RentalContext to listen
@@ -81,7 +79,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       window.dispatchEvent(new CustomEvent('auth:logout'));
       navigate('/');
     }
-  }, [useMockMode, navigate]);
+  }, [navigate]);
 
   const openLoginModal = useCallback(() => {
     setShowLoginModal(true);

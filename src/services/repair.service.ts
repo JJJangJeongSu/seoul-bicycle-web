@@ -1,93 +1,56 @@
 /**
+/**
  * Repair Service
  *
  * Handles repair-related API calls
  */
 
 import type { Repair } from '../types';
-import { apiClient } from './api/client';
-import { API_ENDPOINTS } from './api/config';
-import { MockRepairService } from './mock.service';
-import { repairsApi, adminApi } from '../api';
+import { mockRepairs } from '../lib/mockData';
 
-const mockService = new MockRepairService();
+const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
-class RealRepairService {
-  async createRepair(repair: Omit<Repair, 'id' | 'createdAt' | 'status'>): Promise<Repair> {
-    // API expects type, bikeId/stationId, category, description, photos. Reporter info is inferred.
-    const response = await repairsApi.createRepair({
-      type: repair.type as any,
-      bikeId: repair.bikeId,
-      stationId: repair.stationId,
-      category: repair.category as any,
-      description: repair.description,
-      photos: repair.photos,
-    });
-    return (response.data as any).data || response.data;
-  }
+export const createRepair = async (repair: Omit<Repair, 'id' | 'createdAt' | 'status'>): Promise<Repair> => {
+  await delay();
 
-  async getMyRepairs(reporterId: string): Promise<Repair[]> {
-    // reporterId is inferred from token for getMyRepairs
-    const response = await repairsApi.getMyRepairs();
-    return (response.data as any).data || response.data;
-  }
+  const newRepair: Repair = {
+    ...repair,
+    id: `REP-${Date.now()}`,
+    status: 'pending',
+    createdAt: new Date(),
+  };
 
-  async getAllRepairs(): Promise<Repair[]> {
-    // This seems to be an admin function or public list
-    const response = await adminApi.getAllRepairsAdmin();
-    return (response.data as any).data || response.data;
-  }
+  mockRepairs.unshift(newRepair);
+  return newRepair;
+};
 
-  async getRepairById(id: string): Promise<Repair | null> {
-    try {
-      const response = await repairsApi.getRepairById(id);
-      return (response.data as any).data || response.data;
-    } catch (error) {
-      return null;
-    }
-  }
+export const getMyRepairs = async (reporterId: string): Promise<Repair[]> => {
+  await delay();
+  return mockRepairs.filter(r => r.reporterId === reporterId);
+};
 
-  async updateRepairStatus(id: string, status: Repair['status'], adminNote?: string): Promise<Repair> {
-    const response = await adminApi.updateRepairStatus(id, {
-      status: status as any,
-      adminNote,
-    });
-    return (response.data as any).data || response.data;
-  }
-}
+export const getAllRepairs = async (): Promise<Repair[]> => {
+  await delay();
+  return [...mockRepairs];
+};
 
-const realService = new RealRepairService();
+export const getRepairById = async (id: string): Promise<Repair | null> => {
+  await delay();
+  return mockRepairs.find(r => r.id === id) || null;
+};
 
-export class RepairService {
-  constructor(private useMockMode: boolean) {}
+export const updateRepairStatus = async (id: string, status: Repair['status'], adminNote?: string): Promise<Repair> => {
+  await delay();
 
-  createRepair(repair: Omit<Repair, 'id' | 'createdAt' | 'status'>): Promise<Repair> {
-    return this.useMockMode
-      ? mockService.createRepair(repair)
-      : realService.createRepair(repair);
-  }
+  const index = mockRepairs.findIndex(r => r.id === id);
+  if (index === -1) throw new Error('Repair not found');
 
-  getMyRepairs(reporterId: string): Promise<Repair[]> {
-    return this.useMockMode
-      ? mockService.getMyRepairs(reporterId)
-      : realService.getMyRepairs(reporterId);
-  }
+  mockRepairs[index] = {
+    ...mockRepairs[index],
+    status,
+    adminNote,
+    completedAt: status === 'completed' ? new Date() : undefined,
+  };
 
-  getAllRepairs(): Promise<Repair[]> {
-    return this.useMockMode
-      ? mockService.getAllRepairs()
-      : realService.getAllRepairs();
-  }
-
-  getRepairById(id: string): Promise<Repair | null> {
-    return this.useMockMode
-      ? mockService.getRepairById(id)
-      : realService.getRepairById(id);
-  }
-
-  updateRepairStatus(id: string, status: Repair['status'], adminNote?: string): Promise<Repair> {
-    return this.useMockMode
-      ? mockService.updateRepairStatus(id, status, adminNote)
-      : realService.updateRepairStatus(id, status, adminNote);
-  }
-}
+  return mockRepairs[index];
+};

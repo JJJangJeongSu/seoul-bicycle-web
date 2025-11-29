@@ -1,88 +1,65 @@
 /**
  * Board Service
  *
- * Handles board/post-related API calls
+ * Handles board-related API calls
  */
 
 import type { Post } from '../types';
-import { apiClient } from './api/client';
-import { API_ENDPOINTS } from './api/config';
-import { MockBoardService } from './mock.service';
-import { boardApi } from '../api';
+import { mockPosts } from '../lib/mockData';
 
-const mockService = new MockBoardService();
+const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
-class RealBoardService {
-  async getAllPosts(category?: string): Promise<Post[]> {
-    const response = await boardApi.getAllPosts(undefined, undefined, undefined, category as any);
-    return (response.data as any).data || response.data;
+export const getAllPosts = async (category?: string): Promise<Post[]> => {
+  await delay();
+  if (category) {
+    return mockPosts.filter(p => p.category === category);
   }
+  return [...mockPosts];
+};
 
-  async getPostById(id: string): Promise<Post | null> {
-    try {
-      const response = await boardApi.getPostById(id);
-      return (response.data as any).data || response.data;
-    } catch (error) {
-      return null;
-    }
+export const getPostById = async (id: string): Promise<Post | null> => {
+  await delay();
+  const post = mockPosts.find(p => p.id === id);
+  if (post) {
+    // Increment views
+    const index = mockPosts.findIndex(p => p.id === id);
+    mockPosts[index] = { ...post, views: post.views + 1 };
+    return mockPosts[index];
   }
+  return null;
+};
 
-  async createPost(post: Omit<Post, 'id' | 'views' | 'likes' | 'comments' | 'createdAt'>): Promise<Post> {
-    // API expects only title, content, category. Author info is inferred from token.
-    const response = await boardApi.createPost({
-      title: post.title,
-      content: post.content,
-      category: post.category as any,
-    });
-    return (response.data as any).data || response.data;
-  }
+export const createPost = async (post: Omit<Post, 'id' | 'views' | 'likes' | 'comments' | 'createdAt'>): Promise<Post> => {
+  await delay();
 
-  async updatePost(id: string, updates: Partial<Post>): Promise<Post> {
-    // API only allows updating title and content
-    const response = await boardApi.updatePost(id, {
-      title: updates.title,
-      content: updates.content,
-    });
-    return (response.data as any).data || response.data;
-  }
+  const newPost: Post = {
+    ...post,
+    id: `P-${Date.now()}`,
+    views: 0,
+    likes: 0,
+    comments: 0,
+    createdAt: new Date(),
+  };
 
-  async deletePost(id: string): Promise<void> {
-    await boardApi.deletePost(id);
-  }
-}
+  mockPosts.unshift(newPost);
+  return newPost;
+};
 
-const realService = new RealBoardService();
+export const updatePost = async (id: string, updates: Partial<Post>): Promise<Post> => {
+  await delay();
 
-export class BoardService {
-  constructor(private useMockMode: boolean) {}
+  const index = mockPosts.findIndex(p => p.id === id);
+  if (index === -1) throw new Error('Post not found');
 
-  getAllPosts(category?: string): Promise<Post[]> {
-    return this.useMockMode
-      ? mockService.getAllPosts(category)
-      : realService.getAllPosts(category);
-  }
+  mockPosts[index] = { ...mockPosts[index], ...updates };
+  return mockPosts[index];
+};
 
-  getPostById(id: string): Promise<Post | null> {
-    return this.useMockMode
-      ? mockService.getPostById(id)
-      : realService.getPostById(id);
-  }
+export const deletePost = async (id: string): Promise<void> => {
+  await delay();
 
-  createPost(post: Omit<Post, 'id' | 'views' | 'likes' | 'comments' | 'createdAt'>): Promise<Post> {
-    return this.useMockMode
-      ? mockService.createPost(post)
-      : realService.createPost(post);
-  }
+  const index = mockPosts.findIndex(p => p.id === id);
+  if (index === -1) throw new Error('Post not found');
 
-  updatePost(id: string, updates: Partial<Post>): Promise<Post> {
-    return this.useMockMode
-      ? mockService.updatePost(id, updates)
-      : realService.updatePost(id, updates);
-  }
-
-  deletePost(id: string): Promise<void> {
-    return this.useMockMode
-      ? mockService.deletePost(id)
-      : realService.deletePost(id);
-  }
-}
+  mockPosts.splice(index, 1);
+};

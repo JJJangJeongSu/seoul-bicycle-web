@@ -4,13 +4,13 @@
  * Central export point for all services
  */
 
-export { StationService } from './station.service';
-export { AuthService } from './auth.service';
-export { RentalService } from './rental.service';
-export { BoardService } from './board.service';
-export { RepairService } from './repair.service';
-export { AdminService } from './admin.service';
-export { UserService } from './user.service';
+export * as stationService from './station.service';
+export * as authService from './auth.service';
+export * as rentalService from './rental.service';
+export * as boardService from './board.service';
+export * as repairService from './repair.service';
+export * as adminService from './admin.service';
+export * as userService from './user.service';
 
 // API utilities
 export { apiClient, setAuthToken, getAuthToken } from './api/client';

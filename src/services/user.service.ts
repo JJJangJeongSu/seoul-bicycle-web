@@ -4,40 +4,29 @@
  * Handles user-related API calls
  */
 
-import { apiClient } from './api/client';
-import { API_ENDPOINTS } from './api/config';
-import { MockUserService } from './mock.service';
-import { usersApi } from '../api';
+import { mockRentals } from '../lib/mockData';
 
-const mockService = new MockUserService();
+const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
-class RealUserService {
-  async getUserStatistics(userId: string): Promise<{
-    totalRentals: number;
-    totalDistance: number;
-    totalDuration: number;
-    averageDistance: number;
-    averageDuration: number;
-  }> {
-    const response = await usersApi.getUserStatistics(userId);
-    return (response.data as any).data || response.data;
-  }
-}
+export const getUserStatistics = async (userId: string): Promise<{
+  totalRentals: number;
+  totalDistance: number;
+  totalDuration: number;
+  averageDistance: number;
+  averageDuration: number;
+}> => {
+  await delay();
 
-const realService = new RealUserService();
+  const userRentals = mockRentals.filter(r => r.userId === userId && r.status === 'returned');
 
-export class UserService {
-  constructor(private useMockMode: boolean) {}
+  const totalDistance = userRentals.reduce((sum, r) => sum + (r.distance || 0), 0);
+  const totalDuration = userRentals.reduce((sum, r) => sum + (r.duration || 0), 0);
 
-  getUserStatistics(userId: string): Promise<{
-    totalRentals: number;
-    totalDistance: number;
-    totalDuration: number;
-    averageDistance: number;
-    averageDuration: number;
-  }> {
-    return this.useMockMode
-      ? mockService.getUserStatistics(userId)
-      : realService.getUserStatistics(userId);
-  }
-}
+  return {
+    totalRentals: userRentals.length,
+    totalDistance,
+    totalDuration,
+    averageDistance: userRentals.length > 0 ? totalDistance / userRentals.length : 0,
+    averageDuration: userRentals.length > 0 ? totalDuration / userRentals.length : 0,
+  };
+};
