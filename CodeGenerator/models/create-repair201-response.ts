@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityRepair } from './entity-repair';
+import type { CreateRepair201ResponseAllOfData } from './create-repair201-response-all-of-data';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

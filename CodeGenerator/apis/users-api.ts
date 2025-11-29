@@ -26,6 +26,8 @@ import type { ChangePassword } from '../models';
 // @ts-ignore
 import type { GetUserById200Response } from '../models';
 // @ts-ignore
+import type { GetUserRentals200Response } from '../models';
+// @ts-ignore
 import type { GetUserStatistics200Response } from '../models';
 // @ts-ignore
 import type { Update } from '../models';
@@ -171,6 +173,50 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
+         * @summary 사용자 대여 이력 조회
+         * @param {string} userId 사용자 ID
+         * @param {number} [page] 페이지 번호 (1부터 시작)
+         * @param {number} [limit] 페이지당 항목 수
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserRentals: async (userId: string, page?: number, limit?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('getUserRentals', 'userId', userId)
+            const localVarPath = `/users/{userId}/rentals`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
 
 
     
@@ -396,6 +442,21 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
+         * @summary 사용자 대여 이력 조회
+         * @param {string} userId 사용자 ID
+         * @param {number} [page] 페이지 번호 (1부터 시작)
+         * @param {number} [limit] 페이지당 항목 수
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUserRentals(userId: string, page?: number, limit?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserRentals200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserRentals(userId, page, limit, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UsersApi.getUserRentals']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 사용자의 자전거 이용 통계를 조회합니다. 총 대여 횟수, 총 이동 거리, 총 이용 시간, 평균값 등을 포함합니다.
          * @summary 사용자 통계 조회
          * @param {string} userId 사용자 ID
@@ -502,6 +563,18 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.getUserById_2(userId, options).then((request) => request(axios, basePath));
         },
         /**
+         * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
+         * @summary 사용자 대여 이력 조회
+         * @param {string} userId 사용자 ID
+         * @param {number} [page] 페이지 번호 (1부터 시작)
+         * @param {number} [limit] 페이지당 항목 수
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserRentals(userId: string, page?: number, limit?: number, options?: RawAxiosRequestConfig): AxiosPromise<GetUserRentals200Response> {
+            return localVarFp.getUserRentals(userId, page, limit, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 사용자의 자전거 이용 통계를 조회합니다. 총 대여 횟수, 총 이동 거리, 총 이용 시간, 평균값 등을 포함합니다.
          * @summary 사용자 통계 조회
          * @param {string} userId 사용자 ID
@@ -601,6 +674,20 @@ export class UsersApi extends BaseAPI {
      */
     public getUserById_2(userId: string, options?: RawAxiosRequestConfig) {
         return UsersApiFp(this.configuration).getUserById_2(userId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
+     * @summary 사용자 대여 이력 조회
+     * @param {string} userId 사용자 ID
+     * @param {number} [page] 페이지 번호 (1부터 시작)
+     * @param {number} [limit] 페이지당 항목 수
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public getUserRentals(userId: string, page?: number, limit?: number, options?: RawAxiosRequestConfig) {
+        return UsersApiFp(this.configuration).getUserRentals(userId, page, limit, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

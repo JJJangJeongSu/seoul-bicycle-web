@@ -31,13 +31,13 @@ export interface CreateRepair {
      * @type {string}
      * @memberof CreateRepair
      */
-    'bikeId'?: string;
+    'bike_id'?: string;
     /**
      * 대여소 ID (type이 station일 때 필수)
      * @type {string}
      * @memberof CreateRepair
      */
-    'stationId'?: string;
+    'station_id'?: string;
     /**
      * 고장 카테고리
      * @type {string}

@@ -111,3 +111,7 @@ export const setAuthToken = (token: string | null) => {
     localStorage.removeItem('accessToken');
   }
 };
+
+export const getAuthToken = (): string | null => {
+  return localStorage.getItem('accessToken');
+};

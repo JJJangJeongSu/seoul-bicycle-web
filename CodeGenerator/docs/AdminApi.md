@@ -24,7 +24,7 @@ All URIs are relative to *http://localhost*
 |[**updateUserStatus_0**](#updateuserstatus_0) | **PUT** /admin/users/{userId}/status | 회원 상태 변경|
 
 # **createStation**
-> CreateStation201Response createStation(createStation)
+> CreateStation201Response createStation()
 
 관리자 전용. 새로운 대여소를 추가합니다.
 
@@ -40,7 +40,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
-let createStation: CreateStation; //
+let createStation: CreateStation; // (optional)
 
 const { status, data } = await apiInstance.createStation(
     createStation
@@ -79,7 +79,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createStation_0**
-> CreateStation201Response createStation_0(createStation)
+> CreateStation201Response createStation_0()
 
 관리자 전용. 새로운 대여소를 추가합니다.
 
@@ -95,7 +95,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
-let createStation: CreateStation; //
+let createStation: CreateStation; // (optional)
 
 const { status, data } = await apiInstance.createStation_0(
     createStation
@@ -365,21 +365,11 @@ import {
 const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
-let startDate: string; //통계 시작 날짜 (optional) (default to undefined)
-let endDate: string; //통계 종료 날짜 (optional) (default to undefined)
-
-const { status, data } = await apiInstance.getAdminStatistics(
-    startDate,
-    endDate
-);
+const { status, data } = await apiInstance.getAdminStatistics();
 ```
 
 ### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **startDate** | [**string**] | 통계 시작 날짜 | (optional) defaults to undefined|
-| **endDate** | [**string**] | 통계 종료 날짜 | (optional) defaults to undefined|
+This endpoint does not have any parameters.
 
 
 ### Return type
@@ -421,21 +411,11 @@ import {
 const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
-let startDate: string; //통계 시작 날짜 (optional) (default to undefined)
-let endDate: string; //통계 종료 날짜 (optional) (default to undefined)
-
-const { status, data } = await apiInstance.getAdminStatistics_0(
-    startDate,
-    endDate
-);
+const { status, data } = await apiInstance.getAdminStatistics_0();
 ```
 
 ### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **startDate** | [**string**] | 통계 시작 날짜 | (optional) defaults to undefined|
-| **endDate** | [**string**] | 통계 종료 날짜 | (optional) defaults to undefined|
+This endpoint does not have any parameters.
 
 
 ### Return type
@@ -692,7 +672,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateRepairStatus**
-> CreateRepair201Response updateRepairStatus(updateRepairStatus)
+> updateRepairStatus(updateRepairStatus)
 
 관리자 전용. 고장 신고의 처리 상태를 업데이트합니다. 관리자 메모를 추가할 수 있습니다.
 
@@ -727,7 +707,7 @@ const { status, data } = await apiInstance.updateRepairStatus(
 
 ### Return type
 
-**CreateRepair201Response**
+void (empty response body)
 
 ### Authorization
 
@@ -742,7 +722,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**200** | 상태 업데이트 성공 |  -  |
+|**204** | 상태 업데이트 성공 |  -  |
 |**401** | 인증 필요 |  -  |
 |**403** | 권한 없음 - 관리자만 접근 가능 |  -  |
 |**404** | 신고를 찾을 수 없음 |  -  |
@@ -750,7 +730,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateRepairStatus_0**
-> CreateRepair201Response updateRepairStatus_0(updateRepairStatus)
+> updateRepairStatus_0(updateRepairStatus)
 
 관리자 전용. 고장 신고의 처리 상태를 업데이트합니다. 관리자 메모를 추가할 수 있습니다.
 
@@ -785,7 +765,7 @@ const { status, data } = await apiInstance.updateRepairStatus_0(
 
 ### Return type
 
-**CreateRepair201Response**
+void (empty response body)
 
 ### Authorization
 
@@ -800,7 +780,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**200** | 상태 업데이트 성공 |  -  |
+|**204** | 상태 업데이트 성공 |  -  |
 |**401** | 인증 필요 |  -  |
 |**403** | 권한 없음 - 관리자만 접근 가능 |  -  |
 |**404** | 신고를 찾을 수 없음 |  -  |
@@ -808,7 +788,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateStation**
-> CreateStation201Response updateStation(updateStation)
+> CreateStation201Response updateStation()
 
 관리자 전용. 대여소 정보를 수정합니다.
 
@@ -825,7 +805,7 @@ const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
 let stationId: string; //대여소 ID (default to undefined)
-let updateStation: UpdateStation; //
+let updateStation: UpdateStation; // (optional)
 
 const { status, data } = await apiInstance.updateStation(
     stationId,
@@ -866,7 +846,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateStation_0**
-> CreateStation201Response updateStation_0(updateStation)
+> CreateStation201Response updateStation_0()
 
 관리자 전용. 대여소 정보를 수정합니다.
 
@@ -883,7 +863,7 @@ const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
 let stationId: string; //대여소 ID (default to undefined)
-let updateStation: UpdateStation; //
+let updateStation: UpdateStation; // (optional)
 
 const { status, data } = await apiInstance.updateStation_0(
     stationId,
@@ -924,7 +904,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateUserStatus**
-> GetUserById200Response updateUserStatus(updateUserStatus)
+> UpdateUserStatus200Response updateUserStatus()
 
 관리자 전용. 회원의 상태를 변경합니다. 활성화 또는 차단 상태로 설정할 수 있습니다.
 
@@ -941,7 +921,7 @@ const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
 let userId: string; //사용자 ID (default to undefined)
-let updateUserStatus: UpdateUserStatus; //
+let updateUserStatus: UpdateUserStatus; // (optional)
 
 const { status, data } = await apiInstance.updateUserStatus(
     userId,
@@ -959,7 +939,7 @@ const { status, data } = await apiInstance.updateUserStatus(
 
 ### Return type
 
-**GetUserById200Response**
+**UpdateUserStatus200Response**
 
 ### Authorization
 
@@ -982,7 +962,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateUserStatus_0**
-> GetUserById200Response updateUserStatus_0(updateUserStatus)
+> UpdateUserStatus200Response updateUserStatus_0()
 
 관리자 전용. 회원의 상태를 변경합니다. 활성화 또는 차단 상태로 설정할 수 있습니다.
 
@@ -999,7 +979,7 @@ const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
 let userId: string; //사용자 ID (default to undefined)
-let updateUserStatus: UpdateUserStatus; //
+let updateUserStatus: UpdateUserStatus; // (optional)
 
 const { status, data } = await apiInstance.updateUserStatus_0(
     userId,
@@ -1017,7 +997,7 @@ const { status, data } = await apiInstance.updateUserStatus_0(
 
 ### Return type
 
-**GetUserById200Response**
+**UpdateUserStatus200Response**
 
 ### Authorization
 

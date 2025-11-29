@@ -12,7 +12,7 @@ All URIs are relative to *http://localhost*
 # **calculateRoute**
 > CalculateRoute200Response calculateRoute(calculateRoute)
 
-출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
 
 ### Example
 
@@ -65,7 +65,7 @@ No authorization required
 # **calculateRoute_0**
 > CalculateRoute200Response calculateRoute_0(calculateRoute)
 
-출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
 
 ### Example
 

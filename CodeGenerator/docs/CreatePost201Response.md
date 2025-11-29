@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**EntityPost**](EntityPost.md) |  | [default to undefined]
+**data** | [**CreatePost201ResponseAllOfData**](CreatePost201ResponseAllOfData.md) |  | [default to undefined]
 
 ## Example
 

@@ -7,7 +7,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **status** | **string** |  | [default to undefined]
 **error** | [**ErrorError**](ErrorError.md) |  | [default to undefined]
-**metadata** | [**CommonMetadata**](CommonMetadata.md) |  | [default to undefined]
 
 ## Example
 
@@ -17,7 +16,6 @@ import { ModelError } from './api';
 const instance: ModelError = {
     status,
     error,
-    metadata,
 };
 ```
 

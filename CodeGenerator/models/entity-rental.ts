@@ -49,7 +49,7 @@ export interface EntityRental {
      * @type {string}
      * @memberof EntityRental
      */
-    'end_station_id': string | null;
+    'end_station_id': string;
     /**
      * 대여 시작 시간
      * @type {string}

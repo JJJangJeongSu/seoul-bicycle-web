@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Navigation, Clock, MapPin, Sparkles, Flame, Mountain, Info, Loader2, MapPinned } from 'lucide-react';
-import { aiService } from '../../services/ai.service';
+import * as aiService from '../../services/ai.service';
 
 /**
  * TODO: AI 코스 추천 API 연동

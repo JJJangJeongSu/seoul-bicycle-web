@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { DataPostDetail } from './data-post-detail';
+import type { GetPostById200ResponseAllOfData } from './get-post-by-id200-response-all-of-data';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

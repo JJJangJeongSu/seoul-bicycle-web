@@ -27,6 +27,18 @@ export interface EntityRepair {
      */
     'id': string;
     /**
+     * 신고자 ID
+     * @type {string}
+     * @memberof EntityRepair
+     */
+    'reporter_id': string;
+    /**
+     * 신고자 이름
+     * @type {string}
+     * @memberof EntityRepair
+     */
+    'reporter_name': string;
+    /**
      * 신고 대상 (bike: 자전거, station: 대여소)
      * @type {string}
      * @memberof EntityRepair
@@ -37,13 +49,13 @@ export interface EntityRepair {
      * @type {string}
      * @memberof EntityRepair
      */
-    'bikeId'?: string;
+    'bike_id'?: string | null;
     /**
      * 대여소 ID (type이 station일 때만)
      * @type {string}
      * @memberof EntityRepair
      */
-    'stationId'?: string;
+    'station_id'?: string | null;
     /**
      * 고장 카테고리
      * @type {string}
@@ -57,41 +69,47 @@ export interface EntityRepair {
      */
     'description': string;
     /**
-     * 신고자 이름
-     * @type {string}
-     * @memberof EntityRepair
-     */
-    'reporter': string;
-    /**
-     * 신고자 ID
-     * @type {string}
-     * @memberof EntityRepair
-     */
-    'reporterId': string;
-    /**
      * 처리 상태 (pending: 대기 중, in-progress: 처리 중, completed: 완료)
      * @type {string}
      * @memberof EntityRepair
      */
     'status': EntityRepairStatusEnum;
     /**
+     * 관리자 메모
+     * @type {string}
+     * @memberof EntityRepair
+     */
+    'admin_note'?: string | null;
+    /**
      * 신고 접수 시간
      * @type {string}
      * @memberof EntityRepair
      */
-    'createdAt': string;
+    'created_at': string;
     /**
      * 처리 완료 시간
      * @type {string}
      * @memberof EntityRepair
      */
-    'completedAt'?: string;
+    'completed_at'?: string | null;
     /**
-     * 관리자 메모
+     * 업데이트 시간
      * @type {string}
      * @memberof EntityRepair
      */
-    'adminNote'?: string;
+    'updated_at': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EntityRepair
+     */
+    'bike_model': string;
+    /**
+     * 대여소 이름
+     * @type {string}
+     * @memberof EntityRepair
+     */
+    'station_name': string | null;
 }
 
 export const EntityRepairTypeEnum = {

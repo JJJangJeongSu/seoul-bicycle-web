@@ -31,7 +31,7 @@ export interface UpdateRepairStatus {
      * @type {string}
      * @memberof UpdateRepairStatus
      */
-    'adminNote'?: string;
+    'admin_note'?: string;
 }
 
 export const UpdateRepairStatusStatusEnum = {

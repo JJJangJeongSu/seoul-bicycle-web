@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **string** | 대여소 이름 | [default to undefined]
 **address** | **string** | 대여소 주소 | [default to undefined]
-**latitude** | **number** | 위도 | [default to undefined]
-**longitude** | **number** | 경도 | [default to undefined]
+**latitude** | **string** | 위도 | [default to undefined]
+**longitude** | **string** | 경도 | [default to undefined]
 **capacity** | **number** | 최대 수용 대수 | [default to undefined]
 
 ## Example

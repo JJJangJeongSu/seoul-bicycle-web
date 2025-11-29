@@ -11,7 +11,8 @@ export * as boardService from './board.service';
 export * as repairService from './repair.service';
 export * as adminService from './admin.service';
 export * as userService from './user.service';
+export * as aiService from './ai.service';
 
 // API utilities
-export { apiClient, setAuthToken, getAuthToken } from './api/client';
-export { API_CONFIG, API_ENDPOINTS } from './api/config';
+export { axiosInstance as apiClient, setAuthToken, getAuthToken } from '../api';
+export { apiConfig } from '../api';

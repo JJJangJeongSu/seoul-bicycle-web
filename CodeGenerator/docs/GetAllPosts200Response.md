@@ -7,8 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**Array&lt;EntityPost&gt;**](EntityPost.md) |  | [default to undefined]
-**pagination** | [**CommonPagination**](CommonPagination.md) |  | [default to undefined]
+**data** | [**GetAllPosts200ResponseAllOfData**](GetAllPosts200ResponseAllOfData.md) |  | [default to undefined]
 
 ## Example
 
@@ -19,7 +18,6 @@ const instance: GetAllPosts200Response = {
     success,
     message,
     data,
-    pagination,
 };
 ```
 

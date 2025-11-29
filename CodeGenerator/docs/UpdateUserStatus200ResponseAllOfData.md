@@ -1,0 +1,20 @@
+# UpdateUserStatus200ResponseAllOfData
+
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**user** | [**EntityUser**](EntityUser.md) |  | [default to undefined]
+
+## Example
+
+```typescript
+import { UpdateUserStatus200ResponseAllOfData } from './api';
+
+const instance: UpdateUserStatus200ResponseAllOfData = {
+    user,
+};
+```
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

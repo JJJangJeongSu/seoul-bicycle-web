@@ -13,6 +13,7 @@ import * as boardService from '../services/board.service';
 import * as repairService from '../services/repair.service';
 import * as adminService from '../services/admin.service';
 import * as userService from '../services/user.service';
+import * as aiService from '../services/ai.service';
 
 /**
  * Services Hook
@@ -29,6 +30,7 @@ export function useServices() {
     repairService,
     adminService,
     userService,
+    aiService,
   }), []);
 
   return services;

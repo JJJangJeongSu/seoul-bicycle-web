@@ -27,6 +27,18 @@ export interface EntityPost {
      */
     'id': string;
     /**
+     * 작성자 ID
+     * @type {string}
+     * @memberof EntityPost
+     */
+    'author_id': string;
+    /**
+     * 작성자 이름
+     * @type {string}
+     * @memberof EntityPost
+     */
+    'author_name': string;
+    /**
      * 게시글 카테고리 (notice: 공지, info: 정보, question: 질문, free: 자유)
      * @type {string}
      * @memberof EntityPost
@@ -45,18 +57,6 @@ export interface EntityPost {
      */
     'content': string;
     /**
-     * 작성자 이름
-     * @type {string}
-     * @memberof EntityPost
-     */
-    'author': string;
-    /**
-     * 작성자 ID
-     * @type {string}
-     * @memberof EntityPost
-     */
-    'authorId': string;
-    /**
      * 조회수
      * @type {number}
      * @memberof EntityPost
@@ -73,19 +73,25 @@ export interface EntityPost {
      * @type {number}
      * @memberof EntityPost
      */
-    'comments': number;
+    'comment_count': number;
+    /**
+     * 공지사항 고정 여부
+     * @type {number}
+     * @memberof EntityPost
+     */
+    'is_pinned'?: number;
     /**
      * 작성 시간
      * @type {string}
      * @memberof EntityPost
      */
-    'createdAt': string;
+    'created_at': string;
     /**
-     * 공지사항 고정 여부
-     * @type {boolean}
+     * 수정 시간
+     * @type {string}
      * @memberof EntityPost
      */
-    'isPinned'?: boolean;
+    'updated_at': string;
 }
 
 export const EntityPostCategoryEnum = {

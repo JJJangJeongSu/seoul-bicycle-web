@@ -25,6 +25,7 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
+  // 이메일 폼 입력 검증
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -38,9 +39,11 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
       newErrors.password = '비밀번호를 입력하세요';
     } else if (formData.password.length < 8) {
       newErrors.password = '비밀번호는 8자 이상이어야 합니다';
-    } else if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = '영문과 숫자를 조합하세요';
-    }
+    } 
+    // 나중에 추가
+    // else if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(formData.password)) {
+    //   newErrors.password = '영문과 숫자를 조합하세요';
+    // }
 
     if (formData.password !== confirmPassword) {
       newErrors.confirmPassword = '비밀번호가 일치하지 않습니다';
@@ -60,6 +63,7 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
     return Object.keys(newErrors).length === 0;
   };
 
+  // 회원가입 폼 제출
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -75,6 +79,7 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
     }
   };
 
+  // 전화번호 자동 포맷팅
   const handlePhoneChange = (value: string) => {
     // Auto-format phone number
     const numbers = value.replace(/[^\d]/g, '');

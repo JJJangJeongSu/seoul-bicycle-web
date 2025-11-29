@@ -456,7 +456,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updatePost**
-> CreatePost201Response updatePost(updatePost)
+> UpdatePost200Response updatePost(updatePost)
 
 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
 
@@ -491,7 +491,7 @@ const { status, data } = await apiInstance.updatePost(
 
 ### Return type
 
-**CreatePost201Response**
+**UpdatePost200Response**
 
 ### Authorization
 
@@ -514,7 +514,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updatePost_0**
-> CreatePost201Response updatePost_0(updatePost)
+> UpdatePost200Response updatePost_0(updatePost)
 
 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
 
@@ -549,7 +549,7 @@ const { status, data } = await apiInstance.updatePost_0(
 
 ### Return type
 
-**CreatePost201Response**
+**UpdatePost200Response**
 
 ### Authorization
 

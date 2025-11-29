@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**DataPostDetail**](DataPostDetail.md) |  | [default to undefined]
+**data** | [**GetPostById200ResponseAllOfData**](GetPostById200ResponseAllOfData.md) |  | [default to undefined]
 
 ## Example
 

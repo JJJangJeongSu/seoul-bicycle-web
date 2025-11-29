@@ -5,61 +5,41 @@
  */
 
 import type { Post } from '../types';
-import { mockPosts } from '../lib/mockData';
+import { boardApi } from '../api';
+import { GetAllPostsCategoryEnum } from '../../CodeGenerator/apis/board-api';
 
-const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
-
-export const getAllPosts = async (category?: string): Promise<Post[]> => {
-  await delay();
-  if (category) {
-    return mockPosts.filter(p => p.category === category);
-  }
-  return [...mockPosts];
+export const getAllPosts = async (page?: number, limit?: number, search?: string, category?: GetAllPostsCategoryEnum): Promise<Post[]> => {
+  const response = await boardApi.getAllPosts(page, limit, search, category); 
+  return (response.data as any).data || response.data;
 };
 
 export const getPostById = async (id: string): Promise<Post | null> => {
-  await delay();
-  const post = mockPosts.find(p => p.id === id);
-  if (post) {
-    // Increment views
-    const index = mockPosts.findIndex(p => p.id === id);
-    mockPosts[index] = { ...post, views: post.views + 1 };
-    return mockPosts[index];
+  try {
+    const response = await boardApi.getPostById(id);
+    return (response.data as any).data || response.data;
+  } catch (error) {
+    return null;
   }
-  return null;
 };
 
 export const createPost = async (post: Omit<Post, 'id' | 'views' | 'likes' | 'comments' | 'createdAt'>): Promise<Post> => {
-  await delay();
-
-  const newPost: Post = {
-    ...post,
-    id: `P-${Date.now()}`,
-    views: 0,
-    likes: 0,
-    comments: 0,
-    createdAt: new Date(),
-  };
-
-  mockPosts.unshift(newPost);
-  return newPost;
+  // API expects title, content, category.
+  const response = await boardApi.createPost({
+    title: post.title,
+    content: post.content,
+    category: post.category as any,
+  });
+  return (response.data as any).data || response.data;
 };
 
 export const updatePost = async (id: string, updates: Partial<Post>): Promise<Post> => {
-  await delay();
-
-  const index = mockPosts.findIndex(p => p.id === id);
-  if (index === -1) throw new Error('Post not found');
-
-  mockPosts[index] = { ...mockPosts[index], ...updates };
-  return mockPosts[index];
+  const response = await boardApi.updatePost(id, {
+    title: updates.title,
+    content: updates.content,
+  });
+  return (response.data as any).data || response.data;
 };
 
 export const deletePost = async (id: string): Promise<void> => {
-  await delay();
-
-  const index = mockPosts.findIndex(p => p.id === id);
-  if (index === -1) throw new Error('Post not found');
-
-  mockPosts.splice(index, 1);
+  await boardApi.deletePost(id);
 };

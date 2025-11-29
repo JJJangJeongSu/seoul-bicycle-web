@@ -31,6 +31,8 @@ import type { GetAllPosts200Response } from '../models';
 import type { GetPostById200Response } from '../models';
 // @ts-ignore
 import type { UpdatePost } from '../models';
+// @ts-ignore
+import type { UpdatePost200Response } from '../models';
 /**
  * BoardApi - axios parameter creator
  * @export
@@ -553,7 +555,7 @@ export const BoardApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePost(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
+        async updatePost(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdatePost200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updatePost(postId, updatePost, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BoardApi.updatePost']?.[localVarOperationServerIndex]?.url;
@@ -567,7 +569,7 @@ export const BoardApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
+        async updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdatePost200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updatePost_5(postId, updatePost, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BoardApi.updatePost_5']?.[localVarOperationServerIndex]?.url;
@@ -677,7 +679,7 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePost(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
+        updatePost(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): AxiosPromise<UpdatePost200Response> {
             return localVarFp.updatePost(postId, updatePost, options).then((request) => request(axios, basePath));
         },
         /**
@@ -688,7 +690,7 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
+        updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): AxiosPromise<UpdatePost200Response> {
             return localVarFp.updatePost_5(postId, updatePost, options).then((request) => request(axios, basePath));
         },
     };

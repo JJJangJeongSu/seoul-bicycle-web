@@ -34,7 +34,7 @@ import type { GeocodeAddress200Response } from '../models';
 export const RoutesApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
          * @summary 최적 경로 계산
          * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
@@ -70,7 +70,7 @@ export const RoutesApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
          * @summary 최적 경로 계산
          * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
@@ -190,7 +190,7 @@ export const RoutesApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = RoutesApiAxiosParamCreator(configuration)
     return {
         /**
-         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
          * @summary 최적 경로 계산
          * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
@@ -203,7 +203,7 @@ export const RoutesApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
          * @summary 최적 경로 계산
          * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
@@ -252,7 +252,7 @@ export const RoutesApiFactory = function (configuration?: Configuration, basePat
     const localVarFp = RoutesApiFp(configuration)
     return {
         /**
-         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
          * @summary 최적 경로 계산
          * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
@@ -262,7 +262,7 @@ export const RoutesApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.calculateRoute(calculateRoute, options).then((request) => request(axios, basePath));
         },
         /**
-         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+         * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
          * @summary 최적 경로 계산
          * @param {CalculateRoute} calculateRoute 
          * @param {*} [options] Override http request option.
@@ -302,7 +302,7 @@ export const RoutesApiFactory = function (configuration?: Configuration, basePat
  */
 export class RoutesApi extends BaseAPI {
     /**
-     * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+     * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
      * @summary 최적 경로 계산
      * @param {CalculateRoute} calculateRoute 
      * @param {*} [options] Override http request option.
@@ -314,7 +314,7 @@ export class RoutesApi extends BaseAPI {
     }
 
     /**
-     * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. Haversine 공식을 사용하여 거리를 계산하고, 가장 가까운 대여소와 반납 대여소를 추천합니다.
+     * 출발지와 목적지 좌표를 기반으로 자전거 이용 최적 경로를 계산합니다. KaKaoMap API에서 제공하는 길찾기를 이용합니다.
      * @summary 최적 경로 계산
      * @param {CalculateRoute} calculateRoute 
      * @param {*} [options] Override http request option.

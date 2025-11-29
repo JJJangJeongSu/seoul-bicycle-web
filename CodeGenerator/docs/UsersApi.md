@@ -8,6 +8,7 @@ All URIs are relative to *http://localhost*
 |[**changePassword_0**](#changepassword_0) | **PUT** /users/{userId}/password | 비밀번호 변경|
 |[**getUserById**](#getuserbyid) | **GET** /users/{userId} | 사용자 정보 조회|
 |[**getUserById_0**](#getuserbyid_0) | **GET** /users/{userId} | 사용자 정보 조회|
+|[**getUserRentals**](#getuserrentals) | **GET** /users/{userId}/rentals | 사용자 대여 이력 조회|
 |[**getUserStatistics**](#getuserstatistics) | **GET** /users/{userId}/statistics | 사용자 통계 조회|
 |[**getUserStatistics_0**](#getuserstatistics_0) | **GET** /users/{userId}/statistics | 사용자 통계 조회|
 |[**updateUser**](#updateuser) | **PUT** /users/{userId} | 사용자 정보 수정|
@@ -228,6 +229,65 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 |**200** | 사용자 정보 조회 성공 |  -  |
+|**401** | 인증 필요 |  -  |
+|**404** | 사용자를 찾을 수 없음 |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getUserRentals**
+> GetUserRentals200Response getUserRentals()
+
+특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
+
+### Example
+
+```typescript
+import {
+    UsersApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new UsersApi(configuration);
+
+let userId: string; //사용자 ID (default to undefined)
+let page: number; //페이지 번호 (1부터 시작) (optional) (default to 1)
+let limit: number; //페이지당 항목 수 (optional) (default to 10)
+
+const { status, data } = await apiInstance.getUserRentals(
+    userId,
+    page,
+    limit
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **userId** | [**string**] | 사용자 ID | defaults to undefined|
+| **page** | [**number**] | 페이지 번호 (1부터 시작) | (optional) defaults to 1|
+| **limit** | [**number**] | 페이지당 항목 수 | (optional) defaults to 10|
+
+
+### Return type
+
+**GetUserRentals200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | 대여 이력 조회 성공 |  -  |
 |**401** | 인증 필요 |  -  |
 |**404** | 사용자를 찾을 수 없음 |  -  |
 

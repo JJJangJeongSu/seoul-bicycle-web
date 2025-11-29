@@ -154,50 +154,6 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
-         * @summary 사용자 대여 이력 조회
-         * @param {string} userId 사용자 ID
-         * @param {number} [page] 페이지 번호 (1부터 시작)
-         * @param {number} [limit] 페이지당 항목 수
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserRentals_2: async (userId: string, page?: number, limit?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('getUserRentals_2', 'userId', userId)
-            const localVarPath = `/users/{userId}/rentals`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (page !== undefined) {
-                localVarQueryParameter['page'] = page;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
          * @summary 자전거 반납
          * @param {string} rentalId 
@@ -245,11 +201,11 @@ export const RentalsApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        returnRental_3: async (rentalId: string, returnRental: ReturnRental, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        returnRental_2: async (rentalId: string, returnRental: ReturnRental, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'rentalId' is not null or undefined
-            assertParamExists('returnRental_3', 'rentalId', rentalId)
+            assertParamExists('returnRental_2', 'rentalId', rentalId)
             // verify required parameter 'returnRental' is not null or undefined
-            assertParamExists('returnRental_3', 'returnRental', returnRental)
+            assertParamExists('returnRental_2', 'returnRental', returnRental)
             const localVarPath = `/rentals/{rentalId}/return`
                 .replace(`{${"rentalId"}}`, encodeURIComponent(String(rentalId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -329,21 +285,6 @@ export const RentalsApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
-         * @summary 사용자 대여 이력 조회
-         * @param {string} userId 사용자 ID
-         * @param {number} [page] 페이지 번호 (1부터 시작)
-         * @param {number} [limit] 페이지당 항목 수
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUserRentals_2(userId: string, page?: number, limit?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserRentals200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserRentals_2(userId, page, limit, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['RentalsApi.getUserRentals_2']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
          * @summary 자전거 반납
          * @param {string} rentalId 
@@ -365,10 +306,10 @@ export const RentalsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async returnRental_3(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ReturnRental200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.returnRental_3(rentalId, returnRental, options);
+        async returnRental_2(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ReturnRental200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.returnRental_2(rentalId, returnRental, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['RentalsApi.returnRental_3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RentalsApi.returnRental_2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -414,18 +355,6 @@ export const RentalsApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.getUserRentals(userId, page, limit, options).then((request) => request(axios, basePath));
         },
         /**
-         * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
-         * @summary 사용자 대여 이력 조회
-         * @param {string} userId 사용자 ID
-         * @param {number} [page] 페이지 번호 (1부터 시작)
-         * @param {number} [limit] 페이지당 항목 수
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserRentals_2(userId: string, page?: number, limit?: number, options?: RawAxiosRequestConfig): AxiosPromise<GetUserRentals200Response> {
-            return localVarFp.getUserRentals_2(userId, page, limit, options).then((request) => request(axios, basePath));
-        },
-        /**
          * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
          * @summary 자전거 반납
          * @param {string} rentalId 
@@ -444,8 +373,8 @@ export const RentalsApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        returnRental_3(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig): AxiosPromise<ReturnRental200Response> {
-            return localVarFp.returnRental_3(rentalId, returnRental, options).then((request) => request(axios, basePath));
+        returnRental_2(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig): AxiosPromise<ReturnRental200Response> {
+            return localVarFp.returnRental_2(rentalId, returnRental, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -496,20 +425,6 @@ export class RentalsApi extends BaseAPI {
     }
 
     /**
-     * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
-     * @summary 사용자 대여 이력 조회
-     * @param {string} userId 사용자 ID
-     * @param {number} [page] 페이지 번호 (1부터 시작)
-     * @param {number} [limit] 페이지당 항목 수
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof RentalsApi
-     */
-    public getUserRentals_2(userId: string, page?: number, limit?: number, options?: RawAxiosRequestConfig) {
-        return RentalsApiFp(this.configuration).getUserRentals_2(userId, page, limit, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
      * @summary 자전거 반납
      * @param {string} rentalId 
@@ -531,8 +446,8 @@ export class RentalsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof RentalsApi
      */
-    public returnRental_3(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig) {
-        return RentalsApiFp(this.configuration).returnRental_3(rentalId, returnRental, options).then((request) => request(this.axios, this.basePath));
+    public returnRental_2(rentalId: string, returnRental: ReturnRental, options?: RawAxiosRequestConfig) {
+        return RentalsApiFp(this.configuration).returnRental_2(rentalId, returnRental, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { DataRepairDetail } from './data-repair-detail';
+import type { GetRepairById200ResponseAllOfData } from './get-repair-by-id200-response-all-of-data';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

@@ -22,7 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { RecommendCourse } from '../models';
+import type { AiCourseGet200Response } from '../models';
 // @ts-ignore
 import type { RecommendCourse200Response } from '../models';
 /**
@@ -32,16 +32,15 @@ import type { RecommendCourse200Response } from '../models';
 export const AiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.
-         * @summary AI 코스 추천
-         * @param {RecommendCourse} recommendCourse 
+         * 출발지와 목적지의 위,경도가 주어지면 그 둘을 잇는 경로가 반환됩니다.
+         * @summary 코스 경로 제공
+         * @param {string} [start] 출발지 위,경도
+         * @param {string} [end] 목적지 위,경도
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        recommendCourse: async (recommendCourse: RecommendCourse, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'recommendCourse' is not null or undefined
-            assertParamExists('recommendCourse', 'recommendCourse', recommendCourse)
-            const localVarPath = `/ai/recommend-course`;
+        aiCourseGet: async (start?: string, end?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/ai/course`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -49,18 +48,23 @@ export const AiApiAxiosParamCreator = function (configuration?: Configuration) {
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            if (start !== undefined) {
+                localVarQueryParameter['start'] = start;
+            }
+
+            if (end !== undefined) {
+                localVarQueryParameter['end'] = end;
+            }
+
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recommendCourse, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -68,16 +72,14 @@ export const AiApiAxiosParamCreator = function (configuration?: Configuration) {
             };
         },
         /**
-         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.
+         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다.
          * @summary AI 코스 추천
-         * @param {RecommendCourse} recommendCourse 
+         * @param {string} [prompt] 사용자가 입력한 prompt (LLM이 사용)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        recommendCourse_1: async (recommendCourse: RecommendCourse, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'recommendCourse' is not null or undefined
-            assertParamExists('recommendCourse_1', 'recommendCourse', recommendCourse)
-            const localVarPath = `/ai/recommend-course`;
+        recommendCourse: async (prompt?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/ai/LLMrequest-coords`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -85,18 +87,54 @@ export const AiApiAxiosParamCreator = function (configuration?: Configuration) {
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            if (prompt !== undefined) {
+                localVarQueryParameter['prompt'] = prompt;
+            }
+
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recommendCourse, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다.
+         * @summary AI 코스 추천
+         * @param {string} [prompt] 사용자가 입력한 prompt (LLM이 사용)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        recommendCourse_1: async (prompt?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/ai/LLMrequest-coords`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (prompt !== undefined) {
+                localVarQueryParameter['prompt'] = prompt;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -114,27 +152,41 @@ export const AiApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AiApiAxiosParamCreator(configuration)
     return {
         /**
-         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.
-         * @summary AI 코스 추천
-         * @param {RecommendCourse} recommendCourse 
+         * 출발지와 목적지의 위,경도가 주어지면 그 둘을 잇는 경로가 반환됩니다.
+         * @summary 코스 경로 제공
+         * @param {string} [start] 출발지 위,경도
+         * @param {string} [end] 목적지 위,경도
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async recommendCourse(recommendCourse: RecommendCourse, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecommendCourse200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.recommendCourse(recommendCourse, options);
+        async aiCourseGet(start?: string, end?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AiCourseGet200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aiCourseGet(start, end, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AiApi.aiCourseGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다.
+         * @summary AI 코스 추천
+         * @param {string} [prompt] 사용자가 입력한 prompt (LLM이 사용)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async recommendCourse(prompt?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecommendCourse200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.recommendCourse(prompt, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AiApi.recommendCourse']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.
+         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다.
          * @summary AI 코스 추천
-         * @param {RecommendCourse} recommendCourse 
+         * @param {string} [prompt] 사용자가 입력한 prompt (LLM이 사용)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async recommendCourse_1(recommendCourse: RecommendCourse, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecommendCourse200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.recommendCourse_1(recommendCourse, options);
+        async recommendCourse_1(prompt?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecommendCourse200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.recommendCourse_1(prompt, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AiApi.recommendCourse_1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -150,24 +202,35 @@ export const AiApiFactory = function (configuration?: Configuration, basePath?: 
     const localVarFp = AiApiFp(configuration)
     return {
         /**
-         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.
-         * @summary AI 코스 추천
-         * @param {RecommendCourse} recommendCourse 
+         * 출발지와 목적지의 위,경도가 주어지면 그 둘을 잇는 경로가 반환됩니다.
+         * @summary 코스 경로 제공
+         * @param {string} [start] 출발지 위,경도
+         * @param {string} [end] 목적지 위,경도
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        recommendCourse(recommendCourse: RecommendCourse, options?: RawAxiosRequestConfig): AxiosPromise<RecommendCourse200Response> {
-            return localVarFp.recommendCourse(recommendCourse, options).then((request) => request(axios, basePath));
+        aiCourseGet(start?: string, end?: string, options?: RawAxiosRequestConfig): AxiosPromise<AiCourseGet200Response> {
+            return localVarFp.aiCourseGet(start, end, options).then((request) => request(axios, basePath));
         },
         /**
-         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.
+         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다.
          * @summary AI 코스 추천
-         * @param {RecommendCourse} recommendCourse 
+         * @param {string} [prompt] 사용자가 입력한 prompt (LLM이 사용)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        recommendCourse_1(recommendCourse: RecommendCourse, options?: RawAxiosRequestConfig): AxiosPromise<RecommendCourse200Response> {
-            return localVarFp.recommendCourse_1(recommendCourse, options).then((request) => request(axios, basePath));
+        recommendCourse(prompt?: string, options?: RawAxiosRequestConfig): AxiosPromise<RecommendCourse200Response> {
+            return localVarFp.recommendCourse(prompt, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다.
+         * @summary AI 코스 추천
+         * @param {string} [prompt] 사용자가 입력한 prompt (LLM이 사용)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        recommendCourse_1(prompt?: string, options?: RawAxiosRequestConfig): AxiosPromise<RecommendCourse200Response> {
+            return localVarFp.recommendCourse_1(prompt, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -180,27 +243,40 @@ export const AiApiFactory = function (configuration?: Configuration, basePath?: 
  */
 export class AiApi extends BaseAPI {
     /**
-     * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.
-     * @summary AI 코스 추천
-     * @param {RecommendCourse} recommendCourse 
+     * 출발지와 목적지의 위,경도가 주어지면 그 둘을 잇는 경로가 반환됩니다.
+     * @summary 코스 경로 제공
+     * @param {string} [start] 출발지 위,경도
+     * @param {string} [end] 목적지 위,경도
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AiApi
      */
-    public recommendCourse(recommendCourse: RecommendCourse, options?: RawAxiosRequestConfig) {
-        return AiApiFp(this.configuration).recommendCourse(recommendCourse, options).then((request) => request(this.axios, this.basePath));
+    public aiCourseGet(start?: string, end?: string, options?: RawAxiosRequestConfig) {
+        return AiApiFp(this.configuration).aiCourseGet(start, end, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다. 난이도, 소요 시간, 거리, 칼로리 소모량, 주요 경유지 등을 포함합니다. 현재는 키워드 기반 모의 AI를 사용합니다.
+     * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다.
      * @summary AI 코스 추천
-     * @param {RecommendCourse} recommendCourse 
+     * @param {string} [prompt] 사용자가 입력한 prompt (LLM이 사용)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AiApi
      */
-    public recommendCourse_1(recommendCourse: RecommendCourse, options?: RawAxiosRequestConfig) {
-        return AiApiFp(this.configuration).recommendCourse_1(recommendCourse, options).then((request) => request(this.axios, this.basePath));
+    public recommendCourse(prompt?: string, options?: RawAxiosRequestConfig) {
+        return AiApiFp(this.configuration).recommendCourse(prompt, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 사용자의 자연어 요청을 분석하여 적합한 자전거 코스를 추천합니다.
+     * @summary AI 코스 추천
+     * @param {string} [prompt] 사용자가 입력한 prompt (LLM이 사용)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AiApi
+     */
+    public recommendCourse_1(prompt?: string, options?: RawAxiosRequestConfig) {
+        return AiApiFp(this.configuration).recommendCourse_1(prompt, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

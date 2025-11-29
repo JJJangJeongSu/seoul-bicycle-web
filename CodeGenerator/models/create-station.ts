@@ -34,16 +34,16 @@ export interface CreateStation {
     'address': string;
     /**
      * 위도
-     * @type {number}
+     * @type {string}
      * @memberof CreateStation
      */
-    'latitude': number;
+    'latitude': string;
     /**
      * 경도
-     * @type {number}
+     * @type {string}
      * @memberof CreateStation
      */
-    'longitude': number;
+    'longitude': string;
     /**
      * 최대 수용 대수
      * @type {number}

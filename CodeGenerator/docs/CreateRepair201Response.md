@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**EntityRepair**](EntityRepair.md) |  | [default to undefined]
+**data** | [**CreateRepair201ResponseAllOfData**](CreateRepair201ResponseAllOfData.md) |  | [default to undefined]
 
 ## Example
 
