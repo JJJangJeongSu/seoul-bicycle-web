@@ -26,7 +26,7 @@ export function HomePage() {
 
   // Fetch stations on mount
   useEffect(() => {
-    loadStations();
+    // loadStations();
   }, []);
 
   const loadStations = async () => {

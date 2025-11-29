@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import type { User, SignupData } from '../types';
 import { useApiMode } from './ApiModeContext';
 import { AuthService } from '../services/auth.service';
+import { useLogin } from '../hooks/queries/useAuth';
 
+// AuthContextType 인터페이스 정의
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -31,11 +33,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [showSignupModal, setShowSignupModal] = useState(false);
   const navigate = useNavigate();
 
+  const loginMutation = useLogin();
+
   const login = useCallback(async (email: string, password: string) => {
     try {
       setLoading(true);
-      const authService = new AuthService(useMockMode);
-      const { user: loggedInUser } = await authService.login(email, password);
+      const { user: loggedInUser } = await loginMutation.mutateAsync({ email, password });
       setUser(loggedInUser);
       setShowLoginModal(false);
     } catch (error) {
@@ -45,7 +48,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setLoading(false);
     }
-  }, [useMockMode]);
+  }, [loginMutation]);
 
   const signup = useCallback(async (data: SignupData) => {
     try {

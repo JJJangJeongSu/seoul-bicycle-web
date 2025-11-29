@@ -8,6 +8,7 @@ import type { User } from '../types';
 import { apiClient } from './api/client';
 import { API_ENDPOINTS } from './api/config';
 import { MockAdminService } from './mock.service';
+import { adminApi, usersApi } from '../api';
 
 const mockService = new MockAdminService();
 
@@ -18,29 +19,31 @@ class RealAdminService {
     totalRentals: number;
     activeRentals: number;
   }> {
-    const response = await apiClient.get(API_ENDPOINTS.admin.getStatistics);
-    return response.data.data || response.data;
+    const response = await adminApi.getAdminStatistics();
+    return (response.data as any).data || response.data;
   }
 
   async getAllUsers(): Promise<User[]> {
-    const response = await apiClient.get(API_ENDPOINTS.admin.getAllUsers);
-    return response.data.data || response.data;
+    const response = await adminApi.getAllUsersAdmin();
+    return (response.data as any).data || response.data;
   }
 
   async getUserById(id: string): Promise<User | null> {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.admin.getUserById(id));
-      return response.data.data || response.data;
+      // Admin can use the general user API to get user details
+      const response = await usersApi.getUserById(id);
+      return (response.data as any).data || response.data;
     } catch (error) {
       return null;
     }
   }
 
   async updateUserStatus(id: string, status: 'active' | 'suspended'): Promise<User> {
-    const response = await apiClient.patch(API_ENDPOINTS.admin.updateUserStatus(id), {
-      status,
+    const apiStatus = status === 'suspended' ? 'blocked' : 'active';
+    const response = await adminApi.updateUserStatus(id, {
+      status: apiStatus as any,
     });
-    return response.data.data || response.data;
+    return (response.data as any).data || response.data;
   }
 }
 

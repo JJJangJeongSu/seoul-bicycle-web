@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Navigation, Clock, MapPin, Route as RouteIcon, Bike, ArrowRight, MapPinned, Search } from 'lucide-react';
 import { mockStations } from '../../lib/mockData';
+import { routesService } from '../../services/routes.service';
 
 /**
  * TODO: 실제 지도 API 연동
@@ -49,103 +50,66 @@ export function RoutePage() {
   const [routeResult, setRouteResult] = useState<RouteResult | null>(null);
   const [showStationSelect, setShowStationSelect] = useState<'start' | 'end' | null>(null);
   
-  // 두 지점 간 거리 계산 (Haversine formula)
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371; // 지구 반지름 (km)
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
-  };
-
-  // TODO: 실제 지도 API 연동 필요
-  // - Kakao Maps / Naver Maps / Google Maps Geocoding API 사용
-  // - 실제 주소를 정확한 좌표로 변환
-  // - 에러 핸들링 (주소를 찾을 수 없는 경우)
-  // 주소를 임의의 좌표로 변환 (실제로는 Geocoding API 사용)
-  const addressToCoordinates = (address: string): { lat: number; lon: number } => {
-    // Mock implementation - 실제로는 Kakao Map Geocoding API 등을 사용
-    const hash = address.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return {
-      lat: 37.4 + (hash % 100) / 500, // 서울 근처 좌표
-      lon: 126.8 + (hash % 100) / 500
-    };
-  };
-
-  // 가장 가까운 대여소 찾기
-  const findNearestStation = (lat: number, lon: number): Station => {
-    const activeStations = mockStations.filter(s => s.status === 'active' && s.bikeCount > 0);
-    
-    let nearest = activeStations[0];
-    let minDistance = calculateDistance(lat, lon, nearest.latitude, nearest.longitude);
-
-    activeStations.forEach(station => {
-      const distance = calculateDistance(lat, lon, station.latitude, station.longitude);
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearest = station;
-      }
-    });
-
-    return nearest;
-  };
-
-  // 가장 가까운 반납 대여소 찾기 (자전거 수 상관없음)
-  const findNearestReturnStation = (lat: number, lon: number): Station => {
-    const activeStations = mockStations.filter(s => s.status === 'active');
-    
-    let nearest = activeStations[0];
-    let minDistance = calculateDistance(lat, lon, nearest.latitude, nearest.longitude);
-
-    activeStations.forEach(station => {
-      const distance = calculateDistance(lat, lon, station.latitude, station.longitude);
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearest = station;
-      }
-    });
-
-    return nearest;
-  };
-
   // 경로 찾기
-  const handleFindRoute = () => {
+  const handleFindRoute = async () => {
     if (!currentLocation.trim() || !destination.trim()) {
       alert('출발지와 목적지를 모두 입력해주세요');
       return;
     }
 
-    // 좌표 변환
-    const startCoords = addressToCoordinates(currentLocation);
-    const endCoords = addressToCoordinates(destination);
+    try {
+      // 1. Geocode addresses
+      const startGeocode = await routesService.geocodeAddress(currentLocation);
+      const endGeocode = await routesService.geocodeAddress(destination);
 
-    // 가장 가까운 대여소 찾기
-    const startStation = findNearestStation(startCoords.lat, startCoords.lon);
-    const endStation = findNearestReturnStation(endCoords.lat, endCoords.lon);
+      if (!startGeocode || !endGeocode) {
+        alert('주소를 찾을 수 없습니다.');
+        return;
+      }
 
-    // 거리 계산
-    const walkingToStart = calculateDistance(startCoords.lat, startCoords.lon, startStation.latitude, startStation.longitude);
-    const bikeDistance = calculateDistance(startStation.latitude, startStation.longitude, endStation.latitude, endStation.longitude);
-    const walkingFromEnd = calculateDistance(endStation.latitude, endStation.longitude, endCoords.lat, endCoords.lon);
+      // 2. Calculate route
+      const routeData = await routesService.calculateRoute(
+        startGeocode.lat,
+        startGeocode.lon,
+        endGeocode.lat,
+        endGeocode.lon
+      );
 
-    // 시간 계산 (자전거: 15km/h, 도보: 4km/h)
-    const bikeDuration = (bikeDistance / 15) * 60; // 분
-    const walkingStartDuration = (walkingToStart / 4) * 60; // 분
-    const walkingEndDuration = (walkingFromEnd / 4) * 60; // 분
-    const totalDuration = Math.round(bikeDuration + walkingStartDuration + walkingEndDuration);
+      if (!routeData) {
+        alert('경로를 찾을 수 없습니다.');
+        return;
+      }
 
-    setRouteResult({
-      startStation,
-      endStation,
-      distance: bikeDistance,
-      duration: totalDuration,
-      walkingToStart,
-      walkingFromEnd,
-    });
+      // Map API response to component state
+      setRouteResult({
+        startStation: {
+          id: routeData.startStation.id,
+          name: routeData.startStation.name,
+          address: routeData.startStation.address,
+          latitude: parseFloat(routeData.startStation.latitude),
+          longitude: parseFloat(routeData.startStation.longitude),
+          bikeCount: routeData.startStation.bike_count,
+          status: routeData.startStation.status,
+        },
+        endStation: {
+          id: routeData.endStation.id,
+          name: routeData.endStation.name,
+          address: routeData.endStation.address,
+          latitude: parseFloat(routeData.endStation.latitude),
+          longitude: parseFloat(routeData.endStation.longitude),
+          bikeCount: routeData.endStation.bike_count,
+          status: routeData.endStation.status,
+        },
+        distance: routeData.distance,
+        duration: routeData.duration,
+        walkingToStart: routeData.walkingDistanceToStart,
+        walkingFromEnd: routeData.walkingDistanceFromEnd,
+      });
+
+    } catch (error) {
+      console.error('Error finding route:', error);
+      alert('경로 탐색 중 오류가 발생했습니다.');
+    }
   };
 
   // 대여소 직접 선택
@@ -179,7 +143,7 @@ export function RoutePage() {
               <input
                 type="text"
                 value={currentLocation}
-                onChange={(e) => setCurrentLocation(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentLocation(e.target.value)}
                 placeholder="예: 강남역, 여의도, 홍대입구역"
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -203,7 +167,7 @@ export function RoutePage() {
               <input
                 type="text"
                 value={destination}
-                onChange={(e) => setDestination(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDestination(e.target.value)}
                 placeholder="예: 서울역, 명동, 이태원"
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />

@@ -8,36 +8,35 @@ import type { Rental } from '../types';
 import { apiClient } from './api/client';
 import { API_ENDPOINTS } from './api/config';
 import { MockRentalService } from './mock.service';
+import { rentalsApi } from '../api';
 
 const mockService = new MockRentalService();
 
 class RealRentalService {
   async createRental(userId: string, stationId: string): Promise<Rental> {
-    const response = await apiClient.post(API_ENDPOINTS.rentals.create, {
-      userId,
+    // userId is inferred from token in the generated API
+    const response = await rentalsApi.createRental({
       stationId,
     });
-    return response.data.data || response.data;
+    return (response.data as any).data || response.data;
   }
 
   async returnRental(rentalId: string, stationId: string, distance: number, duration: number): Promise<Rental> {
-    const response = await apiClient.post(API_ENDPOINTS.rentals.return(rentalId), {
-      stationId,
-      distance,
-      duration,
+    // distance and duration are calculated by backend
+    const response = await rentalsApi.returnRental(rentalId, {
+      endStationId: stationId,
     });
-    return response.data.data || response.data;
+    return (response.data as any).data || response.data;
   }
 
   async getUserRentals(userId: string): Promise<Rental[]> {
-    const response = await apiClient.get(API_ENDPOINTS.rentals.getUserRentals, {
-      params: { userId },
-    });
-    return response.data.data || response.data;
+    const response = await rentalsApi.getUserRentals(userId);
+    return (response.data as any).data || response.data;
   }
 
   async getRentalById(id: string): Promise<Rental | null> {
     try {
+      // getRentalById is not in generated API yet
       const response = await apiClient.get(API_ENDPOINTS.rentals.getById(id));
       return response.data.data || response.data;
     } catch (error) {

@@ -8,42 +8,51 @@ import type { Repair } from '../types';
 import { apiClient } from './api/client';
 import { API_ENDPOINTS } from './api/config';
 import { MockRepairService } from './mock.service';
+import { repairsApi, adminApi } from '../api';
 
 const mockService = new MockRepairService();
 
 class RealRepairService {
   async createRepair(repair: Omit<Repair, 'id' | 'createdAt' | 'status'>): Promise<Repair> {
-    const response = await apiClient.post(API_ENDPOINTS.repairs.create, repair);
-    return response.data.data || response.data;
+    // API expects type, bikeId/stationId, category, description, photos. Reporter info is inferred.
+    const response = await repairsApi.createRepair({
+      type: repair.type as any,
+      bikeId: repair.bikeId,
+      stationId: repair.stationId,
+      category: repair.category as any,
+      description: repair.description,
+      photos: repair.photos,
+    });
+    return (response.data as any).data || response.data;
   }
 
   async getMyRepairs(reporterId: string): Promise<Repair[]> {
-    const response = await apiClient.get(API_ENDPOINTS.repairs.getMy, {
-      params: { reporterId },
-    });
-    return response.data.data || response.data;
+    // reporterId is inferred from token for getMyRepairs
+    const response = await repairsApi.getMyRepairs();
+    return (response.data as any).data || response.data;
   }
 
   async getAllRepairs(): Promise<Repair[]> {
-    const response = await apiClient.get(API_ENDPOINTS.repairs.getAll);
-    return response.data.data || response.data;
+    // This seems to be an admin function or public list
+    const response = await adminApi.getAllRepairsAdmin();
+    return (response.data as any).data || response.data;
   }
 
   async getRepairById(id: string): Promise<Repair | null> {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.repairs.getById(id));
-      return response.data.data || response.data;
+      const response = await repairsApi.getRepairById(id);
+      return (response.data as any).data || response.data;
     } catch (error) {
       return null;
     }
   }
 
   async updateRepairStatus(id: string, status: Repair['status'], adminNote?: string): Promise<Repair> {
-    const response = await apiClient.patch(API_ENDPOINTS.repairs.updateStatus(id), {
-      status,
+    const response = await adminApi.updateRepairStatus(id, {
+      status: status as any,
       adminNote,
     });
-    return response.data.data || response.data;
+    return (response.data as any).data || response.data;
   }
 }
 

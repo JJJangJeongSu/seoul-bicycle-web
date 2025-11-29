@@ -23,28 +23,52 @@ export const apiClient: AxiosInstance = axios.create({
  * Adds authentication token to requests
  * Logs requests in debug mode
  */
+// Extended request config to include start time
+interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
+  metadata?: {
+    startTime: number;
+  };
+}
+
+/**
+ * Request Interceptor
+ *
+ * Adds authentication token to requests
+ * Logs requests in debug mode
+ */
 apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  (config: ExtendedAxiosRequestConfig) => {
     // Add authentication token if available
     const token = localStorage.getItem('accessToken');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    // Add start time for duration calculation
+    config.metadata = { startTime: Date.now() };
+
     // Log request in debug mode
     if (API_CONFIG.debug) {
-      console.log('[API Request]', {
-        method: config.method?.toUpperCase(),
-        url: config.url,
-        data: config.data,
-      });
+      const method = config.method?.toUpperCase();
+      const url = config.url;
+      
+      console.groupCollapsed(
+        `%c🚀 [REQUEST] ${method} ${url}`, 
+        'color: #3b82f6; font-weight: bold; font-size: 12px;'
+      );
+      console.log('%cHeaders:', 'color: #9ca3af; font-weight: bold;', config.headers);
+      if (config.data) {
+        console.log('%cBody:', 'color: #9ca3af; font-weight: bold;', config.data);
+      }
+      console.log('%cConfig:', 'color: #9ca3af; font-weight: bold;', config);
+      console.groupEnd();
     }
 
     return config;
   },
   (error: AxiosError) => {
     if (API_CONFIG.debug) {
-      console.error('[API Request Error]', error);
+      console.error('❌ [REQUEST ERROR]', error);
     }
     return Promise.reject(error);
   }
@@ -58,26 +82,51 @@ apiClient.interceptors.request.use(
  */
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
+    const config = response.config as ExtendedAxiosRequestConfig;
+    const duration = config.metadata ? Date.now() - config.metadata.startTime : 0;
+
     // Log response in debug mode
     if (API_CONFIG.debug) {
-      console.log('[API Response]', {
-        status: response.status,
-        url: response.config.url,
-        data: response.data,
-      });
+      const status = response.status;
+      const url = response.config.url;
+      const method = response.config.method?.toUpperCase();
+      
+      console.groupCollapsed(
+        `%c✅ [RESPONSE] ${status} ${method} ${url} (%c${duration}ms%c)`, 
+        'color: #10b981; font-weight: bold; font-size: 12px;',
+        'color: #f59e0b; font-weight: bold;',
+        'color: #10b981; font-weight: bold; font-size: 12px;'
+      );
+      console.log('%cData:', 'color: #9ca3af; font-weight: bold;', response.data);
+      console.log('%cHeaders:', 'color: #9ca3af; font-weight: bold;', response.headers);
+      console.groupEnd();
     }
 
     return response;
   },
   (error: AxiosError) => {
+    const config = error.config as ExtendedAxiosRequestConfig;
+    const duration = config?.metadata ? Date.now() - config.metadata.startTime : 0;
+
     // Log error in debug mode
     if (API_CONFIG.debug) {
-      console.error('[API Response Error]', {
-        status: error.response?.status,
-        url: error.config?.url,
-        message: error.message,
-        data: error.response?.data,
-      });
+      const status = error.response?.status || 'UNKNOWN';
+      const url = error.config?.url;
+      const method = error.config?.method?.toUpperCase();
+
+      console.groupCollapsed(
+        `%c❌ [ERROR] ${status} ${method} ${url} (%c${duration}ms%c)`, 
+        'color: #ef4444; font-weight: bold; font-size: 12px;',
+        'color: #f59e0b; font-weight: bold;',
+        'color: #ef4444; font-weight: bold; font-size: 12px;'
+      );
+      console.log('%cMessage:', 'color: #ef4444; font-weight: bold;', error.message);
+      if (error.response) {
+        console.log('%cResponse Data:', 'color: #9ca3af; font-weight: bold;', error.response.data);
+        console.log('%cResponse Headers:', 'color: #9ca3af; font-weight: bold;', error.response.headers);
+      }
+      console.log('%cStack:', 'color: #9ca3af;', error.stack);
+      console.groupEnd();
     }
 
     // Handle common error scenarios
@@ -93,21 +142,18 @@ apiClient.interceptors.response.use(
 
         case 403:
           // Forbidden - user doesn't have permission
-          console.error('Permission denied');
+          console.warn('Permission denied for:', error.config?.url);
           break;
 
         case 404:
           // Not found
-          console.error('Resource not found');
+          console.warn('Resource not found:', error.config?.url);
           break;
 
         case 500:
           // Server error
           console.error('Server error occurred');
           break;
-
-        default:
-          console.error('API error:', error.message);
       }
     } else if (error.request) {
       // Request made but no response received

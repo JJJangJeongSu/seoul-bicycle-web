@@ -8,38 +8,46 @@ import type { Post } from '../types';
 import { apiClient } from './api/client';
 import { API_ENDPOINTS } from './api/config';
 import { MockBoardService } from './mock.service';
+import { boardApi } from '../api';
 
 const mockService = new MockBoardService();
 
 class RealBoardService {
   async getAllPosts(category?: string): Promise<Post[]> {
-    const response = await apiClient.get(API_ENDPOINTS.board.getAllPosts, {
-      params: category ? { category } : undefined,
-    });
-    return response.data.data || response.data;
+    const response = await boardApi.getAllPosts(undefined, undefined, undefined, category as any);
+    return (response.data as any).data || response.data;
   }
 
   async getPostById(id: string): Promise<Post | null> {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.board.getPostById(id));
-      return response.data.data || response.data;
+      const response = await boardApi.getPostById(id);
+      return (response.data as any).data || response.data;
     } catch (error) {
       return null;
     }
   }
 
   async createPost(post: Omit<Post, 'id' | 'views' | 'likes' | 'comments' | 'createdAt'>): Promise<Post> {
-    const response = await apiClient.post(API_ENDPOINTS.board.createPost, post);
-    return response.data.data || response.data;
+    // API expects only title, content, category. Author info is inferred from token.
+    const response = await boardApi.createPost({
+      title: post.title,
+      content: post.content,
+      category: post.category as any,
+    });
+    return (response.data as any).data || response.data;
   }
 
   async updatePost(id: string, updates: Partial<Post>): Promise<Post> {
-    const response = await apiClient.patch(API_ENDPOINTS.board.updatePost(id), updates);
-    return response.data.data || response.data;
+    // API only allows updating title and content
+    const response = await boardApi.updatePost(id, {
+      title: updates.title,
+      content: updates.content,
+    });
+    return (response.data as any).data || response.data;
   }
 
   async deletePost(id: string): Promise<void> {
-    await apiClient.delete(API_ENDPOINTS.board.deletePost(id));
+    await boardApi.deletePost(id);
   }
 }
 

@@ -86,14 +86,17 @@ export function Navbar() {
             )}
 
             {/* Mock Mode Toggle (Dev Only) */}
-            {import.meta.env.DEV && (
+            {
               <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
                 <Switch
                   checked={useMockMode}
                   onCheckedChange={toggleMockMode}
                   className="data-[state=checked]:bg-accent"
                 />
-                <div className="flex items-center gap-1.5">
+                <div 
+                  className="flex items-center gap-1.5 cursor-pointer select-none"
+                  onClick={toggleMockMode}
+                >
                   {useMockMode ? (
                     <>
                       <Hammer className="w-4 h-4" />
@@ -109,7 +112,7 @@ export function Navbar() {
                   )}
                 </div>
               </div>
-            )}
+            }
 
             {user ? (
               <>

@@ -1,0 +1,20 @@
+import { AuthApi } from '../../CodeGenerator/apis/auth-api';
+import { UsersApi } from '../../CodeGenerator/apis/users-api';
+import { StationsApi } from '../../CodeGenerator/apis/stations-api';
+import { RentalsApi } from '../../CodeGenerator/apis/rentals-api';
+import { RoutesApi } from '../../CodeGenerator/apis/routes-api';
+import { RepairsApi } from '../../CodeGenerator/apis/repairs-api';
+import { BoardApi } from '../../CodeGenerator/apis/board-api';
+import { AdminApi } from '../../CodeGenerator/apis/admin-api';
+import { AiApi } from '../../CodeGenerator/apis/ai-api';
+import { apiConfig, axiosInstance } from './config';
+
+export const authApi = new AuthApi(apiConfig, undefined, axiosInstance);
+export const usersApi = new UsersApi(apiConfig, undefined, axiosInstance);
+export const stationsApi = new StationsApi(apiConfig, undefined, axiosInstance);
+export const rentalsApi = new RentalsApi(apiConfig, undefined, axiosInstance);
+export const routesApi = new RoutesApi(apiConfig, undefined, axiosInstance);
+export const repairsApi = new RepairsApi(apiConfig, undefined, axiosInstance);
+export const boardApi = new BoardApi(apiConfig, undefined, axiosInstance);
+export const adminApi = new AdminApi(apiConfig, undefined, axiosInstance);
+export const aiApi = new AiApi(apiConfig, undefined, axiosInstance);

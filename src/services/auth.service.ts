@@ -9,6 +9,7 @@ import type { User } from '../types';
 import { apiClient, setAuthToken } from './api/client';
 import { API_ENDPOINTS } from './api/config';
 import { MockAuthService } from './mock.service';
+import { authApi } from '../api';
 
 // Singleton instances
 const mockService = new MockAuthService();
@@ -18,19 +19,18 @@ const mockService = new MockAuthService();
  */
 class RealAuthService {
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
-    const response = await apiClient.post(API_ENDPOINTS.auth.login, {
-      email,
-      password,
-    });
-
-    const data = response.data.data || response.data;
+    const response = await authApi.loginUser({ email, password });
+    const data = response.data;
+    
+    // API might return data wrapped in 'data' property or directly
+    const result = (data as any).data || data;
 
     // Store token
-    if (data.token) {
-      setAuthToken(data.token);
+    if (result.token) {
+      setAuthToken(result.token);
     }
 
-    return data;
+    return result;
   }
 
   async signup(signupData: {
@@ -39,21 +39,30 @@ class RealAuthService {
     name: string;
     phone: string;
   }): Promise<{ user: User; token: string }> {
-    const response = await apiClient.post(API_ENDPOINTS.auth.signup, signupData);
+    const response = await authApi.signupUser(signupData);
+    const data = response.data;
 
-    const data = response.data.data || response.data;
+    const result = (data as any).data || data;
 
     // Store token
-    if (data.token) {
-      setAuthToken(data.token);
+    if (result.token) {
+      setAuthToken(result.token);
     }
 
-    return data;
+    return result;
   }
 
   async logout(): Promise<void> {
     try {
+      // AuthApi doesn't have logout method generated yet, or it was missed?
+      // Checking auth-api.ts, it only had login, signup, checkEmail.
+      // If logout endpoint exists but not in openapi, we might need to use apiClient or add it.
+      // For now, let's assume client-side logout is enough or use apiClient for logout if needed.
+      // But wait, the original code called API_ENDPOINTS.auth.logout.
+      // Let's keep using apiClient for logout for now if authApi doesn't have it.
       await apiClient.post(API_ENDPOINTS.auth.logout);
+    } catch (e) {
+      // Ignore logout errors
     } finally {
       // Clear token regardless of API response
       setAuthToken(null);
@@ -61,11 +70,14 @@ class RealAuthService {
   }
 
   async checkEmailAvailability(email: string): Promise<{ available: boolean }> {
-    const response = await apiClient.post(API_ENDPOINTS.auth.checkEmail, { email });
-    return response.data.data || response.data;
+    const response = await authApi.checkEmailAvailability(email);
+    return (response.data as any).data || response.data;
   }
 
   async changePassword(oldPassword: string, newPassword: string): Promise<void> {
+    // changePassword might not be in AuthApi yet based on previous view_file of auth-api.ts
+    // It was not in the list of methods in auth-api.ts (only checkEmail, login, signup).
+    // So we keep using apiClient for this one.
     await apiClient.post(API_ENDPOINTS.auth.changePassword, {
       oldPassword,
       newPassword,

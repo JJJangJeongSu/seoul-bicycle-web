@@ -7,6 +7,7 @@
 import { apiClient } from './api/client';
 import { API_ENDPOINTS } from './api/config';
 import { MockUserService } from './mock.service';
+import { usersApi } from '../api';
 
 const mockService = new MockUserService();
 
@@ -18,10 +19,8 @@ class RealUserService {
     averageDistance: number;
     averageDuration: number;
   }> {
-    const response = await apiClient.get(API_ENDPOINTS.users.getStatistics, {
-      params: { userId },
-    });
-    return response.data.data || response.data;
+    const response = await usersApi.getUserStatistics(userId);
+    return (response.data as any).data || response.data;
   }
 }
 

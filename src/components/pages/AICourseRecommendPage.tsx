@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Navigation, Clock, MapPin, Sparkles, Flame, Mountain, Info, Loader2, MapPinned } from 'lucide-react';
+import { aiService } from '../../services/ai.service';
 
 /**
  * TODO: AI 코스 추천 API 연동
@@ -75,96 +76,10 @@ export function AICourseRecommendPage() {
     return descriptions[difficulty as keyof typeof descriptions] || '';
   };
 
-  // AI API 호출 모의 함수
-  const fetchCourseRecommendation = async (userPrompt: string): Promise<CourseInfo> => {
-    // 실제로는 AI API를 호출
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    const keyword = userPrompt.toLowerCase();
-
-    // 키워드 기반 코스 추천
-    if (keyword.includes('한강') || keyword.includes('강변')) {
-      return {
-        name: '한강 라이딩 코스',
-        description: '한강을 따라 달리는 시원한 코스입니다. 넓은 자전거 도로와 아름다운 강변 풍경을 즐기며 여유로운 라이딩을 할 수 있습니다. 여의도 한강공원에서 출발하여 반포 한강공원까지 이어지는 코스로, 중간중간 휴식 공간과 편의시설이 잘 갖춰져 있습니다.',
-        duration: 90,
-        calories: 450,
-        difficulty: '하',
-        distance: 15.2,
-        highlights: ['강변 풍경', '평탄한 도로', '휴식 공간', '편의시설'],
-      };
-    } else if (keyword.includes('남산')) {
-      return {
-        name: '남산 순환 도전 코스',
-        description: '남산을 한 바퀴 도는 도전적인 코스입니다. 경사가 급한 오르막이 있어 체력이 많이 소모되지만, 정상에서 보는 서울 야경과 성취감은 그 무엇과도 바꿀 수 없습니다. 초보자보다는 어느 정도 라이딩 경험이 있는 분들께 추천합니다.',
-        duration: 75,
-        calories: 680,
-        difficulty: '최상',
-        distance: 9.8,
-        highlights: ['서울 전망', '급경사', '야경 명소', '성취감'],
-      };
-    } else if (keyword.includes('야간') || keyword.includes('밤')) {
-      return {
-        name: '서울 야경 투어 코스',
-        description: '서울의 아름다운 야경을 감상하며 달리는 코스입니다. LED 조명이 켜진 한강대교를 지나 여의도, 반포대교 달빛무지개분수를 거쳐 돌아오는 환상적인 야간 라이딩 코스입니다.',
-        duration: 60,
-        calories: 320,
-        difficulty: '중',
-        distance: 12.0,
-        highlights: ['야경', '조명', '분수쇼', '낭만적'],
-      };
-    } else if (keyword.includes('초보') || keyword.includes('쉬운')) {
-      return {
-        name: '초보자 추천 평탄 코스',
-        description: '처음 자전거를 타시는 분들을 위한 완만하고 안전한 코스입니다. 서울숲에서 시작하여 뚝섬 한강공원까지 이어지는 평탄한 코스로, 경사가 거의 없어 편안하게 라이딩을 즐길 수 있습니다.',
-        duration: 45,
-        calories: 220,
-        difficulty: '최하',
-        distance: 8.5,
-        highlights: ['평탄', '안전', '공원', '초보자'],
-      };
-    } else if (keyword.includes('운동') || keyword.includes('칼로리') || keyword.includes('다이어트')) {
-      return {
-        name: '칼로리 소모 집중 코스',
-        description: '효과적인 칼로리 소모를 위한 코스입니다. 오르막과 내리막이 적절히 섞여 있어 심박수를 높이고 지방 연소에 효과적입니다. 중랑천 자전거길을 따라 달리며 일정한 속도를 유지하는 것이 중요합니다.',
-        duration: 120,
-        calories: 850,
-        difficulty: '상',
-        distance: 22.5,
-        highlights: ['고강도', '칼로리', '운동', '지구력'],
-      };
-    } else if (keyword.includes('공원') || keyword.includes('산책')) {
-      return {
-        name: '서울숲 여유 코스',
-        description: '서울숲 공원을 중심으로 한 여유로운 코스입니다. 나무 그늘 아래에서 시원한 바람을 맞으며 가벼운 라이딩을 즐길 수 있습니다. 중간에 카페에서 휴식을 취하기에도 좋습니다.',
-        duration: 50,
-        calories: 280,
-        difficulty: '최하',
-        distance: 10.2,
-        highlights: ['공원', '나무', '여유', '카페'],
-      };
-    } else if (keyword.includes('관광') || keyword.includes('명소')) {
-      return {
-        name: '서울 랜드마크 투어 코스',
-        description: '서울의 주요 랜드마크를 자전거로 둘러보는 관광 코스입니다. 광화문, 경복궁, 청계천, 동대문을 거쳐 돌아오며 서울의 역사와 현대가 공존하는 모습을 감상할 수 있습니다.',
-        duration: 100,
-        calories: 520,
-        difficulty: '중',
-        distance: 18.3,
-        highlights: ['관광', '역사', '문화', '사진'],
-      };
-    } else {
-      // 기본 추천 코스
-      return {
-        name: '서울 추천 라이딩 코스',
-        description: `"${userPrompt}"에 맞는 추천 코스입니다. 서울의 아름다운 풍경을 감상하며 즐거운 라이딩을 경험할 수 있는 균형 잡힌 코스입니다. 평탄한 구간과 약간의 언덕이 섞여 있어 지루하지 않게 라이딩을 즐길 수 있습니다.`,
-        duration: 70,
-        calories: 380,
-        difficulty: '중',
-        distance: 13.5,
-        highlights: ['균형잡힌', '다양성', '추천', '경치'],
-      };
-    }
+  const fetchCourseRecommendation = async (userPrompt: string) => {
+    // Call AI service
+    const courseData = await aiService.recommendCourse(userPrompt);
+    return courseData;
   };
 
   const handleRecommend = async () => {
@@ -200,10 +115,10 @@ export function AICourseRecommendPage() {
         </label>
         <textarea
           value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPrompt(e.target.value)}
           placeholder="예: 한강을 따라 달리는 쉬운 코스를 추천해주세요&#10;예: 야경이 아름다운 밤 라이딩 코스&#10;예: 칼로리 소모가 많은 운동 코스&#10;예: 초보자도 탈 수 있는 평탄한 코스"
           className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent mb-4 min-h-32 resize-none"
-          onKeyDown={(e) => {
+          onKeyDown={(e: React.KeyboardEvent) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
               !loading && handleRecommend();

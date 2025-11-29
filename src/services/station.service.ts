@@ -9,6 +9,7 @@ import type { Station } from '../types';
 import { apiClient } from './api/client';
 import { API_ENDPOINTS } from './api/config';
 import { MockStationService } from './mock.service';
+import { stationsApi } from '../api';
 
 // Singleton instances
 const mockService = new MockStationService();
@@ -18,12 +19,13 @@ const mockService = new MockStationService();
  */
 class RealStationService {
   async getAllStations(): Promise<Station[]> {
-    const response = await apiClient.get(API_ENDPOINTS.stations.getAll);
-    return response.data.data || response.data;
+    const response = await stationsApi.getAllStations();
+    return (response.data as any).data || response.data;
   }
 
   async getStationById(id: string): Promise<Station | null> {
     try {
+      // getStationById is not in generated API yet
       const response = await apiClient.get(API_ENDPOINTS.stations.getById(id));
       return response.data.data || response.data;
     } catch (error) {
@@ -33,21 +35,21 @@ class RealStationService {
 
   async getNearestStation(latitude: number, longitude: number): Promise<Station | null> {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.stations.getNearest, {
-        params: { latitude, longitude },
-      });
-      return response.data.data || response.data;
+      // API expects string for lat/lon
+      const response = await stationsApi.getNearestStation(latitude.toString(), longitude.toString());
+      return (response.data as any).data || response.data;
     } catch (error) {
       return null;
     }
   }
 
   async getStationsStatus(): Promise<{ total: number; active: number; inactive: number; available: number }> {
-    const response = await apiClient.get(API_ENDPOINTS.stations.getStatus);
-    return response.data.data || response.data;
+    const response = await stationsApi.getStationsStatus();
+    return (response.data as any).data || response.data;
   }
 
   async updateStationBikeCount(id: string, count: number): Promise<Station> {
+    // updateStationBikeCount is not in generated API yet
     const response = await apiClient.patch(API_ENDPOINTS.stations.update(id), {
       bikeCount: count,
     });
