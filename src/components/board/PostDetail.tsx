@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Eye, ThumbsUp, MessageSquare, Share2, Edit, Trash2, Loader2 } from 'lucide-react';
+import { ArrowLeft, Eye, MessageSquare, Edit, Trash2, Loader2 } from 'lucide-react';
 import type { Post } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
 import { useServices } from '../../hooks/useServices';
@@ -7,14 +7,13 @@ import { useServices } from '../../hooks/useServices';
 type PostDetailProps = {
   postId: string;
   onBack: () => void;
+  onEdit?: (post: Post) => void;
 };
 
-export function PostDetail({ postId, onBack }: PostDetailProps) {
+export function PostDetail({ postId, onBack, onEdit }: PostDetailProps) {
   const { user } = useAuth();
   const { boardService } = useServices();
   const [postData, setPostData] = useState<Post | null>(null);
-  const [liked, setLiked] = useState(false);
-  const [userLikedPosts, setUserLikedPosts] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,13 +41,8 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
         }
 
         if (foundPost) {
-          // Load likes data from localStorage
-          const savedLikes = localStorage.getItem('post_likes');
-          const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
-
           setPostData({
             ...foundPost,
-            likes: likesMap[foundPost.id] !== undefined ? likesMap[foundPost.id] : foundPost.likes,
           });
         } else {
           setError('게시글을 찾을 수 없습니다.');
@@ -62,20 +56,7 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
     };
 
     loadPost();
-
-    // Load user's liked posts
-    if (user) {
-      const userLikes = localStorage.getItem(`user_likes_${user.id}`);
-      setUserLikedPosts(userLikes ? JSON.parse(userLikes) : []);
-    }
   }, [postId, user, boardService]);
-
-  // Check if user already liked this post
-  useEffect(() => {
-    if (user && postData) {
-      setLiked(userLikedPosts.includes(postData.id));
-    }
-  }, [user, postData, userLikedPosts]);
 
   const [comments, setComments] = useState([
     {
@@ -120,40 +101,6 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
       </div>
     );
   }
-
-  const handleLike = () => {
-    if (!user) {
-      alert('로그인이 필요합니다');
-      return;
-    }
-
-    // Toggle like
-    const newLikedState = !liked;
-    setLiked(newLikedState);
-
-    // Update likes count
-    const newLikesCount = newLikedState ? postData.likes + 1 : postData.likes - 1;
-    setPostData({ ...postData, likes: newLikesCount });
-
-    // Save likes data
-    const savedLikes = localStorage.getItem('post_likes');
-    const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
-    likesMap[postData.id] = newLikesCount;
-    localStorage.setItem('post_likes', JSON.stringify(likesMap));
-
-    // Update user's liked posts
-    let updatedUserLikes = [...userLikedPosts];
-    if (newLikedState) {
-      updatedUserLikes.push(postData.id);
-    } else {
-      updatedUserLikes = updatedUserLikes.filter(id => id !== postData.id);
-    }
-    setUserLikedPosts(updatedUserLikes);
-    localStorage.setItem(`user_likes_${user.id}`, JSON.stringify(updatedUserLikes));
-
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new Event('board_updated'));
-  };
 
   const handleComment = () => {
     if (!user) {
@@ -209,12 +156,6 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
       const posts: Post[] = savedPosts ? JSON.parse(savedPosts) : [];
       const updatedPosts = posts.filter(p => p.id !== postData.id);
       localStorage.setItem('board_posts', JSON.stringify(updatedPosts));
-
-      // Also remove likes data for this post
-      const savedLikes = localStorage.getItem('post_likes');
-      const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
-      delete likesMap[postData.id];
-      localStorage.setItem('post_likes', JSON.stringify(likesMap));
 
       // Dispatch event to notify other components
       window.dispatchEvent(new Event('board_updated'));
@@ -274,10 +215,6 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
                 {postData.views}
               </div>
               <div className="flex items-center gap-1">
-                <ThumbsUp className="w-4 h-4" />
-                {postData.likes}
-              </div>
-              <div className="flex items-center gap-1">
                 <MessageSquare className="w-4 h-4" />
                 {comments.length}
               </div>
@@ -291,31 +228,15 @@ export function PostDetail({ postId, onBack }: PostDetailProps) {
         </div>
 
         {/* Actions */}
-        <div className="p-6 border-t flex items-center justify-between">
-          <div className="flex gap-2">
-            <button
-              onClick={handleLike}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                liked
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <ThumbsUp className="w-5 h-5" />
-              추천 {postData.likes}
-            </button>
-
-            <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
-              <Share2 className="w-5 h-5" />
-              공유
-            </button>
-          </div>
-
+        <div className="p-6 border-t flex items-center justify-end">
           {user && (user.id === postData.authorId || user.role === 'admin') && (
             <div className="flex gap-2">
               {/* 본인이 작성한 게시글이거나, 관리자가 작성한 글인 경우에만 수정 버튼 표시 */}
               {(user.id === postData.authorId) && (
-                <button className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                <button
+                  onClick={() => onEdit?.(postData)}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
+                >
                   <Edit className="w-5 h-5" />
                   수정
                 </button>

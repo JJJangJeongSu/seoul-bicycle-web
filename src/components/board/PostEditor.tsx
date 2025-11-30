@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { ArrowLeft, Save, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useServices } from '../../hooks/useServices';
-import { PostCreate } from '../../types';
-  
+import { PostCreate, Post } from '../../types';
+
 type PostEditorProps = {
   onBack: () => void;
   onSubmit: () => void;
+  initialData?: Post;
 };
 
-export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
+export function PostEditor({ onBack, onSubmit, initialData }: PostEditorProps) {
   const { user } = useAuth();
   const { boardService } = useServices();
   const [submitting, setSubmitting] = useState(false);
@@ -19,19 +20,23 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
   }
 
   const [formData, setFormData] = useState<PostCreate>({
-    category: 'free',
-    title: '',
-    content: '',
+    category: initialData?.category || 'free',
+    title: initialData?.title || '',
+    content: initialData?.content || '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await boardService.createPost(formData);
+      if (initialData) {
+        await boardService.updatePost(initialData.id, formData);
+      } else {
+        await boardService.createPost(formData);
+      }
       onSubmit();
     } catch (error) {
-      console.error('Error creating post:', error);
+      console.error('Error saving post:', error);
     } finally {
       setSubmitting(false);
     }
@@ -63,7 +68,7 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
 
       {/* Editor Form */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-2xl mb-6">글쓰기</h2>
+        <h2 className="text-2xl mb-6">{initialData ? '글 수정하기' : '글쓰기'}</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Category */}
@@ -76,7 +81,7 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => setFormData({ ...formData })}
+                  onClick={() => setFormData({ ...formData, category: cat.id as any })}
                   className={`px-4 py-2 rounded-lg transition-colors ${
                     formData.category === cat.id
                       ? 'bg-blue-600 text-white'
@@ -124,22 +129,6 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
             </p>
           </div>
 
-          {/* Image Upload */}
-          <div>
-            <label className="block text-sm text-gray-700 mb-2">
-              이미지 첨부 (선택, 최대 5장)
-            </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-500 mb-2">
-                클릭하여 이미지를 업로드하세요
-              </p>
-              <p className="text-xs text-gray-400">
-                JPG, PNG 파일 (최대 5MB)
-              </p>
-            </div>
-          </div>
-
           {/* Submit Buttons */}
           <div className="flex gap-3 pt-4 border-t">
             <button
@@ -148,7 +137,7 @@ export function PostEditor({ onBack, onSubmit }: PostEditorProps) {
               className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="w-5 h-5" />
-              {submitting ? '등록 중...' : '등록하기'}
+              {submitting ? (initialData ? '수정 중...' : '등록 중...') : (initialData ? '수정하기' : '등록하기')}
             </button>
             <button
               type="button"

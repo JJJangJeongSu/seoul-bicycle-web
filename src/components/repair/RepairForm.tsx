@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlertCircle, Image as ImageIcon, Send } from 'lucide-react';
+import { AlertCircle, Send } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useServices } from '../../hooks/useServices';
 
@@ -137,21 +137,7 @@ export function RepairForm({ onSuccess, onCancel }: RepairFormProps) {
           />
         </div>
 
-        {/* Photo Upload */}
-        <div>
-          <label className="block text-sm text-gray-700 mb-2">
-            사진 첨부 (선택, 최대 3장)
-          </label>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-            <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-500 mb-2">
-              클릭하여 사진을 업로드하세요
-            </p>
-            <p className="text-xs text-gray-400">
-              JPG, PNG 파일 (최대 5MB)
-            </p>
-          </div>
-        </div>
+
 
         {/* Info */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -162,7 +148,6 @@ export function RepairForm({ onSuccess, onCancel }: RepairFormProps) {
               <ul className="list-disc list-inside space-y-1">
                 <li>자전거 번호를 정확히 입력해주세요</li>
                 <li>고장 상황을 구체적으로 설명해주세요</li>
-                <li>사진을 첨부하면 처리가 더 빨라집니다</li>
               </ul>
             </div>
           </div>

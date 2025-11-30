@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { MessageSquare, Eye, ThumbsUp, Pin, Search, Loader2 } from 'lucide-react';
+import { MessageSquare, Eye, Pin, Search, Loader2 } from 'lucide-react';
 import type { Post } from '../../types';
 import { useServices } from '../../hooks/useServices';
 
@@ -11,7 +11,7 @@ export function BoardList({ onPostClick }: BoardListProps) {
   const { boardService } = useServices();
   const [category, setCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'comments'>('latest');
+  const [sortBy, setSortBy] = useState<'latest' | 'comments'>('latest');
   const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,18 +34,8 @@ export function BoardList({ onPostClick }: BoardListProps) {
           createdAt: new Date(post.createdAt),
         }));
 
-        // Load likes data from localStorage
-        const savedLikes = localStorage.getItem('post_likes');
-        const likesMap: Record<string, number> = savedLikes ? JSON.parse(savedLikes) : {};
-
-        // Update posts with saved likes
-        const updatedPosts = posts.map(post => ({
-          ...post,
-          likes: likesMap[post.id] !== undefined ? likesMap[post.id] : post.likes,
-        }));
-
         // Combine API posts with localStorage posts
-        setAllPosts([...updatedPosts, ...parsedPosts]);
+        setAllPosts([...posts, ...parsedPosts]);
       } catch (err) {
         console.error('Failed to load posts:', err);
         setError('게시글을 불러오는데 실패했습니다.');
@@ -58,7 +48,7 @@ export function BoardList({ onPostClick }: BoardListProps) {
 
     // Listen for storage changes
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'board_posts' || e.key === 'post_likes') {
+      if (e.key === 'board_posts') {
         loadPosts();
       }
     };
@@ -105,8 +95,6 @@ export function BoardList({ onPostClick }: BoardListProps) {
     posts.sort((a, b) => {
       if (sortBy === 'latest') {
         return b.createdAt.getTime() - a.createdAt.getTime();
-      } else if (sortBy === 'popular') {
-        return b.views - a.views;
       } else {
         return b.comments - a.comments;
       }
@@ -204,11 +192,10 @@ export function BoardList({ onPostClick }: BoardListProps) {
 
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as 'latest' | 'popular' | 'comments')}
+          onChange={(e) => setSortBy(e.target.value as 'latest' | 'comments')}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="latest">최신순</option>
-          <option value="popular">인기순</option>
           <option value="comments">댓글 많은순</option>
         </select>
       </div>
@@ -252,10 +239,6 @@ export function BoardList({ onPostClick }: BoardListProps) {
                       <div className="flex items-center gap-1">
                         <Eye className="w-4 h-4" />
                         {post.views}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <ThumbsUp className="w-4 h-4" />
-                        {post.likes}
                       </div>
                       <div className="flex items-center gap-1">
                         <MessageSquare className="w-4 h-4" />

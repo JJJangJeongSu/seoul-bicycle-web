@@ -4,11 +4,13 @@ import { BoardList } from '../board/BoardList';
 import { PostDetail } from '../board/PostDetail';
 import { PostEditor } from '../board/PostEditor';
 import { useAuth } from '../../contexts/AuthContext';
+import { Post } from '../../types';
 
 export function BoardPage() {
   const { user } = useAuth();
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [isWriting, setIsWriting] = useState(false);
+  const [editingPost, setEditingPost] = useState<Post | undefined>(undefined);
 
   const handlePostClick = (postId: string) => {
     setSelectedPostId(postId);
@@ -17,6 +19,13 @@ export function BoardPage() {
   const handleBack = () => {
     setSelectedPostId(null);
     setIsWriting(false);
+    setEditingPost(undefined);
+  };
+
+  const handleEdit = (post: Post) => {
+    setEditingPost(post);
+    setIsWriting(true);
+    setSelectedPostId(null);
   };
 
   return (
@@ -42,9 +51,9 @@ export function BoardPage() {
 
       {/* Content */}
       {selectedPostId ? (
-        <PostDetail postId={selectedPostId} onBack={handleBack} />
+        <PostDetail postId={selectedPostId} onBack={handleBack} onEdit={handleEdit} />
       ) : isWriting ? (
-        <PostEditor onBack={handleBack} onSubmit={handleBack} />
+        <PostEditor onBack={handleBack} onSubmit={handleBack} initialData={editingPost} />
       ) : (
         <BoardList onPostClick={handlePostClick} />
       )}
