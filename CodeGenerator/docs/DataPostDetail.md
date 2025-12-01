@@ -12,11 +12,11 @@ Name | Type | Description | Notes
 **title** | **string** | 게시글 제목 | [default to undefined]
 **content** | **string** | 게시글 내용 | [default to undefined]
 **views** | **number** | 조회수 | [default to undefined]
-**likes** | **number** | 좋아요 수 | [default to undefined]
 **comment_count** | **number** | 댓글 수 | [default to undefined]
 **is_pinned** | **number** | 공지사항 고정 여부 | [optional] [default to undefined]
 **created_at** | **string** | 작성 시간 | [default to undefined]
 **updated_at** | **string** | 수정 시간 | [default to undefined]
+**comments** | [**Array&lt;Comment&gt;**](Comment.md) |  | [default to undefined]
 **authorInfo** | [**DataPostDetailAllOfAuthorInfo**](DataPostDetailAllOfAuthorInfo.md) |  | [optional] [default to undefined]
 
 ## Example
@@ -32,11 +32,11 @@ const instance: DataPostDetail = {
     title,
     content,
     views,
-    likes,
     comment_count,
     is_pinned,
     created_at,
     updated_at,
+    comments,
     authorInfo,
 };
 ```

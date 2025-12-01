@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityPost } from './entity-post';
+import type { Post } from './post';
 
 /**
  * 
@@ -25,9 +25,9 @@ import type { EntityPost } from './entity-post';
 export interface CreatePost201ResponseAllOfData {
     /**
      * 
-     * @type {EntityPost}
+     * @type {Post}
      * @memberof CreatePost201ResponseAllOfData
      */
-    'post': EntityPost;
+    'post': Post;
 }
 

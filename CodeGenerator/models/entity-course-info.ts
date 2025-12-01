@@ -65,7 +65,7 @@ export interface EntityCourseInfo {
 }
 
 export const EntityCourseInfoDifficultyEnum = {
-    1: '최하',
+    : '최하',
     2: '하',
     3: '중',
     4: '상',

@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**Array&lt;EntityRepair&gt;**](EntityRepair.md) |  | [default to undefined]
+**data** | [**Array&lt;Repair&gt;**](Repair.md) |  | [default to undefined]
 
 ## Example
 

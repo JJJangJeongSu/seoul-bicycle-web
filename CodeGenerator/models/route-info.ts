@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Station1 } from './station1';
+import type { Station } from './station';
 
 /**
  * 
@@ -25,16 +25,16 @@ import type { Station1 } from './station1';
 export interface RouteInfo {
     /**
      * 
-     * @type {Station1}
+     * @type {Station}
      * @memberof RouteInfo
      */
-    'startStation': Station1;
+    'startStation': Station;
     /**
      * 
-     * @type {Station1}
+     * @type {Station}
      * @memberof RouteInfo
      */
-    'endStation': Station1;
+    'endStation': Station;
     /**
      * 자전거 이동 거리 (km)
      * @type {number}

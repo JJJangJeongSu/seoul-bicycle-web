@@ -15,10 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { CommonPagination } from './common-pagination';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { EntityRepair } from './entity-repair';
+import type { GetAllRepairsAdmin200ResponseAllOfData } from './get-all-repairs-admin200-response-all-of-data';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

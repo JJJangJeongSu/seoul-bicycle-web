@@ -31,55 +31,61 @@ export interface Rental {
      * @type {string}
      * @memberof Rental
      */
-    'userId': string;
+    'user_id': string;
     /**
      * 자전거 ID (Seoul Public Bike)
      * @type {string}
      * @memberof Rental
      */
-    'bikeId': string;
+    'bike_id': string;
     /**
      * 출발 대여소 ID
      * @type {string}
      * @memberof Rental
      */
-    'startStationId': string;
+    'start_station_id': string;
     /**
      * 도착 대여소 ID (반납 시에만)
      * @type {string}
      * @memberof Rental
      */
-    'endStationId'?: string;
+    'end_station_id': string | null;
     /**
      * 대여 시작 시간
      * @type {string}
      * @memberof Rental
      */
-    'rentalTime': string;
+    'rental_time': string | null;
     /**
      * 반납 시간
      * @type {string}
      * @memberof Rental
      */
-    'returnTime'?: string;
+    'return_time': string | null;
     /**
      * 이용 시간 (분 단위)
      * @type {number}
      * @memberof Rental
      */
-    'duration'?: number;
+    'duration'?: number | null;
     /**
      * 이동 거리 (km)
-     * @type {number}
+     * @type {string}
      * @memberof Rental
      */
-    'distance'?: number;
+    'distance'?: string | null;
     /**
      * 대여 상태 (rented: 대여 중, returned: 반납 완료)
      * @type {string}
      * @memberof Rental
      */
     'status': RentalStatusEnum;
+    /**
+     * 자전거 모델
+     * @type {string}
+     * @memberof Rental
+     */
+    'bike_model': string;
 }
 
 export const RentalStatusEnum = {

@@ -44,9 +44,5 @@ export const checkEmailAvailability = async (email: string): Promise<{ available
   return (response.data as any).data || response.data;
 };
 
-export const changePassword = async (oldPassword: string, newPassword: string): Promise<void> => {
-  // Not implemented in API yet or needs specific endpoint
-  console.log('[AuthService] Change password');
-  await new Promise(resolve => setTimeout(resolve, 500));
-};
+
 

@@ -15,10 +15,10 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { CommonPagination } from './common-pagination';
+import type { Pagination } from './pagination';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityUser } from './entity-user';
+import type { User } from './user';
 
 /**
  * 
@@ -28,15 +28,15 @@ import type { EntityUser } from './entity-user';
 export interface GetAllUsersAdmin200ResponseAllOfData {
     /**
      * 
-     * @type {Array<EntityUser>}
+     * @type {Array<User>}
      * @memberof GetAllUsersAdmin200ResponseAllOfData
      */
-    'users': Array<EntityUser>;
+    'users': Array<User>;
     /**
      * 
-     * @type {CommonPagination}
+     * @type {Pagination}
      * @memberof GetAllUsersAdmin200ResponseAllOfData
      */
-    'pagination': CommonPagination;
+    'pagination': Pagination;
 }
 

@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityRepair } from './entity-repair';
+import type { Repair } from './repair';
 
 /**
  * 
@@ -25,9 +25,9 @@ import type { EntityRepair } from './entity-repair';
 export interface CreateRepair201ResponseAllOfData {
     /**
      * 
-     * @type {EntityRepair}
+     * @type {Repair}
      * @memberof CreateRepair201ResponseAllOfData
      */
-    'repair': EntityRepair;
+    'repair': Repair;
 }
 

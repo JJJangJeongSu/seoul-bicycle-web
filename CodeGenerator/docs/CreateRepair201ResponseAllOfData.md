@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**repair** | [**EntityRepair**](EntityRepair.md) |  | [default to undefined]
+**repair** | [**Repair**](Repair.md) |  | [default to undefined]
 
 ## Example
 

@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**user** | [**EntityUser**](EntityUser.md) |  | [default to undefined]
+**user** | [**User**](User.md) |  | [default to undefined]
 
 ## Example
 

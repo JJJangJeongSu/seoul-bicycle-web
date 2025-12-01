@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AlertCircle, Send } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useServices } from '../../hooks/useServices';
+import { RepairCategory, RepairType } from '../../types';
 
 type RepairFormProps = {
   onSuccess: () => void;
@@ -44,7 +45,7 @@ export function RepairForm({ onSuccess, onCancel }: RepairFormProps) {
       const newRepair = await repairService.createRepair({
         type: formData.type,
         bikeId: formData.bikeId,
-        category: formData.category,
+        category: formData.category as RepairCategory,
         description: formData.description,
         reporter: user.name,
         reporterId: user.id,
@@ -76,7 +77,7 @@ export function RepairForm({ onSuccess, onCancel }: RepairFormProps) {
                 type="radio"
                 value="bike"
                 checked={formData.type === 'bike'}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as RepairType })}
                 className="w-4 h-4 text-blue-600"
               />
               <span>자전거</span>

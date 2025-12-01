@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { DataStationsStatusListInner } from './data-stations-status-list-inner';
+import type { StationStatusListInner } from './station-status-list-inner';
 
 /**
  * 
@@ -25,9 +25,9 @@ import type { DataStationsStatusListInner } from './data-stations-status-list-in
 export interface GetStationsStatus200ResponseAllOfData {
     /**
      * 
-     * @type {Array<DataStationsStatusListInner>}
+     * @type {Array<StationStatusListInner>}
      * @memberof GetStationsStatus200ResponseAllOfData
      */
-    'stations': Array<DataStationsStatusListInner>;
+    'stations': Array<StationStatusListInner>;
 }
 

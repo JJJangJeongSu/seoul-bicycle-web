@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**post** | [**EntityPost**](EntityPost.md) |  | [default to undefined]
+**post** | [**Post**](Post.md) |  | [default to undefined]
 
 ## Example
 

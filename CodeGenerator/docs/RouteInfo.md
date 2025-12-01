@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**startStation** | [**Station1**](Station1.md) |  | [default to undefined]
-**endStation** | [**Station1**](Station1.md) |  | [default to undefined]
+**startStation** | [**Station**](Station.md) |  | [default to undefined]
+**endStation** | [**Station**](Station.md) |  | [default to undefined]
 **distance** | **number** | 자전거 이동 거리 (km) | [default to undefined]
 **duration** | **number** | 예상 소요 시간 (분) | [default to undefined]
 **walkingDistanceToStart** | **number** | 출발지에서 출발 대여소까지 도보 거리 (km) | [default to undefined]

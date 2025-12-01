@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**stations** | [**Array&lt;DataStationsStatusListInner&gt;**](DataStationsStatusListInner.md) |  | [default to undefined]
+**stations** | [**Array&lt;StationStatusListInner&gt;**](StationStatusListInner.md) |  | [default to undefined]
 
 ## Example
 

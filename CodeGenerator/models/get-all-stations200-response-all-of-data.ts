@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityStation } from './entity-station';
+import type { Station } from './station';
 
 /**
  * 
@@ -25,10 +25,10 @@ import type { EntityStation } from './entity-station';
 export interface GetAllStations200ResponseAllOfData {
     /**
      * 
-     * @type {Array<EntityStation>}
+     * @type {Array<Station>}
      * @memberof GetAllStations200ResponseAllOfData
      */
-    'stations': Array<EntityStation>;
+    'stations': Array<Station>;
     /**
      * 
      * @type {number}

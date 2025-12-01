@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**Array&lt;EntityRental&gt;**](EntityRental.md) |  | [default to undefined]
-**pagination** | [**CommonPagination**](CommonPagination.md) |  | [default to undefined]
+**data** | [**Array&lt;Rental&gt;**](Rental.md) |  | [default to undefined]
+**pagination** | [**Pagination**](Pagination.md) |  | [default to undefined]
 
 ## Example
 

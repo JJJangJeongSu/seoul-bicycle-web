@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { User as UserIcon, Lock, Trash2, Save } from 'lucide-react';
+import { User as UserIcon, Lock, Trash2, Save, Loader2 } from 'lucide-react';
 import { User } from '../../App';
+import { changePassword, updateUser } from '../../services/user.service';
 
 type UserSettingsProps = {
   user: User;
@@ -17,13 +18,29 @@ export function UserSettings({ user }: UserSettingsProps) {
     new: '',
     confirm: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleProfileUpdate = (e: React.FormEvent) => {
+  const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('개인정보가 수정되었습니다');
+    
+    try {
+      setIsLoading(true);
+      await updateUser(user.id, {
+        email: user.email,
+        name: formData.name,
+        phone: formData.phone,
+      });
+      alert('개인정보가 수정되었습니다');
+    } catch (error: any) {
+      console.error('Failed to update profile:', error);
+      const errorMessage = error.response?.data?.message || '개인정보 수정에 실패했습니다.';
+      alert(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (passwordData.new !== passwordData.confirm) {
@@ -36,8 +53,21 @@ export function UserSettings({ user }: UserSettingsProps) {
       return;
     }
 
-    alert('비밀번호가 변경되었습니다');
-    setPasswordData({ current: '', new: '', confirm: '' });
+    try {
+      setIsLoading(true);
+      await changePassword(user.id, {
+        currentPassword: passwordData.current,
+        newPassword: passwordData.new
+      });
+      alert('비밀번호가 변경되었습니다');
+      setPasswordData({ current: '', new: '', confirm: '' });
+    } catch (error: any) {
+      console.error('Failed to change password:', error);
+      const errorMessage = error.response?.data?.message || '비밀번호 변경에 실패했습니다. 현재 비밀번호를 확인해주세요.';
+      alert(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleAccountDelete = () => {
@@ -175,10 +205,15 @@ export function UserSettings({ user }: UserSettingsProps) {
 
             <button
               type="submit"
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              disabled={isLoading}
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
             >
-              <Lock className="w-5 h-5" />
-              비밀번호 변경
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Lock className="w-5 h-5" />
+              )}
+              {isLoading ? '변경 중...' : '비밀번호 변경'}
             </button>
           </form>
         </div>

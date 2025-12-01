@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { DataAuthLogin } from './data-auth-login';
+import type { Login1 } from './login1';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

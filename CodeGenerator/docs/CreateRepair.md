@@ -10,7 +10,6 @@ Name | Type | Description | Notes
 **station_id** | **string** | 대여소 ID (type이 station일 때 필수) | [optional] [default to undefined]
 **category** | **string** | 고장 카테고리 | [default to undefined]
 **description** | **string** | 고장 상세 설명 | [default to undefined]
-**photos** | **Array&lt;string&gt;** | 첨부 사진 URL 목록 | [optional] [default to undefined]
 
 ## Example
 
@@ -23,7 +22,6 @@ const instance: CreateRepair = {
     station_id,
     category,
     description,
-    photos,
 };
 ```
 

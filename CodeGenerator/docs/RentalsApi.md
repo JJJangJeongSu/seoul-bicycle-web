@@ -11,7 +11,7 @@ All URIs are relative to *http://localhost*
 |[**returnRental_0**](#returnrental_0) | **PUT** /rentals/{rentalId}/return | 자전거 반납|
 
 # **createRental**
-> CreateRental201Response createRental(createRental)
+> CreateRental201Response createRental(createRentalRequest)
 
 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
 
@@ -21,16 +21,16 @@ All URIs are relative to *http://localhost*
 import {
     RentalsApi,
     Configuration,
-    CreateRental
+    CreateRentalRequest
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
-let createRental: CreateRental; //
+let createRentalRequest: CreateRentalRequest; //
 
 const { status, data } = await apiInstance.createRental(
-    createRental
+    createRentalRequest
 );
 ```
 
@@ -38,7 +38,7 @@ const { status, data } = await apiInstance.createRental(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **createRental** | **CreateRental**|  | |
+| **createRentalRequest** | **CreateRentalRequest**|  | |
 
 
 ### Return type
@@ -66,7 +66,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createRental_0**
-> CreateRental201Response createRental_0(createRental)
+> CreateRental201Response createRental_0(createRentalRequest)
 
 지정된 대여소에서 자전거를 대여합니다. 사용자는 한 번에 하나의 자전거만 대여할 수 있습니다. 대여소에 자전거가 없거나 이미 대여 중인 경우 실패합니다. 관리자는 대여할 수 없습니다.
 
@@ -76,16 +76,16 @@ No authorization required
 import {
     RentalsApi,
     Configuration,
-    CreateRental
+    CreateRentalRequest
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
-let createRental: CreateRental; //
+let createRentalRequest: CreateRentalRequest; //
 
 const { status, data } = await apiInstance.createRental_0(
-    createRental
+    createRentalRequest
 );
 ```
 
@@ -93,7 +93,7 @@ const { status, data } = await apiInstance.createRental_0(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **createRental** | **CreateRental**|  | |
+| **createRentalRequest** | **CreateRentalRequest**|  | |
 
 
 ### Return type
@@ -180,7 +180,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **returnRental**
-> ReturnRental200Response returnRental(returnRental)
+> ReturnRental200Response returnRental(returnRentalRequest)
 
 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
 
@@ -190,18 +190,18 @@ No authorization required
 import {
     RentalsApi,
     Configuration,
-    ReturnRental
+    ReturnRentalRequest
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
 let rentalId: string; // (default to undefined)
-let returnRental: ReturnRental; //
+let returnRentalRequest: ReturnRentalRequest; //
 
 const { status, data } = await apiInstance.returnRental(
     rentalId,
-    returnRental
+    returnRentalRequest
 );
 ```
 
@@ -209,7 +209,7 @@ const { status, data } = await apiInstance.returnRental(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **returnRental** | **ReturnRental**|  | |
+| **returnRentalRequest** | **ReturnRentalRequest**|  | |
 | **rentalId** | [**string**] |  | defaults to undefined|
 
 
@@ -238,7 +238,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **returnRental_0**
-> ReturnRental200Response returnRental_0(returnRental)
+> ReturnRental200Response returnRental_0(returnRentalRequest)
 
 대여한 자전거를 지정된 대여소에 반납합니다. 반납 시 이용 시간과 이동 거리가 자동으로 계산됩니다. 반납 정보는 사용자의 대여 이력에 저장됩니다.
 
@@ -248,18 +248,18 @@ No authorization required
 import {
     RentalsApi,
     Configuration,
-    ReturnRental
+    ReturnRentalRequest
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
 let rentalId: string; // (default to undefined)
-let returnRental: ReturnRental; //
+let returnRentalRequest: ReturnRentalRequest; //
 
 const { status, data } = await apiInstance.returnRental_0(
     rentalId,
-    returnRental
+    returnRentalRequest
 );
 ```
 
@@ -267,7 +267,7 @@ const { status, data } = await apiInstance.returnRental_0(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **returnRental** | **ReturnRental**|  | |
+| **returnRentalRequest** | **ReturnRentalRequest**|  | |
 | **rentalId** | [**string**] |  | defaults to undefined|
 
 

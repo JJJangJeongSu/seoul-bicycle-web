@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**DataStationsNearest**](DataStationsNearest.md) |  | [default to undefined]
+**data** | [**NearestStation**](NearestStation.md) |  | [default to undefined]
 
 ## Example
 

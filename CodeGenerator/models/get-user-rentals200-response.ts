@@ -15,10 +15,10 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { CommonPagination } from './common-pagination';
+import type { Pagination } from './pagination';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityRental } from './entity-rental';
+import type { Rental } from './rental';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

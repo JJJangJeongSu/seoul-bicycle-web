@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**stations** | [**Array&lt;EntityStation&gt;**](EntityStation.md) |  | [default to undefined]
+**stations** | [**Array&lt;Station&gt;**](Station.md) |  | [default to undefined]
 **total** | **number** |  | [default to undefined]
 
 ## Example

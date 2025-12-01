@@ -15,15 +15,18 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
+import type { Comment } from './comment';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { DataPostDetailAllOfAuthorInfo } from './data-post-detail-all-of-author-info';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityPost } from './entity-post';
+import type { Post } from './post';
 
 /**
  * @type DataPostDetail
  * @export
  */
-export type DataPostDetail = EntityPost;
+export type DataPostDetail = Post;
 
 

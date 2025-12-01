@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityRouteInfo } from './entity-route-info';
+import type { RouteInfo } from './route-info';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**DataEmailCheck**](DataEmailCheck.md) |  | [default to undefined]
+**data** | [**EmailCheck**](EmailCheck.md) |  | [default to undefined]
 
 ## Example
 

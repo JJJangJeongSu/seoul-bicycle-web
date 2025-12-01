@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityStation } from './entity-station';
+import type { Station } from './station';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

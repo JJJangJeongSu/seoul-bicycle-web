@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { User1 } from './user1';
+import type { User } from './user';
 
 /**
  * 
@@ -25,10 +25,10 @@ import type { User1 } from './user1';
 export interface Login1 {
     /**
      * 
-     * @type {User1}
+     * @type {User}
      * @memberof Login1
      */
-    'user': User1;
+    'user': User;
     /**
      * JWT 인증 토큰
      * @type {string}

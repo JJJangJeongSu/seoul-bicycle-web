@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityUser } from './entity-user';
+import type { User } from './user';
 
 /**
  * 
@@ -25,9 +25,9 @@ import type { EntityUser } from './entity-user';
 export interface UpdateUserStatus200ResponseAllOfData {
     /**
      * 
-     * @type {EntityUser}
+     * @type {User}
      * @memberof UpdateUserStatus200ResponseAllOfData
      */
-    'user': EntityUser;
+    'user': User;
 }
 

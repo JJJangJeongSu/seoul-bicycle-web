@@ -15,10 +15,10 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { CommonPagination } from './common-pagination';
+import type { Pagination } from './pagination';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityPost } from './entity-post';
+import type { Post } from './post';
 
 /**
  * 
@@ -28,15 +28,15 @@ import type { EntityPost } from './entity-post';
 export interface GetAllPosts200ResponseAllOfData {
     /**
      * 
-     * @type {Array<EntityPost>}
+     * @type {Array<Post>}
      * @memberof GetAllPosts200ResponseAllOfData
      */
-    'posts': Array<EntityPost>;
+    'posts': Array<Post>;
     /**
      * 
-     * @type {CommonPagination}
+     * @type {Pagination}
      * @memberof GetAllPosts200ResponseAllOfData
      */
-    'pagination': CommonPagination;
+    'pagination': Pagination;
 }
 

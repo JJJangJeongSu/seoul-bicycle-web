@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { CommonCoordinates } from './common-coordinates';
+import type { Coordinates } from './coordinates';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

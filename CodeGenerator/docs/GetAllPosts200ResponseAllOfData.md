@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**posts** | [**Array&lt;EntityPost&gt;**](EntityPost.md) |  | [default to undefined]
-**pagination** | [**CommonPagination**](CommonPagination.md) |  | [default to undefined]
+**posts** | [**Array&lt;Post&gt;**](Post.md) |  | [default to undefined]
+**pagination** | [**Pagination**](Pagination.md) |  | [default to undefined]
 
 ## Example
 

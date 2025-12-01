@@ -18,12 +18,12 @@
 import type { DataRepairDetailAllOfReporterInfo } from './data-repair-detail-all-of-reporter-info';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityRepair } from './entity-repair';
+import type { Repair } from './repair';
 
 /**
  * @type DataRepairDetail
  * @export
  */
-export type DataRepairDetail = EntityRepair;
+export type DataRepairDetail = Repair;
 
 

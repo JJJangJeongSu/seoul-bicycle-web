@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**users** | [**Array&lt;EntityUser&gt;**](EntityUser.md) |  | [default to undefined]
-**pagination** | [**CommonPagination**](CommonPagination.md) |  | [default to undefined]
+**users** | [**Array&lt;User&gt;**](User.md) |  | [default to undefined]
+**pagination** | [**Pagination**](Pagination.md) |  | [default to undefined]
 
 ## Example
 

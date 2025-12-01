@@ -18,7 +18,7 @@
 import type { DataRentalReturnSummary } from './data-rental-return-summary';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EntityRental } from './entity-rental';
+import type { Rental } from './rental';
 
 /**
  * 
@@ -28,10 +28,10 @@ import type { EntityRental } from './entity-rental';
 export interface DataRentalReturn {
     /**
      * 
-     * @type {EntityRental}
+     * @type {Rental}
      * @memberof DataRentalReturn
      */
-    'rental': EntityRental;
+    'rental': Rental;
     /**
      * 
      * @type {DataRentalReturnSummary}

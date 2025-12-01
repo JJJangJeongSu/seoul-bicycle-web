@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**user** | [**User1**](User1.md) |  | [default to undefined]
+**user** | [**User**](User.md) |  | [default to undefined]
 **token** | **string** | JWT 인증 토큰 | [default to undefined]
 
 ## Example

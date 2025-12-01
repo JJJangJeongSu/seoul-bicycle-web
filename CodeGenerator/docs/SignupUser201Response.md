@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**DataAuthSignup**](DataAuthSignup.md) |  | [default to undefined]
+**data** | [**Signup1**](Signup1.md) |  | [default to undefined]
 
 ## Example
 

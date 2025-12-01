@@ -50,12 +50,6 @@ export interface CreateRepair {
      * @memberof CreateRepair
      */
     'description': string;
-    /**
-     * 첨부 사진 URL 목록
-     * @type {Array<string>}
-     * @memberof CreateRepair
-     */
-    'photos'?: Array<string>;
 }
 
 export const CreateRepairTypeEnum = {

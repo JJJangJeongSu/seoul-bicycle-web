@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**DataAuthLogin**](DataAuthLogin.md) |  | [default to undefined]
+**data** | [**Login1**](Login1.md) |  | [default to undefined]
 
 ## Example
 

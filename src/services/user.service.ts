@@ -4,9 +4,19 @@
  * Handles user-related API calls
  */
 
+import { usersApi } from '../api';
 import { mockRentals } from '../lib/mockData';
+import { ChangePassword, Update } from '../../CodeGenerator';
 
 const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const changePassword = async (userId: string, data: ChangePassword): Promise<void> => {
+  await usersApi.changePassword(userId, data);
+};
+
+export const updateUser = async (userId: string, data: Update): Promise<void> => {
+  await usersApi.updateUser(userId, data);
+};
 
 export const getUserStatistics = async (userId: string): Promise<{
   totalRentals: number;
@@ -30,3 +40,5 @@ export const getUserStatistics = async (userId: string): Promise<{
     averageDuration: userRentals.length > 0 ? totalDuration / userRentals.length : 0,
   };
 };
+
+

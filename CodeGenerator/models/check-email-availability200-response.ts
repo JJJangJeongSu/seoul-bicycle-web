@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { DataEmailCheck } from './data-email-check';
+import type { EmailCheck } from './email-check';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

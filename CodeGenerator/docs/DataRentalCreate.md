@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**rental** | [**EntityRental**](EntityRental.md) |  | [default to undefined]
+**rental** | [**Rental**](Rental.md) |  | [default to undefined]
 **summary** | [**DataRentalCreateSummary**](DataRentalCreateSummary.md) |  | [default to undefined]
 
 ## Example

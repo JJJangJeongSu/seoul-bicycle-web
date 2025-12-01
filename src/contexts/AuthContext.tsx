@@ -25,7 +25,15 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const savedUser = localStorage.getItem('user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (error) {
+      console.error('Failed to parse user from localStorage:', error);
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -39,6 +47,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(true);
       const { user: loggedInUser } = await loginMutation.mutateAsync({ email, password });
       setUser(loggedInUser);
+      localStorage.setItem('user', JSON.stringify(loggedInUser));
       setShowLoginModal(false);
     } catch (error) {
       console.error('Login failed:', error);
@@ -54,6 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(true);
       const { user: newUser } = await signupMutation.mutateAsync(data);
       setUser(newUser);
+      localStorage.setItem('user', JSON.stringify(newUser));
       setShowSignupModal(false);
     } catch (error) {
       console.error('Signup failed:', error);
@@ -69,6 +79,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       await authService.logout();
       setUser(null);
+      localStorage.removeItem('user');
       // Dispatch custom event for RentalContext to listen
       window.dispatchEvent(new CustomEvent('auth:logout'));
       navigate('/');
@@ -76,6 +87,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error('Logout failed:', error);
       // Still clear user even if API call fails
       setUser(null);
+      localStorage.removeItem('user');
       window.dispatchEvent(new CustomEvent('auth:logout'));
       navigate('/');
     }
