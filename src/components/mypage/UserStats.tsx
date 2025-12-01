@@ -3,14 +3,16 @@ import { Bike, Navigation, Clock, TrendingUp, MapPin, Loader2 } from 'lucide-rea
 import { Rental, Station } from '../../App';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useServices } from '../../hooks/useServices';
+import { UserStatistics } from '../../../CodeGenerator/models/user-statistics';
 
 type UserStatsProps = {
   userId: string;
 };
 
 export function UserStats({ userId }: UserStatsProps) {
-  const { rentalService, stationService } = useServices();
+  const { userService, stationService } = useServices();
   const [allRentals, setAllRentals] = useState<Rental[]>([]);
+  const [statistics, setStatistics] = useState<UserStatistics | null>(null);
   const [stations, setStations] = useState<Station[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +25,9 @@ export function UserStats({ userId }: UserStatsProps) {
         setError(null);
 
         // Load rentals from service
-        const rentals = await rentalService.getUserRentals(userId);
+        const userStats = await userService.getUserStatistics(userId);
+        setStatistics(userStats);
+        const rentals = await userService.getUserRentals(userId);
 
         // Also load from localStorage (for backwards compatibility)
         const existingHistory = localStorage.getItem('rental_history');
@@ -59,13 +63,24 @@ export function UserStats({ userId }: UserStatsProps) {
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, [userId, rentalService, stationService]);
+  }, [userId, userService, stationService]);
 
   const userRentals = useMemo(() => {
     return allRentals.filter(r => r.userId === userId && r.status === 'returned');
   }, [allRentals, userId]);
 
   const stats = useMemo(() => {
+    if (statistics) {
+      return {
+        totalRentals: statistics.totalRentals,
+        totalDistance: statistics.totalDistance.toFixed(1),
+        totalDuration: statistics.totalDuration,
+        avgDuration: statistics.averageDuration.toFixed(1),
+        avgDistance: statistics.averageDistance.toFixed(1),
+      };
+    }
+
+    // Fallback calculation if API stats are not available (e.g. only localStorage data)
     const totalRentals = userRentals.length;
     const totalDistance = userRentals.reduce((sum, r) => sum + (r.distance || 0), 0);
     const totalDuration = userRentals.reduce((sum, r) => sum + (r.duration || 0), 0);
@@ -79,7 +94,7 @@ export function UserStats({ userId }: UserStatsProps) {
       avgDuration: avgDuration.toFixed(1),
       avgDistance: avgDistance.toFixed(1),
     };
-  }, [userRentals]);
+  }, [userRentals, statistics]);
 
   // Monthly trend data
   const monthlyData = useMemo(() => {

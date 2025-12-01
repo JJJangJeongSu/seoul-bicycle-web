@@ -8,7 +8,7 @@ type RentalHistoryProps = {
 };
 
 export function RentalHistory({ userId }: RentalHistoryProps) {
-  const { rentalService, stationService } = useServices();
+  const { userService, stationService } = useServices();
   const [period, setPeriod] = useState<'week' | 'month' | 'all'>('all');
   const [sortOrder, setSortOrder] = useState<'latest' | 'oldest'>('latest');
   const [allRentals, setAllRentals] = useState<Rental[]>([]);
@@ -26,7 +26,7 @@ export function RentalHistory({ userId }: RentalHistoryProps) {
         setError(null);
 
         // Load rentals from service
-        const rentals = await rentalService.getUserRentals(userId);
+        const rentals = await userService.getUserRentals(userId);
 
         // Also load from localStorage (for backwards compatibility)
         const existingHistory = localStorage.getItem('rental_history');
@@ -62,7 +62,7 @@ export function RentalHistory({ userId }: RentalHistoryProps) {
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, [userId, rentalService, stationService]);
+  }, [userId, userService, stationService]);
 
   const filteredRentals = useMemo(() => {
     let rentals = allRentals.filter(r => r.userId === userId && r.status === 'returned');
