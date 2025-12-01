@@ -49,6 +49,23 @@ export const getAllUsers = async (page: number = 1, limit: number = 10, search?:
   return { users, pagination: paginationData };
 };
 
+// Get All Stations
+export const getAllStations = async (): Promise<Station[]> => {
+  const response = await adminApi.getAllStationsAdmin();
+  const data = response.data as any;
+  const stationsData = data.data?.stations || data.stations || [];
+
+  return stationsData.map((station: any) => ({
+    id: station.id,
+    name: station.name,
+    address: station.address,
+    latitude: station.latitude,
+    longitude: station.longitude,
+    status: station.status,
+  }));
+};
+
+
 export const getUserById = async (id: string): Promise<User | null> => {
   // Currently no direct API for get user by ID for admin, 
   // but we can filter from list or implement if needed.
