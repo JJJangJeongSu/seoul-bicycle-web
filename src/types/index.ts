@@ -1,11 +1,21 @@
 // User and Authentication Types
+// User and Authentication Types
 export type User = {
   id: string;
   email: string;
   name: string;
   role: 'user' | 'admin';
   phone: string;
-  createdAt: string;
+  status: string;
+};
+
+export type AdminStatistics = {
+  totalUsers: number;
+  totalStations: number;
+  totalBikes: number;
+  activeRentals: number;
+  todayRentalsToday: number;
+  totalRepairsPending: number;
 };
 
 export type SignupData = {
@@ -111,3 +121,12 @@ export type MyPageTab = 'history' | 'stats' | 'settings';
 export type AdminTab = 'users' | 'stations' | 'bikes' | 'repairs';
 export type SortBy = 'date' | 'distance' | 'duration';
 export type ViewMode = 'map' | 'list';
+
+export type Pagination = {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+};

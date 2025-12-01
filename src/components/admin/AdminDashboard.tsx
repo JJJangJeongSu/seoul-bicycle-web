@@ -8,8 +8,10 @@ export function AdminDashboard() {
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalStations: 0,
-    totalRentals: 0,
+    totalBikes: 0,
     activeRentals: 0,
+    todayRentalsToday: 0,
+    totalRepairsPending: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -100,8 +102,8 @@ export function AdminDashboard() {
             <TrendingUp className="w-10 h-10 opacity-80" />
             <span className="text-2xl opacity-80">📈</span>
           </div>
-          <p className="text-sm opacity-90 mb-1">총 대여 건수</p>
-          <p className="text-3xl">{stats.totalRentals.toLocaleString()}</p>
+          <p className="text-sm opacity-90 mb-1">총 자전거</p>
+          <p className="text-3xl">{stats.totalBikes.toLocaleString()}</p>
         </div>
 
         <div className="bg-orange-500 text-white rounded-lg p-6">
