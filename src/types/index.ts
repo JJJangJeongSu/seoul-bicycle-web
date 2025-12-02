@@ -99,7 +99,6 @@ export type Repair = {
   createdAt: Date;
   completedAt?: Date;
   adminNote?: string;
-  photos?: string[];
 };
 
 // Route Types

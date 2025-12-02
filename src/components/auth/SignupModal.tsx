@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
+import { checkEmailAvailability } from '../../services/auth.service';
 
 type SignupModalProps = {
   onClose: () => void;
@@ -21,6 +22,7 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
     name: '',
     phone: '',
   });
+  const [emailAvailable, setEmailAvailable] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -33,6 +35,8 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
       newErrors.email = '이메일을 입력하세요';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = '올바른 이메일 형식이 아닙니다';
+    } else if (!emailAvailable) {
+      newErrors.email = '이메일 중복 확인을 해주세요';
     }
 
     if (!formData.password) {
@@ -63,6 +67,25 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
     return Object.keys(newErrors).length === 0;
   };
 
+  // 이메일 중복 확인
+  const handleEmailCheck = async () => {
+    try {
+      setLoading(true);
+      const response = await checkEmailAvailability(formData.email);
+      setEmailAvailable(response.available);
+      if (!response.available) {
+        setErrors({ ...errors, email: '이미 사용 중인 이메일입니다' });
+      } else {
+        setErrors({ ...errors, email: '' });
+        alert('사용 가능한 이메일입니다');
+      }
+    } catch (err) {
+      setErrors({ ...errors, general: '이메일 중복 확인에 실패했습니다' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 회원가입 폼 제출
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,6 +101,7 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
       }
     }
   };
+
 
   // 전화번호 자동 포맷팅
   const handlePhoneChange = (value: string) => {
@@ -114,15 +138,34 @@ export function SignupModal({ onClose, onSignup, onLoginClick }: SignupModalProp
             <label className="block text-sm text-gray-700 mb-2">
               📧 이메일 <span className="text-destructive">*</span>
             </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className={`w-full px-4 py-3 border-2 rounded-2xl focus:ring-4 focus:ring-sky-200 focus:border-sky-400 transition-all bg-sky-50/30 ${
-                errors.email ? 'border-destructive' : 'border-sky-200'
-              }`}
-              placeholder="example@email.com"
-            />
+            <div className="flex gap-2">
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => {
+                  setFormData({ ...formData, email: e.target.value });
+                  setEmailAvailable(false);
+                  setErrors({ ...errors, email: '' });
+                }}
+                className={`flex-1 px-4 py-3 border-2 rounded-2xl focus:ring-4 focus:ring-sky-200 focus:border-sky-400 transition-all bg-sky-50/30 ${
+                  errors.email ? 'border-destructive' : emailAvailable ? 'border-green-500' : 'border-sky-200'
+                }`}
+                placeholder="example@email.com"
+              />
+              <button
+                type="button"
+                onClick={handleEmailCheck}
+                disabled={!formData.email || emailAvailable}
+                className={`px-4 py-2 rounded-xl transition-all whitespace-nowrap ${
+                  emailAvailable
+                    ? 'bg-green-500 text-white cursor-default'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {emailAvailable ? '확인됨' : '중복확인'}
+              </button>
+            </div>
+            
             {errors.email && <p className="text-sm text-destructive mt-1">⚠️ {errors.email}</p>}
           </div>
 

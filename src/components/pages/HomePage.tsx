@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Search, Filter, Map as MapIcon, List, RefreshCw, Loader2 } from 'lucide-react';
 import type { Station, Rental } from '../../types';
 import { seoulDistricts } from '../../lib/mockData';
@@ -13,36 +14,29 @@ export function HomePage() {
   const { user, setShowLoginModal } = useAuth();
   const { currentRental, setCurrentRental } = useRental();
   const { stationService, rentalService } = useServices();
+  const queryClient = useQueryClient();
 
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('전체');
   const [bikeFilter, setBikeFilter] = useState<'all' | 'available' | 'unavailable'>('all');
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
-  const [stations, setStations] = useState<Station[]>([]);
-  const [lastUpdate, setLastUpdate] = useState(new Date());
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // Fetch stations on mount
-  useEffect(() => {
-    loadStations();
-  }, []);
+  // React Query for fetching stations
+  const { 
+    data: stations = [], 
+    isLoading: loading, 
+    error,
+    dataUpdatedAt,
+    refetch 
+  } = useQuery({
+    queryKey: ['stations'],
+    queryFn: () => stationService.getAllStations(),
+    staleTime: 60000, // 1 minute
+    gcTime: 300000, // 5 minutes
+  });
 
-  const loadStations = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await stationService.getAllStations();
-      setStations(data);
-      setLastUpdate(new Date());
-    } catch (err) {
-      setError('정류소 데이터를 불러오는데 실패했습니다.');
-      console.error('Failed to load stations:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const lastUpdate = new Date(dataUpdatedAt);
 
   // Filter stations
   const filteredStations = useMemo(() => {
@@ -71,7 +65,7 @@ export function HomePage() {
   }, [stations, searchTerm, selectedDistrict, bikeFilter]);
 
   const handleRefresh = () => {
-    loadStations();
+    refetch();
   };
 
   const handleRent = async (stationId: string) => {
@@ -103,10 +97,8 @@ export function HomePage() {
       // Update station bike count
       await stationService.updateStationBikeCount(stationId, station.bikeCount - 1);
 
-      // Refresh stations to reflect updated count
-      setStations(prev => prev.map(s =>
-        s.id === stationId ? { ...s, bikeCount: s.bikeCount - 1 } : s
-      ));
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['stations'] });
 
       setCurrentRental(newRental);
       setSelectedStation(null);
@@ -156,9 +148,8 @@ export function HomePage() {
       // Update station bike count
       await stationService.updateStationBikeCount(stationId, station.bikeCount + 1);
 
-      setStations(prev => prev.map(s =>
-        s.id === stationId ? { ...s, bikeCount: s.bikeCount + 1 } : s
-      ));
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['stations'] });
 
       const startStation = stations.find(s => s.id === currentRental.startStationId);
 
@@ -190,9 +181,9 @@ export function HomePage() {
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="text-destructive mb-4 text-xl">⚠️</div>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <p className="text-gray-600 mb-4">정류소 데이터를 불러오는데 실패했습니다.</p>
           <button
-            onClick={loadStations}
+            onClick={() => refetch()}
             className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all"
           >
             다시 시도
