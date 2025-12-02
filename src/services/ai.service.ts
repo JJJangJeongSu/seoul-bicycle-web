@@ -1,57 +1,45 @@
 /**
  * AI Service
  *
- * Handles AI-related operations (Course Recommendation)
- * Currently using mock data as requested
+ * Handles AI-related API calls (LLM-based course recommendation)
  */
 
-const delay = (ms: number = 1000) => new Promise(resolve => setTimeout(resolve, ms));
+import { aiApi } from '../api';
+import type { CourseInfo } from '../types';
 
-export interface CourseRecommendation {
-  id: string;
-  name: string;
-  description: string;
-  difficulty: '최하' | '하' | '중' | '상' | '최상';
-  distance: number;
-  duration: number;
-  imageUrl?: string;
-}
+/**
+ * 사용자의 자연어 요청(prompt)을 분석하여 적합한 자전거 코스를 추천합니다.
+ * @param prompt 사용자 입력 문자열
+ * @returns CourseInfo 배열
+ */
+export const recommendCourse = async (prompt: string): Promise<CourseInfo[]> => {
+  try {
+    // OpenAPI Generator 기반 aiApi 호출
+    const response = await aiApi.recommendCourse(prompt);
+    
+    // Admin Service 패턴과 동일하게 wrapper 처리
+    const data = response.data?.data || response.data;
 
-export const recommendCourse = async (preferences: string | {
-  difficulty?: string;
-  duration?: number;
-  distance?: number;
-}): Promise<CourseRecommendation[]> => {
-  await delay();
-
-  // Mock recommendations based on preferences
-  return [
-    {
-      id: 'course-1',
-      name: '한강 힐링 코스',
-      description: '시원한 강바람을 맞으며 달리는 초보자 추천 코스',
-      difficulty: '하',
-      distance: 5.2,
-      duration: 30,
-      imageUrl: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?q=80&w=1000&auto=format&fit=crop'
-    },
-    {
-      id: 'course-2',
-      name: '남산 도전 코스',
-      description: '업힐을 즐기는 라이더를 위한 중급 코스',
-      difficulty: '상',
-      distance: 8.5,
-      duration: 60,
-      imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=1000&auto=format&fit=crop'
-    },
-    {
-      id: 'course-3',
-      name: '도심 야경 코스',
-      description: '서울의 밤을 즐기는 로맨틱 라이딩',
-      difficulty: '중',
-      distance: 12.0,
-      duration: 90,
-      imageUrl: 'https://images.unsplash.com/photo-1496568816309-51d7c20e3b21?q=80&w=1000&auto=format&fit=crop'
+    if (!data?.places || !Array.isArray(data.places)) {
+      console.warn('추천 코스 데이터가 비어있습니다.');
+      return [];
     }
-  ];
+
+    // 필요한 필드만 매핑
+    return data.places.map((place: any) => ({
+      name: place.name,
+      startLat: Number(place.start_lat),
+      startLon: Number(place.start_lon),
+      endLat: Number(place.end_lat),
+      endLon: Number(place.end_lon),
+      description: place.description || 'AI 추천 코스',
+      distance: Number(place.distance) || 0,
+      duration: Number(place.duration) || 0,
+      difficulty: place.difficulty || '중',
+      highlights: place.highlights || [],
+    }));
+  } catch (error) {
+    console.error('AI 코스 추천 실패:', error);
+    return [];
+  }
 };

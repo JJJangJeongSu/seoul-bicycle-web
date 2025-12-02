@@ -130,3 +130,23 @@ export type Pagination = {
   hasNext: boolean;
   hasPrev: boolean;
 };
+
+
+export type CourseInfo = {
+  name: string;
+  startLat: number;
+  startLon: number;
+  endLat: number;
+  endLon: number;
+  description: string;
+  distance: number; // km
+  duration: number; // 분
+  difficulty: '최하' | '하' | '중' | '상' | '최상';
+  highlights: string[];
+};
+
+export type LatLng = {
+  lat: number;
+  lng: number;
+};
+
