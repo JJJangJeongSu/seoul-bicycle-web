@@ -1,152 +1,89 @@
-import { MapPin, Bike } from 'lucide-react';
-import { Station } from '../../App';
+import { useEffect, useRef } from 'react';
+import type { Station } from '../../types';
 
 type MapViewProps = {
   stations: Station[];
   onStationClick: (station: Station) => void;
 };
 
-/**
- * TODO: Mock 지도를 실제 지도 API로 교체
- *
- * 현재 상태: 간단한 좌표 기반 시각화만 구현
- *
- * 필요한 작업:
- * 1. 지도 라이브러리 통합
- *    - Kakao Maps API (추천: 한국 지도 데이터 우수)
- *    - Naver Maps API (대안)
- *    - Google Maps API (대안)
- *    - Leaflet.js (오픈소스 대안)
- *
- * 2. 고급 지도 기능
- *    - 확대/축소 (Zoom in/out)
- *    - 드래그/이동 (Pan)
- *    - 현재 위치 표시
- *    - 정류소 마커 클러스터링 (많은 마커 처리)
- *
- * 3. 실시간 업데이트
- *    - 정류소별 자전거 현황 실시간 반영
- *    - WebSocket 또는 Polling으로 자동 갱신
- *    - 마커 색상 실시간 변경
- *
- * 4. 사용자 경험 개선
- *    - 정류소 검색 시 자동 지도 이동
- *    - 정류소 클릭 시 상세 정보 팝업
- *    - 경로 표시 (출발지 → 목적지)
- *
- * 환경 변수 필요:
- * - VITE_KAKAO_MAP_KEY
- */
-
 export function MapView({ stations, onStationClick }: MapViewProps) {
-  // This is a simplified map view. In production, you would use a real map library like Leaflet or Google Maps
-  
-  const getMarkerColor = (station: Station) => {
-    if (station.status === 'inactive') return 'bg-gray-400';
-    if (station.bikeCount === 0) return 'bg-primary';
-    if (station.bikeCount <= 4) return 'bg-chart-4';
-    return 'bg-accent';
-  };
+  const mapRef = useRef<HTMLDivElement>(null);
 
-  const getMarkerLabel = (station: Station) => {
-    if (station.status === 'inactive') return '운영중지';
-    if (station.bikeCount === 0) return '대여불가';
-    if (station.bikeCount <= 4) return '여유부족';
-    return '대여여유';
-  };
+  useEffect(() => {
+    const kakaoKey = import.meta.env.VITE_KAKAO_MAP_KEY;
+
+    if (!mapRef.current) {
+      console.error('[MapView] mapRef.current is null');
+      return;
+    }
+
+    // 기존에 로드된 스크립트 확인
+    const existingScript = document.getElementById('kakao-map-sdk') as HTMLScriptElement | null;
+
+    if (!existingScript) {
+      console.log('[MapView] Kakao Map SDK script not found, creating one...');
+      const script = document.createElement('script');
+      script.id = 'kakao-map-sdk';
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`;
+      script.async = true;
+      document.head.appendChild(script);
+
+      script.onload = () => {
+        initMap();
+      };
+
+      script.onerror = (err) => {
+        console.error('[MapView] Failed to load Kakao Map SDK', err);
+      };
+    } else {
+      console.log('[MapView] Kakao Map SDK script already loaded');
+      initMap();
+    }
+
+    function initMap() {
+      const kakao = (window as any).kakao;
+      if (!kakao) {
+        console.error('[MapView] window.kakao is undefined');
+        return;
+      }
+
+      kakao.maps.load(() => {
+        const container = mapRef.current!;
+        const options = {
+          center: new kakao.maps.LatLng(37.5665, 126.978),
+          level: 3,
+          maxLevel: 5,         // 최대 축소 레벨
+        };
+
+        const map = new kakao.maps.Map(container, options);
+        console.log('[MapView] Kakao Map instance created:', map);
+
+        // 마커 추가
+        stations.forEach(station => {
+          if (!station.latitude || !station.longitude) {
+            console.warn('[MapView] Station missing lat/lng:', station);
+            return;
+          }
+
+          const marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(station.latitude, station.longitude),
+          });
+          marker.setMap(map);
+
+          kakao.maps.event.addListener(marker, 'click', () => {
+            console.log('[MapView] Marker clicked:', station);
+            onStationClick(station);
+          });
+        });
+
+        console.log('[MapView] All markers added:', stations.length);
+      });
+    }
+  }, [stations, onStationClick]);
 
   return (
     <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-muted">
-      {/* Map Legend */}
-      <div className="bg-muted p-5 border-b-4 border-muted flex items-center gap-6 flex-wrap">
-        <span className="text-sm">🗺️ 범례:</span>
-        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm">
-          <div className="w-3 h-3 rounded-full bg-accent"></div>
-          <span className="text-sm text-gray-700">✨ 대여 여유 (5대 이상)</span>
-        </div>
-        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm">
-          <div className="w-3 h-3 rounded-full bg-chart-4"></div>
-          <span className="text-sm text-gray-700">⚠️ 여유 부족 (1-4대)</span>
-        </div>
-        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm">
-          <div className="w-3 h-3 rounded-full bg-primary"></div>
-          <span className="text-sm text-gray-700">❌ 대여 불가 (0대)</span>
-        </div>
-        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm">
-          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
-          <span className="text-sm text-gray-700">⏸️ 운영 중지</span>
-        </div>
-      </div>
-
-      {/* Simplified Map View */}
-      <div className="relative bg-sky-50 h-[600px] overflow-auto p-8">
-        {/* Grid to simulate map */}
-        <div className="relative w-full h-full min-w-[800px] min-h-[800px]">
-          {stations.map((station, index) => {
-            // Position stations in a grid-like pattern (simplified)
-            const row = Math.floor(index / 5);
-            const col = index % 5;
-            const top = row * 150 + 50;
-            const left = col * 150 + 50;
-
-            return (
-              <div
-                key={station.id}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
-                style={{ top: `${top}px`, left: `${left}px` }}
-                onClick={() => onStationClick(station)}
-              >
-                {/* Marker */}
-                <div className="relative">
-                  <MapPin
-                    className={`w-10 h-10 ${getMarkerColor(station)} text-white drop-shadow-lg group-hover:scale-110 transition-transform`}
-                    fill="currentColor"
-                  />
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -mt-2">
-                    <Bike className="w-4 h-4 text-white" />
-                  </div>
-                </div>
-
-                {/* Tooltip */}
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                  <div className="bg-white rounded-2xl shadow-2xl p-4 min-w-[220px] border-4 border-muted">
-                    <p className="text-sm mb-1">📍 {station.name}</p>
-                    <p className="text-xs text-gray-600 mb-2">{station.address}</p>
-                    <div className="flex items-center justify-between bg-muted px-3 py-2 rounded-full">
-                      <span className="text-sm text-gray-700">🚲 자전거:</span>
-                      <span className={`text-sm ${
-                        station.bikeCount === 0 ? 'text-primary' : 'text-accent'
-                      }`}>
-                        {station.bikeCount}대
-                      </span>
-                    </div>
-                    <div className="mt-2 pt-2 border-t-2 border-muted/50 flex justify-center">
-                      <span className={`text-xs px-3 py-1.5 rounded-full shadow-sm ${
-                        station.status === 'inactive' ? 'bg-gray-100 text-gray-700' :
-                        station.bikeCount === 0 ? 'bg-primary/20 text-primary' :
-                        station.bikeCount <= 4 ? 'bg-chart-4/30 text-accent-foreground' :
-                        'bg-accent/30 text-accent-foreground'
-                      }`}>
-                        {getMarkerLabel(station)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Map Info */}
-        <div className="absolute bottom-4 right-4 bg-white rounded-2xl shadow-2xl p-5 max-w-xs border-4 border-secondary/30">
-          <p className="text-sm text-gray-600 mb-2">
-            💡 실제 서비스에서는 실시간 지도가 표시됩니다
-          </p>
-          <p className="text-xs text-gray-500">
-            🖱️ 마커를 클릭하면 상세 정보를 확인할 수 있습니다
-          </p>
-        </div>
-      </div>
+      <div ref={mapRef} className="w-full h-[600px]" />
     </div>
   );
 }
