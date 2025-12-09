@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**DataAdminStatistics**](DataAdminStatistics.md) |  | [default to undefined]
+**data** | [**AdminStatistics**](AdminStatistics.md) |  | [default to undefined]
 
 ## Example
 

@@ -33,11 +33,11 @@ export interface UpdateStation {
      */
     'address'?: string;
     /**
-     * 현재 자전거 수
+     * 자전거 최대 수용량
      * @type {number}
      * @memberof UpdateStation
      */
-    'bikeCount'?: number;
+    'capacity'?: number;
     /**
      * 운영 상태
      * @type {string}

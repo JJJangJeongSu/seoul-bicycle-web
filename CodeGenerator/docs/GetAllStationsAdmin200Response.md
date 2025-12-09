@@ -1,4 +1,4 @@
-# ReturnRental200Response
+# GetAllStationsAdmin200Response
 
 
 ## Properties
@@ -7,14 +7,14 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**ReturnRental1**](ReturnRental1.md) |  | [default to undefined]
+**data** | [**GetAllStationsAdmin200ResponseAllOfData**](GetAllStationsAdmin200ResponseAllOfData.md) |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ReturnRental200Response } from './api';
+import { GetAllStationsAdmin200Response } from './api';
 
-const instance: ReturnRental200Response = {
+const instance: GetAllStationsAdmin200Response = {
     success,
     message,
     data,

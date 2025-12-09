@@ -23,19 +23,19 @@ import type { Rental } from './rental';
 /**
  * 
  * @export
- * @interface DataRentalCreate
+ * @interface CreateRental201ResponseAllOfData
  */
-export interface DataRentalCreate {
+export interface CreateRental201ResponseAllOfData {
     /**
      * 
      * @type {Rental}
-     * @memberof DataRentalCreate
+     * @memberof CreateRental201ResponseAllOfData
      */
     'rental': Rental;
     /**
      * 
      * @type {CreateRental201ResponseAllOfDataSummary}
-     * @memberof DataRentalCreate
+     * @memberof CreateRental201ResponseAllOfData
      */
     'summary': CreateRental201ResponseAllOfDataSummary;
 }

@@ -13,17 +13,24 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { ReturnRental1 } from './return-rental1';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { Success } from './success';
 
 /**
- * @type ReturnRental200Response
+ * 
  * @export
+ * @interface CreateRental201ResponseAllOfDataSummary
  */
-export type ReturnRental200Response = Success;
-
+export interface CreateRental201ResponseAllOfDataSummary {
+    /**
+     * 시작 역 이름
+     * @type {string}
+     * @memberof CreateRental201ResponseAllOfDataSummary
+     */
+    'start_station_name': string;
+    /**
+     * 시작 역 주소
+     * @type {string}
+     * @memberof CreateRental201ResponseAllOfDataSummary
+     */
+    'start_station_address': string;
+}
 

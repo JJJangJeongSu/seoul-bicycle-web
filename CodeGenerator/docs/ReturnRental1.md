@@ -1,4 +1,4 @@
-# DataRentalCreate
+# ReturnRental1
 
 
 ## Properties
@@ -6,14 +6,14 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **rental** | [**Rental**](Rental.md) |  | [default to undefined]
-**summary** | [**CreateRental201ResponseAllOfDataSummary**](CreateRental201ResponseAllOfDataSummary.md) |  | [default to undefined]
+**summary** | [**ReturnRental1Summary**](ReturnRental1Summary.md) |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { DataRentalCreate } from './api';
+import { ReturnRental1 } from './api';
 
-const instance: DataRentalCreate = {
+const instance: ReturnRental1 = {
     rental,
     summary,
 };

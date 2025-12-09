@@ -1,19 +1,19 @@
-# CreatePost201ResponseAllOfData
+# WriteComment
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**comment** | [**Comment**](Comment.md) |  | [default to undefined]
+**content** | **string** | 댓글 내용 | [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreatePost201ResponseAllOfData } from './api';
+import { WriteComment } from './api';
 
-const instance: CreatePost201ResponseAllOfData = {
-    comment,
+const instance: WriteComment = {
+    content,
 };
 ```
 

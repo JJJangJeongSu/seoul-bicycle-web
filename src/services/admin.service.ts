@@ -50,19 +50,33 @@ export const getAllUsers = async (page: number = 1, limit: number = 10, search?:
 };
 
 // Get All Stations
-export const getAllStations = async (): Promise<Station[]> => {
-  const response = await adminApi.getAllStationsAdmin();
+// Get All Stations
+export const getAllStations = async (page: number = 1, limit: number = 20, search?: string): Promise<{ stations: Station[], pagination: Pagination }> => {
+  const response = await adminApi.getAllStationsAdmin(page, limit, search);
   const data = response.data as any;
-  const stationsData = data.data?.stations || data.stations || [];
+  const responseData = data.data || data;
+  const stationsData = responseData.stations || [];
+  const paginationData = responseData.pagination || {
+    currentPage: page,
+    totalPages: 1,
+    totalItems: stationsData.length,
+    itemsPerPage: limit,
+    hasNext: false,
+    hasPrev: false
+  };
 
-  return stationsData.map((station: any) => ({
+  const stations = stationsData.map((station: any) => ({
     id: station.id,
     name: station.name,
     address: station.address,
     latitude: station.latitude,
     longitude: station.longitude,
+    capacity: station.capacity,
+    bikeCount: station.bike_count || 0, // API might return bike_count
     status: station.status,
   }));
+
+  return { stations, pagination: paginationData };
 };
 
 
@@ -86,12 +100,29 @@ export const deleteUser = async (id: string): Promise<void> => {
 };
 
 // Station Management
-export const createStation = async (stationData: CreateStation): Promise<void> => {
-  await adminApi.createStation(stationData);
+export const createStation = async (stationData: Station): Promise<void> => {
+  // station -> createStation
+  const createStationData: CreateStation = {
+    name: stationData.name,
+    address: stationData.address,
+    capacity: stationData.capacity,
+    latitude: String(stationData.latitude),
+    longitude: String(stationData.longitude)
+  };
+  await adminApi.createStation(createStationData);
 };
 
-export const updateStation = async (id: string, stationData: UpdateStation): Promise<void> => {
-  await adminApi.updateStation(id, stationData);
+export const updateStation = async (id: string, stationData: Station): Promise<void> => {
+  if (!id) {
+    throw new Error('Station ID is required for update');
+  }
+  const updateStationData: UpdateStation = {
+    name: stationData.name,
+    address: stationData.address,
+    capacity: stationData.capacity,
+    status: stationData.status,
+  };
+  await adminApi.updateStation(id, updateStationData);
 };
 
 export const deleteStation = async (id: string): Promise<void> => {

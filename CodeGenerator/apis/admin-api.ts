@@ -30,6 +30,8 @@ import type { GetAdminStatistics200Response } from '../models';
 // @ts-ignore
 import type { GetAllRepairsAdmin200Response } from '../models';
 // @ts-ignore
+import type { GetAllStationsAdmin200Response } from '../models';
+// @ts-ignore
 import type { GetAllUsersAdmin200Response } from '../models';
 // @ts-ignore
 import type { SimpleError } from '../models';
@@ -37,6 +39,8 @@ import type { SimpleError } from '../models';
 import type { UpdateRepairStatus } from '../models';
 // @ts-ignore
 import type { UpdateStation } from '../models';
+// @ts-ignore
+import type { UpdateStation200Response } from '../models';
 // @ts-ignore
 import type { UpdateUserStatus } from '../models';
 // @ts-ignore
@@ -392,6 +396,96 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * 관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+         * @summary 정류장 목록 조회
+         * @param {number} [page] 페이지 번호
+         * @param {number} [limit] 페이지당 항목 수
+         * @param {string} [search] 이름 또는 이메일 검색어
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllStationsAdmin: async (page?: number, limit?: number, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/admin/stations`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+         * @summary 정류장 목록 조회
+         * @param {number} [page] 페이지 번호
+         * @param {number} [limit] 페이지당 항목 수
+         * @param {string} [search] 이름 또는 이메일 검색어
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllStationsAdmin_6: async (page?: number, limit?: number, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/admin/stations`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 관리자 전용. 전체 회원 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
          * @summary 회원 목록 조회
          * @param {number} [page] 페이지 번호
@@ -445,7 +539,7 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllUsersAdmin_6: async (page?: number, limit?: number, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllUsersAdmin_7: async (page?: number, limit?: number, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/admin/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -529,11 +623,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateRepairStatus_7: async (repairId: string, updateRepairStatus: UpdateRepairStatus, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateRepairStatus_8: async (repairId: string, updateRepairStatus: UpdateRepairStatus, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'repairId' is not null or undefined
-            assertParamExists('updateRepairStatus_7', 'repairId', repairId)
+            assertParamExists('updateRepairStatus_8', 'repairId', repairId)
             // verify required parameter 'updateRepairStatus' is not null or undefined
-            assertParamExists('updateRepairStatus_7', 'updateRepairStatus', updateRepairStatus)
+            assertParamExists('updateRepairStatus_8', 'updateRepairStatus', updateRepairStatus)
             const localVarPath = `/admin/repairs/{repairId}`
                 .replace(`{${"repairId"}}`, encodeURIComponent(String(repairId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -607,9 +701,9 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateStation_8: async (stationId: string, updateStation?: UpdateStation, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateStation_9: async (stationId: string, updateStation?: UpdateStation, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'stationId' is not null or undefined
-            assertParamExists('updateStation_8', 'stationId', stationId)
+            assertParamExists('updateStation_9', 'stationId', stationId)
             const localVarPath = `/admin/stations/{stationId}`
                 .replace(`{${"stationId"}}`, encodeURIComponent(String(stationId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -683,9 +777,9 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUserStatus_9: async (userId: string, updateUserStatus?: UpdateUserStatus, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateUserStatus_10: async (userId: string, updateUserStatus?: UpdateUserStatus, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
-            assertParamExists('updateUserStatus_9', 'userId', userId)
+            assertParamExists('updateUserStatus_10', 'userId', userId)
             const localVarPath = `/admin/users/{userId}/status`
                 .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -854,6 +948,36 @@ export const AdminApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+         * @summary 정류장 목록 조회
+         * @param {number} [page] 페이지 번호
+         * @param {number} [limit] 페이지당 항목 수
+         * @param {string} [search] 이름 또는 이메일 검색어
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllStationsAdmin(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetAllStationsAdmin200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllStationsAdmin(page, limit, search, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getAllStationsAdmin']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+         * @summary 정류장 목록 조회
+         * @param {number} [page] 페이지 번호
+         * @param {number} [limit] 페이지당 항목 수
+         * @param {string} [search] 이름 또는 이메일 검색어
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllStationsAdmin_6(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetAllStationsAdmin200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllStationsAdmin_6(page, limit, search, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getAllStationsAdmin_6']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 관리자 전용. 전체 회원 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
          * @summary 회원 목록 조회
          * @param {number} [page] 페이지 번호
@@ -877,10 +1001,10 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllUsersAdmin_6(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetAllUsersAdmin200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUsersAdmin_6(page, limit, search, options);
+        async getAllUsersAdmin_7(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetAllUsersAdmin200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUsersAdmin_7(page, limit, search, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.getAllUsersAdmin_6']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getAllUsersAdmin_7']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -905,10 +1029,10 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateRepairStatus_7(repairId: string, updateRepairStatus: UpdateRepairStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateRepairStatus_7(repairId, updateRepairStatus, options);
+        async updateRepairStatus_8(repairId: string, updateRepairStatus: UpdateRepairStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateRepairStatus_8(repairId, updateRepairStatus, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.updateRepairStatus_7']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.updateRepairStatus_8']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -919,7 +1043,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateStation(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateStation201Response>> {
+        async updateStation(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateStation200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateStation(stationId, updateStation, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.updateStation']?.[localVarOperationServerIndex]?.url;
@@ -933,10 +1057,10 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateStation_8(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateStation201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateStation_8(stationId, updateStation, options);
+        async updateStation_9(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateStation200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateStation_9(stationId, updateStation, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.updateStation_8']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.updateStation_9']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -961,10 +1085,10 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateUserStatus_9(userId: string, updateUserStatus?: UpdateUserStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateUserStatus200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserStatus_9(userId, updateUserStatus, options);
+        async updateUserStatus_10(userId: string, updateUserStatus?: UpdateUserStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateUserStatus200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserStatus_10(userId, updateUserStatus, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.updateUserStatus_9']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.updateUserStatus_10']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -1078,6 +1202,30 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.getAllRepairsAdmin_5(status, page, options).then((request) => request(axios, basePath));
         },
         /**
+         * 관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+         * @summary 정류장 목록 조회
+         * @param {number} [page] 페이지 번호
+         * @param {number} [limit] 페이지당 항목 수
+         * @param {string} [search] 이름 또는 이메일 검색어
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllStationsAdmin(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<GetAllStationsAdmin200Response> {
+            return localVarFp.getAllStationsAdmin(page, limit, search, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+         * @summary 정류장 목록 조회
+         * @param {number} [page] 페이지 번호
+         * @param {number} [limit] 페이지당 항목 수
+         * @param {string} [search] 이름 또는 이메일 검색어
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllStationsAdmin_6(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<GetAllStationsAdmin200Response> {
+            return localVarFp.getAllStationsAdmin_6(page, limit, search, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 관리자 전용. 전체 회원 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
          * @summary 회원 목록 조회
          * @param {number} [page] 페이지 번호
@@ -1098,8 +1246,8 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllUsersAdmin_6(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<GetAllUsersAdmin200Response> {
-            return localVarFp.getAllUsersAdmin_6(page, limit, search, options).then((request) => request(axios, basePath));
+        getAllUsersAdmin_7(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<GetAllUsersAdmin200Response> {
+            return localVarFp.getAllUsersAdmin_7(page, limit, search, options).then((request) => request(axios, basePath));
         },
         /**
          * 관리자 전용. 고장 신고의 처리 상태를 업데이트합니다. 관리자 메모를 추가할 수 있습니다.
@@ -1120,8 +1268,8 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateRepairStatus_7(repairId: string, updateRepairStatus: UpdateRepairStatus, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.updateRepairStatus_7(repairId, updateRepairStatus, options).then((request) => request(axios, basePath));
+        updateRepairStatus_8(repairId: string, updateRepairStatus: UpdateRepairStatus, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.updateRepairStatus_8(repairId, updateRepairStatus, options).then((request) => request(axios, basePath));
         },
         /**
          * 관리자 전용. 대여소 정보를 수정합니다.
@@ -1131,7 +1279,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateStation(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig): AxiosPromise<CreateStation201Response> {
+        updateStation(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig): AxiosPromise<UpdateStation200Response> {
             return localVarFp.updateStation(stationId, updateStation, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1142,8 +1290,8 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateStation_8(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig): AxiosPromise<CreateStation201Response> {
-            return localVarFp.updateStation_8(stationId, updateStation, options).then((request) => request(axios, basePath));
+        updateStation_9(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig): AxiosPromise<UpdateStation200Response> {
+            return localVarFp.updateStation_9(stationId, updateStation, options).then((request) => request(axios, basePath));
         },
         /**
          * 관리자 전용. 회원의 상태를 변경합니다. 활성화 또는 차단 상태로 설정할 수 있습니다.
@@ -1164,8 +1312,8 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUserStatus_9(userId: string, updateUserStatus?: UpdateUserStatus, options?: RawAxiosRequestConfig): AxiosPromise<UpdateUserStatus200Response> {
-            return localVarFp.updateUserStatus_9(userId, updateUserStatus, options).then((request) => request(axios, basePath));
+        updateUserStatus_10(userId: string, updateUserStatus?: UpdateUserStatus, options?: RawAxiosRequestConfig): AxiosPromise<UpdateUserStatus200Response> {
+            return localVarFp.updateUserStatus_10(userId, updateUserStatus, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1298,6 +1446,34 @@ export class AdminApi extends BaseAPI {
     }
 
     /**
+     * 관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+     * @summary 정류장 목록 조회
+     * @param {number} [page] 페이지 번호
+     * @param {number} [limit] 페이지당 항목 수
+     * @param {string} [search] 이름 또는 이메일 검색어
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getAllStationsAdmin(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getAllStationsAdmin(page, limit, search, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+     * @summary 정류장 목록 조회
+     * @param {number} [page] 페이지 번호
+     * @param {number} [limit] 페이지당 항목 수
+     * @param {string} [search] 이름 또는 이메일 검색어
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getAllStationsAdmin_6(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getAllStationsAdmin_6(page, limit, search, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 관리자 전용. 전체 회원 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
      * @summary 회원 목록 조회
      * @param {number} [page] 페이지 번호
@@ -1321,8 +1497,8 @@ export class AdminApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getAllUsersAdmin_6(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getAllUsersAdmin_6(page, limit, search, options).then((request) => request(this.axios, this.basePath));
+    public getAllUsersAdmin_7(page?: number, limit?: number, search?: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getAllUsersAdmin_7(page, limit, search, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1347,8 +1523,8 @@ export class AdminApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public updateRepairStatus_7(repairId: string, updateRepairStatus: UpdateRepairStatus, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).updateRepairStatus_7(repairId, updateRepairStatus, options).then((request) => request(this.axios, this.basePath));
+    public updateRepairStatus_8(repairId: string, updateRepairStatus: UpdateRepairStatus, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).updateRepairStatus_8(repairId, updateRepairStatus, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1373,8 +1549,8 @@ export class AdminApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public updateStation_8(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).updateStation_8(stationId, updateStation, options).then((request) => request(this.axios, this.basePath));
+    public updateStation_9(stationId: string, updateStation?: UpdateStation, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).updateStation_9(stationId, updateStation, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1399,8 +1575,8 @@ export class AdminApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public updateUserStatus_9(userId: string, updateUserStatus?: UpdateUserStatus, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).updateUserStatus_9(userId, updateUserStatus, options).then((request) => request(this.axios, this.basePath));
+    public updateUserStatus_10(userId: string, updateUserStatus?: UpdateUserStatus, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).updateUserStatus_10(userId, updateUserStatus, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

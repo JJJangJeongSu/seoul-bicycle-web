@@ -17,38 +17,32 @@
 /**
  * 
  * @export
- * @interface Comment
+ * @interface ReturnRental1Summary
  */
-export interface Comment {
+export interface ReturnRental1Summary {
     /**
-     * 댓글 고유 ID
+     * 
      * @type {string}
-     * @memberof Comment
+     * @memberof ReturnRental1Summary
      */
-    'comment_id': string;
+    'start_station_name': string;
     /**
-     * 작성자 ID
+     * 
      * @type {string}
-     * @memberof Comment
+     * @memberof ReturnRental1Summary
      */
-    'author_id': string;
+    'start_station_address': string;
     /**
-     * 작성자 이름
+     * 
      * @type {string}
-     * @memberof Comment
+     * @memberof ReturnRental1Summary
      */
-    'author_name': string;
+    'end_station_name': string;
     /**
-     * 작성 시간
+     * 
      * @type {string}
-     * @memberof Comment
+     * @memberof ReturnRental1Summary
      */
-    'created_at': string;
-    /**
-     * 댓글 내용
-     * @type {string}
-     * @memberof Comment
-     */
-    'content': string;
+    'end_station_address': string;
 }
 

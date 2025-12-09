@@ -33,6 +33,7 @@ export type Station = {
   latitude: number;
   longitude: number;
   bikeCount: number;
+  capacity: number;
   status: 'active' | 'inactive';
 };
 

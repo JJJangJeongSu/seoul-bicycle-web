@@ -13,17 +13,18 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { ReturnRental1 } from './return-rental1';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { Success } from './success';
 
 /**
- * @type ReturnRental200Response
+ * 
  * @export
+ * @interface WriteComment
  */
-export type ReturnRental200Response = Success;
-
+export interface WriteComment {
+    /**
+     * 댓글 내용
+     * @type {string}
+     * @memberof WriteComment
+     */
+    'content': string;
+}
 

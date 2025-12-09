@@ -1,4 +1,4 @@
-# DataRentalCreate
+# CreateRental201ResponseAllOfData
 
 
 ## Properties
@@ -11,9 +11,9 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { DataRentalCreate } from './api';
+import { CreateRental201ResponseAllOfData } from './api';
 
-const instance: DataRentalCreate = {
+const instance: CreateRental201ResponseAllOfData = {
     rental,
     summary,
 };

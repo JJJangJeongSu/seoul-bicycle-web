@@ -4,8 +4,10 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**createPost**](#createpost) | **POST** /board/posts | 게시글 작성|
-|[**createPost_0**](#createpost_0) | **POST** /board/posts | 게시글 작성|
+|[**createPost**](#createpost) | **POST** /board/posts/{postId}/comment | 게시물 댓글 작성|
+|[**createPost_0**](#createpost_0) | **POST** /board/posts/{postId}/comment | 게시물 댓글 작성|
+|[**createPost_1**](#createpost_1) | **POST** /board/posts | 게시글 작성|
+|[**createPost_2**](#createpost_2) | **POST** /board/posts | 게시글 작성|
 |[**deletePost**](#deletepost) | **DELETE** /board/posts/{postId} | 게시글 삭제|
 |[**deletePost_0**](#deletepost_0) | **DELETE** /board/posts/{postId} | 게시글 삭제|
 |[**getAllPosts**](#getallposts) | **GET** /board/posts | 게시글 목록 조회|
@@ -16,7 +18,121 @@ All URIs are relative to *http://localhost*
 |[**updatePost_0**](#updatepost_0) | **PUT** /board/posts/{postId} | 게시글 수정|
 
 # **createPost**
-> CreatePost201Response createPost(createPost)
+> CreatePost201Response createPost(writeComment)
+
+게시물에 댓글을 작성합니다
+
+### Example
+
+```typescript
+import {
+    BoardApi,
+    Configuration,
+    WriteComment
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new BoardApi(configuration);
+
+let postId: string; // (default to undefined)
+let writeComment: WriteComment; //
+
+const { status, data } = await apiInstance.createPost(
+    postId,
+    writeComment
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **writeComment** | **WriteComment**|  | |
+| **postId** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+**CreatePost201Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**201** | 댓글 작성 성공 |  -  |
+|**400** | 잘못된 요청 - 필수 필드 누락 |  -  |
+|**401** | 인증 필요 |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **createPost_0**
+> CreatePost201Response createPost_0(writeComment)
+
+게시물에 댓글을 작성합니다
+
+### Example
+
+```typescript
+import {
+    BoardApi,
+    Configuration,
+    WriteComment
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new BoardApi(configuration);
+
+let postId: string; // (default to undefined)
+let writeComment: WriteComment; //
+
+const { status, data } = await apiInstance.createPost_0(
+    postId,
+    writeComment
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **writeComment** | **WriteComment**|  | |
+| **postId** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+**CreatePost201Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**201** | 댓글 작성 성공 |  -  |
+|**400** | 잘못된 요청 - 필수 필드 누락 |  -  |
+|**401** | 인증 필요 |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **createPost_1**
+> CreatePost201Response1 createPost_1(createPost)
 
 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
 
@@ -34,7 +150,7 @@ const apiInstance = new BoardApi(configuration);
 
 let createPost: CreatePost; //
 
-const { status, data } = await apiInstance.createPost(
+const { status, data } = await apiInstance.createPost_1(
     createPost
 );
 ```
@@ -48,7 +164,7 @@ const { status, data } = await apiInstance.createPost(
 
 ### Return type
 
-**CreatePost201Response**
+**CreatePost201Response1**
 
 ### Authorization
 
@@ -69,8 +185,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **createPost_0**
-> CreatePost201Response createPost_0(createPost)
+# **createPost_2**
+> CreatePost201Response1 createPost_2(createPost)
 
 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
 
@@ -88,7 +204,7 @@ const apiInstance = new BoardApi(configuration);
 
 let createPost: CreatePost; //
 
-const { status, data } = await apiInstance.createPost_0(
+const { status, data } = await apiInstance.createPost_2(
     createPost
 );
 ```
@@ -102,7 +218,7 @@ const { status, data } = await apiInstance.createPost_0(
 
 ### Return type
 
-**CreatePost201Response**
+**CreatePost201Response1**
 
 ### Authorization
 

@@ -1,23 +1,56 @@
-import { useState } from 'react';
-import { Plus, Edit, Power, X } from 'lucide-react';
-import { mockStations } from '../../lib/mockData';
-import { Station } from '../../App';
+import { useState, useEffect } from 'react';
+import { Plus, Edit, Power, X, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Station, Pagination } from '../../types';
+import { useServices } from '../../hooks/useServices';
 
 export function AdminStations() {
-  const [stations, setStations] = useState<Station[]>(mockStations);
+  const { adminService } = useServices()
+  const [stations, setStations] = useState<Station[]>([]);
+  const [pagination, setPagination] = useState<Pagination>({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 20,
+    hasNext: false,
+    hasPrev: false
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
   const [editingStation, setEditingStation] = useState<Station | null>(null);
   const [isAddingStation, setIsAddingStation] = useState(false);
   const [newStation, setNewStation] = useState({
     name: '',
     address: '',
-    bikeCount: 0,
+    latitude: 0,
+    longitude: 0,
+    capacity: 0,
   });
+
+  const fetchStations = async (page: number, search: string) => {
+    try {
+      const { stations, pagination } = await adminService.getAllStations(page, 20, search);
+      setStations(stations);
+      setPagination(pagination);
+    } catch (error) {
+      console.error('Failed to fetch stations:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStations(currentPage, searchQuery);
+  }, [currentPage, searchQuery]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCurrentPage(1);
+    fetchStations(1, searchQuery);
+  };
 
   const handleEdit = (station: Station) => {
     setEditingStation(station);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editingStation) return;
 
     if (!editingStation.name || !editingStation.address) {
@@ -25,58 +58,120 @@ export function AdminStations() {
       return;
     }
 
-    setStations(stations.map(s => 
-      s.id === editingStation.id 
-        ? editingStation
-        : s
-    ));
-    setEditingStation(null);
-    alert('대여소 정보가 수정되었습니다');
+    if (!editingStation.id) {
+      alert('대여소 ID가 없습니다. 새로고침 후 다시 시도해주세요.');
+      return;
+    }
+
+    try {
+      await adminService.updateStation(editingStation.id, editingStation);
+      
+      // Refresh list
+      fetchStations(currentPage, searchQuery);
+      setEditingStation(null);
+      alert('대여소 정보가 수정되었습니다');
+    } catch (error) {
+      console.error('Failed to update station:', error);
+      alert('대여소 정보 수정에 실패했습니다.');
+    }
   };
 
-  const handleToggleStatus = (station: Station) => {
+  const handleToggleStatus = async (station: Station) => {
     const newStatus = station.status === 'active' ? 'inactive' : 'active';
     const action = newStatus === 'inactive' ? '폐쇄' : '재개장';
     
+    if (!station.id) {
+      alert('대여소 ID가 없습니다.');
+      return;
+    }
+
     const confirmed = window.confirm(`정말로 ${station.name} 대여소를 ${action}하시겠습니까?`);
     if (!confirmed) return;
 
-    setStations(stations.map(s => 
-      s.id === station.id 
-        ? { ...s, status: newStatus }
-        : s
-    ));
-    
-    alert(`${station.name} 대여소가 ${action}되었습니다`);
+    try {
+      await adminService.updateStation(station.id, { ...station, status: newStatus });
+
+      // Refresh list
+      fetchStations(currentPage, searchQuery);
+      
+      alert(`${station.name} 대여소가 ${action}되었습니다`);
+    } catch (error) {
+      console.error('Failed to toggle station status:', error);
+      alert(`대여소 ${action}에 실패했습니다.`);
+    }
   };
 
-  const handleAddStation = () => {
+  const handleDeleteStation = async (station: Station) => {
+    if (!station.id) {
+      alert('대여소 ID가 없습니다.');
+      return;
+    }
+
+    const confirmed = window.confirm(`정말로 ${station.name} 대여소를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`);
+    if (!confirmed) return;
+
+    try {
+      await adminService.deleteStation(station.id);
+      
+      // Refresh list
+      fetchStations(currentPage, searchQuery);
+      alert(`${station.name} 대여소가 삭제되었습니다`);
+    } catch (error) {
+      console.error('Failed to delete station:', error);
+      alert('대여소 삭제에 실패했습니다.');
+    }
+  };
+
+  const handleAddStation = async () => {
     if (!newStation.name || !newStation.address) {
       alert('대여소명과 주소를 입력해주세요');
       return;
     }
 
-    const newId = `ST-${Math.floor(100 + Math.random() * 900)}`;
-    const station: Station = {
-      id: newId,
+    // id 는 server에서 자동 할당
+    // bikecount는 0에서 시작
+    const station: Station = {  
+      id: '',
       name: newStation.name,
       address: newStation.address,
-      latitude: 37.5665 + (Math.random() - 0.5) * 0.1,
-      longitude: 126.9780 + (Math.random() - 0.5) * 0.1,
-      bikeCount: newStation.bikeCount,
+      latitude: newStation.latitude,
+      longitude: newStation.longitude,
+      capacity: newStation.capacity,
+      bikeCount: 0,
       status: 'active',
     };
 
-    setStations([...stations, station]);
-    setIsAddingStation(false);
-    setNewStation({ name: '', address: '', bikeCount: 0 });
-    alert(`새 대여소 ${station.name}가 추가되었습니다`);
+
+    // API 호출
+    try {
+      await adminService.createStation(station);
+
+      // Refresh list
+      fetchStations(currentPage, searchQuery);
+
+      setIsAddingStation(false);
+      setNewStation({ name: '', address: '', capacity: 0, latitude: 0, longitude: 0 });
+      alert(`새 대여소 ${station.name}가 추가되었습니다`);
+    } catch (error) {
+      console.error('Failed to create station:', error);
+      alert('대여소 추가에 실패했습니다.');
+    }
   };
 
   return (
     <div className="space-y-6">
       {/* Add Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <form onSubmit={handleSearch} className="relative w-64">
+          <input
+            type="text"
+            placeholder="대여소 검색..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+        </form>
         <button 
           onClick={() => setIsAddingStation(true)}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -132,12 +227,46 @@ export function AdminStations() {
                       >
                         <Power className="w-4 h-4" />
                       </button>
+                      <button 
+                        onClick={() => handleDeleteStation(station)}
+                        className="p-1 text-red-600 hover:bg-red-50 rounded" 
+                        title="삭제"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+        
+        {/* Pagination Controls */}
+        <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+          <div className="text-sm text-gray-500">
+            총 {pagination.totalItems}개 중 {(pagination.currentPage - 1) * pagination.itemsPerPage + 1}-
+            {Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems)}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={!pagination.hasPrev}
+              className="p-2 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="px-4 py-2 text-sm text-gray-600">
+              {pagination.currentPage} / {pagination.totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(pagination.totalPages, prev + 1))}
+              disabled={!pagination.hasNext}
+              className="p-2 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -189,14 +318,26 @@ export function AdminStations() {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-600 mb-1">자전거 수</label>
+                <label className="block text-sm text-gray-600 mb-1">자전거 최대 수용량</label>
                 <input
                   type="number"
-                  value={editingStation.bikeCount}
-                  onChange={(e) => setEditingStation({ ...editingStation, bikeCount: parseInt(e.target.value) || 0 })}
+                  value={editingStation.capacity}
+                  onChange={(e) => setEditingStation({ ...editingStation, capacity: parseInt(e.target.value) || 0 })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   min="0"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">상태 *</label>
+                <select
+                  value={editingStation.status}
+                  onChange={(e) => setEditingStation({ ...editingStation, status: e.target.value as 'active' | 'inactive' })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="active">활성</option>
+                  <option value="inactive">비활성</option>
+                </select>
               </div>
 
               <div className="flex gap-2 pt-4">
@@ -227,7 +368,7 @@ export function AdminStations() {
               <button 
                 onClick={() => {
                   setIsAddingStation(false);
-                  setNewStation({ name: '', address: '', bikeCount: 0 });
+                  setNewStation({ name: '', address: '', capacity: 0, latitude: 0, longitude: 0 });
                 }}
                 className="text-gray-500 hover:text-gray-700"
               >
@@ -259,21 +400,43 @@ export function AdminStations() {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-600 mb-1">자전거 수</label>
+                <label className="block text-sm text-gray-600 mb-1">위도</label>
                 <input
                   type="number"
-                  value={newStation.bikeCount}
-                  onChange={(e) => setNewStation({ ...newStation, bikeCount: parseInt(e.target.value) || 0 })}
+                  value={newStation.latitude}
+                  onChange={(e) => setNewStation({ ...newStation, latitude: parseFloat(e.target.value) })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  min="0"
+                  min="-90"
+                  max="90"
+                  step="0.0001"
                   placeholder="0"
                 />
               </div>
 
-              <div className="bg-blue-50 rounded-lg p-3">
-                <p className="text-xs text-blue-700">
-                  💡 위도/경도는 자동으로 설정됩니다
-                </p>
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">경도</label>
+                <input
+                  type="number"
+                  value={newStation.longitude}
+                  onChange={(e) => setNewStation({ ...newStation, longitude: parseFloat(e.target.value) })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  min="-180"
+                  max="180"
+                  step="0.0001"
+                  placeholder="0"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">자전거 최대 수용량</label>
+                <input
+                  type="number"
+                  value={newStation.capacity}
+                  onChange={(e) => setNewStation({ ...newStation, capacity: parseInt(e.target.value) || 0 })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  min="0"
+                  placeholder="0"
+                />
               </div>
 
               <div className="flex gap-2 pt-4">
@@ -286,7 +449,7 @@ export function AdminStations() {
                 <button
                   onClick={() => {
                     setIsAddingStation(false);
-                    setNewStation({ name: '', address: '', bikeCount: 0 });
+                    setNewStation({ name: '', address: '', capacity: 0, latitude: 0, longitude: 0 });
                   }}
                   className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
                 >

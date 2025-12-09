@@ -1,19 +1,19 @@
-# CreatePost201ResponseAllOfData
+# CreateStation201ResponseAllOfData
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**comment** | [**Comment**](Comment.md) |  | [default to undefined]
+**station** | [**DataStation**](DataStation.md) |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreatePost201ResponseAllOfData } from './api';
+import { CreateStation201ResponseAllOfData } from './api';
 
-const instance: CreatePost201ResponseAllOfData = {
-    comment,
+const instance: CreateStation201ResponseAllOfData = {
+    station,
 };
 ```
 

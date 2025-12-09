@@ -15,28 +15,28 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { CreateRental201ResponseAllOfDataSummary } from './create-rental201-response-all-of-data-summary';
+import type { Pagination } from './pagination';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Rental } from './rental';
+import type { Station } from './station';
 
 /**
  * 
  * @export
- * @interface DataRentalCreate
+ * @interface GetAllStationsAdmin200ResponseAllOfData
  */
-export interface DataRentalCreate {
+export interface GetAllStationsAdmin200ResponseAllOfData {
     /**
      * 
-     * @type {Rental}
-     * @memberof DataRentalCreate
+     * @type {Array<Station>}
+     * @memberof GetAllStationsAdmin200ResponseAllOfData
      */
-    'rental': Rental;
+    'stations': Array<Station>;
     /**
      * 
-     * @type {CreateRental201ResponseAllOfDataSummary}
-     * @memberof DataRentalCreate
+     * @type {Pagination}
+     * @memberof GetAllStationsAdmin200ResponseAllOfData
      */
-    'summary': CreateRental201ResponseAllOfDataSummary;
+    'pagination': Pagination;
 }
 

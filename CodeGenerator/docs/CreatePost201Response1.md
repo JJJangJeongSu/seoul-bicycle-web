@@ -1,4 +1,4 @@
-# ReturnRental200Response
+# CreatePost201Response1
 
 
 ## Properties
@@ -7,14 +7,14 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** | 응답 상태 | [optional] [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**ReturnRental1**](ReturnRental1.md) |  | [default to undefined]
+**data** | [**CreatePost201Response1AllOfData**](CreatePost201Response1AllOfData.md) |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ReturnRental200Response } from './api';
+import { CreatePost201Response1 } from './api';
 
-const instance: ReturnRental200Response = {
+const instance: CreatePost201Response1 = {
     success,
     message,
     data,

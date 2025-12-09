@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **string** | 대여소 이름 | [optional] [default to undefined]
 **address** | **string** | 대여소 주소 | [optional] [default to undefined]
-**bikeCount** | **number** | 현재 자전거 수 | [optional] [default to undefined]
+**capacity** | **number** | 자전거 최대 수용량 | [optional] [default to undefined]
 **status** | **string** | 운영 상태 | [optional] [default to undefined]
 
 ## Example
@@ -18,7 +18,7 @@ import { UpdateStation } from './api';
 const instance: UpdateStation = {
     name,
     address,
-    bikeCount,
+    capacity,
     status,
 };
 ```

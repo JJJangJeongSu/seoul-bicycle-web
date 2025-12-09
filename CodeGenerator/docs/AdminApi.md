@@ -14,6 +14,8 @@ All URIs are relative to *http://localhost*
 |[**getAdminStatistics_0**](#getadminstatistics_0) | **GET** /admin/statistics | 전체 시스템 통계 조회|
 |[**getAllRepairsAdmin**](#getallrepairsadmin) | **GET** /admin/repairs | 고장 신고 목록 조회|
 |[**getAllRepairsAdmin_0**](#getallrepairsadmin_0) | **GET** /admin/repairs | 고장 신고 목록 조회|
+|[**getAllStationsAdmin**](#getallstationsadmin) | **GET** /admin/stations | 정류장 목록 조회|
+|[**getAllStationsAdmin_0**](#getallstationsadmin_0) | **GET** /admin/stations | 정류장 목록 조회|
 |[**getAllUsersAdmin**](#getallusersadmin) | **GET** /admin/users | 회원 목록 조회|
 |[**getAllUsersAdmin_0**](#getallusersadmin_0) | **GET** /admin/users | 회원 목록 조회|
 |[**updateRepairStatus**](#updaterepairstatus) | **PUT** /admin/repairs/{repairId} | 고장 처리 상태 업데이트|
@@ -553,6 +555,124 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **getAllStationsAdmin**
+> GetAllStationsAdmin200Response getAllStationsAdmin()
+
+관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+
+### Example
+
+```typescript
+import {
+    AdminApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AdminApi(configuration);
+
+let page: number; //페이지 번호 (optional) (default to 1)
+let limit: number; //페이지당 항목 수 (optional) (default to 20)
+let search: string; //이름 또는 이메일 검색어 (optional) (default to undefined)
+
+const { status, data } = await apiInstance.getAllStationsAdmin(
+    page,
+    limit,
+    search
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **page** | [**number**] | 페이지 번호 | (optional) defaults to 1|
+| **limit** | [**number**] | 페이지당 항목 수 | (optional) defaults to 20|
+| **search** | [**string**] | 이름 또는 이메일 검색어 | (optional) defaults to undefined|
+
+
+### Return type
+
+**GetAllStationsAdmin200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | 회원 목록 조회 성공 |  -  |
+|**401** | 인증 필요 |  -  |
+|**403** | 권한 없음 - 관리자만 접근 가능 |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getAllStationsAdmin_0**
+> GetAllStationsAdmin200Response getAllStationsAdmin_0()
+
+관리자 전용. 전체 정류장 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.
+
+### Example
+
+```typescript
+import {
+    AdminApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AdminApi(configuration);
+
+let page: number; //페이지 번호 (optional) (default to 1)
+let limit: number; //페이지당 항목 수 (optional) (default to 20)
+let search: string; //이름 또는 이메일 검색어 (optional) (default to undefined)
+
+const { status, data } = await apiInstance.getAllStationsAdmin_0(
+    page,
+    limit,
+    search
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **page** | [**number**] | 페이지 번호 | (optional) defaults to 1|
+| **limit** | [**number**] | 페이지당 항목 수 | (optional) defaults to 20|
+| **search** | [**string**] | 이름 또는 이메일 검색어 | (optional) defaults to undefined|
+
+
+### Return type
+
+**GetAllStationsAdmin200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | 회원 목록 조회 성공 |  -  |
+|**401** | 인증 필요 |  -  |
+|**403** | 권한 없음 - 관리자만 접근 가능 |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getAllUsersAdmin**
 > GetAllUsersAdmin200Response getAllUsersAdmin()
 
@@ -788,7 +908,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateStation**
-> CreateStation201Response updateStation()
+> UpdateStation200Response updateStation()
 
 관리자 전용. 대여소 정보를 수정합니다.
 
@@ -823,7 +943,7 @@ const { status, data } = await apiInstance.updateStation(
 
 ### Return type
 
-**CreateStation201Response**
+**UpdateStation200Response**
 
 ### Authorization
 
@@ -846,7 +966,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateStation_0**
-> CreateStation201Response updateStation_0()
+> UpdateStation200Response updateStation_0()
 
 관리자 전용. 대여소 정보를 수정합니다.
 
@@ -881,7 +1001,7 @@ const { status, data } = await apiInstance.updateStation_0(
 
 ### Return type
 
-**CreateStation201Response**
+**UpdateStation200Response**
 
 ### Authorization
 

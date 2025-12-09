@@ -31,6 +31,8 @@ import type { GetUserRentals200Response } from '../models';
 import type { ReturnRental200Response } from '../models';
 // @ts-ignore
 import type { ReturnRentalRequest } from '../models';
+// @ts-ignore
+import type { SimpleError } from '../models';
 /**
  * RentalsApi - axios parameter creator
  * @export

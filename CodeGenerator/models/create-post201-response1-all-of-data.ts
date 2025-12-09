@@ -15,28 +15,19 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { CreateRental201ResponseAllOfDataSummary } from './create-rental201-response-all-of-data-summary';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { Rental } from './rental';
+import type { Post } from './post';
 
 /**
  * 
  * @export
- * @interface DataRentalCreate
+ * @interface CreatePost201Response1AllOfData
  */
-export interface DataRentalCreate {
+export interface CreatePost201Response1AllOfData {
     /**
      * 
-     * @type {Rental}
-     * @memberof DataRentalCreate
+     * @type {Post}
+     * @memberof CreatePost201Response1AllOfData
      */
-    'rental': Rental;
-    /**
-     * 
-     * @type {CreateRental201ResponseAllOfDataSummary}
-     * @memberof DataRentalCreate
-     */
-    'summary': CreateRental201ResponseAllOfDataSummary;
+    'post': Post;
 }
 
