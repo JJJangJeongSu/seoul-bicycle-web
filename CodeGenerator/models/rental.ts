@@ -80,12 +80,6 @@ export interface Rental {
      * @memberof Rental
      */
     'status': RentalStatusEnum;
-    /**
-     * 자전거 모델
-     * @type {string}
-     * @memberof Rental
-     */
-    'bike_model': string;
 }
 
 export const RentalStatusEnum = {

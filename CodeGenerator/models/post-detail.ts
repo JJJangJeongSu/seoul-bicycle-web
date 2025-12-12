@@ -15,7 +15,10 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Post1 } from './post1';
+import type { Comment } from './comment';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { Post } from './post';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { PostDetailAllOfAuthorInfo } from './post-detail-all-of-author-info';
@@ -24,6 +27,6 @@ import type { PostDetailAllOfAuthorInfo } from './post-detail-all-of-author-info
  * @type PostDetail
  * @export
  */
-export type PostDetail = Post1;
+export type PostDetail = Post;
 
 

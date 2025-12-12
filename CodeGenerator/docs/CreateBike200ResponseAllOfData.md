@@ -1,0 +1,20 @@
+# CreateBike200ResponseAllOfData
+
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**bike** | [**Bike**](Bike.md) |  | [default to undefined]
+
+## Example
+
+```typescript
+import { CreateBike200ResponseAllOfData } from './api';
+
+const instance: CreateBike200ResponseAllOfData = {
+    bike,
+};
+```
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

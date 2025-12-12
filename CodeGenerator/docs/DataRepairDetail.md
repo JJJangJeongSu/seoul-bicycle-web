@@ -18,7 +18,6 @@ Name | Type | Description | Notes
 **created_at** | **string** | 신고 접수 시간 | [default to undefined]
 **completed_at** | **string** | 처리 완료 시간 | [optional] [default to undefined]
 **updated_at** | **string** | 업데이트 시간 | [default to undefined]
-**bike_model** | **string** |  | [default to undefined]
 **station_name** | **string** | 대여소 이름 | [default to undefined]
 **reporterInfo** | [**DataRepairDetailAllOfReporterInfo**](DataRepairDetailAllOfReporterInfo.md) |  | [optional] [default to undefined]
 
@@ -41,7 +40,6 @@ const instance: DataRepairDetail = {
     created_at,
     completed_at,
     updated_at,
-    bike_model,
     station_name,
     reporterInfo,
 };

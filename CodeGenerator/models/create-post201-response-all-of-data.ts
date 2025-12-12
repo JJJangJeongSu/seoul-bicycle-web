@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Post } from './post';
+import type { Comment } from './comment';
 
 /**
  * 
@@ -25,9 +25,9 @@ import type { Post } from './post';
 export interface CreatePost201ResponseAllOfData {
     /**
      * 
-     * @type {Post}
+     * @type {Comment}
      * @memberof CreatePost201ResponseAllOfData
      */
-    'post': Post;
+    'comment': Comment;
 }
 

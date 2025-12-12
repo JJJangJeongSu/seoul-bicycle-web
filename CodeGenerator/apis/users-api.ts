@@ -127,7 +127,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         getUserById: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
             assertParamExists('getUserById', 'userId', userId)
-            const localVarPath = `/users/{userId}`
+            const localVarPath = `/users/{userId}/profile`
                 .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -161,7 +161,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         getUserById_2: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
             assertParamExists('getUserById_2', 'userId', userId)
-            const localVarPath = `/users/{userId}`
+            const localVarPath = `/users/{userId}/profile`
                 .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -395,7 +395,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async changePassword(userId: string, changePassword: ChangePassword, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async changePassword(userId: string, changePassword: ChangePassword, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.changePassword(userId, changePassword, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UsersApi.changePassword']?.[localVarOperationServerIndex]?.url;
@@ -409,7 +409,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async changePassword_1(userId: string, changePassword: ChangePassword, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async changePassword_1(userId: string, changePassword: ChangePassword, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.changePassword_1(userId, changePassword, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UsersApi.changePassword_1']?.[localVarOperationServerIndex]?.url;
@@ -528,7 +528,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        changePassword(userId: string, changePassword: ChangePassword, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        changePassword(userId: string, changePassword: ChangePassword, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.changePassword(userId, changePassword, options).then((request) => request(axios, basePath));
         },
         /**
@@ -539,7 +539,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        changePassword_1(userId: string, changePassword: ChangePassword, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        changePassword_1(userId: string, changePassword: ChangePassword, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.changePassword_1(userId, changePassword, options).then((request) => request(axios, basePath));
         },
         /**

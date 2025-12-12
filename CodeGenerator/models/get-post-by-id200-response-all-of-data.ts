@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { DataPostDetail } from './data-post-detail';
+import type { PostDetail } from './post-detail';
 
 /**
  * 
@@ -25,9 +25,9 @@ import type { DataPostDetail } from './data-post-detail';
 export interface GetPostById200ResponseAllOfData {
     /**
      * 
-     * @type {DataPostDetail}
+     * @type {PostDetail}
      * @memberof GetPostById200ResponseAllOfData
      */
-    'post': DataPostDetail;
+    'post': PostDetail;
 }
 

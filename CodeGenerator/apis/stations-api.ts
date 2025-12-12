@@ -22,17 +22,55 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { DeleteStation200Response } from '../models';
+// @ts-ignore
 import type { GetAllStations200Response } from '../models';
 // @ts-ignore
 import type { GetNearestStation200Response } from '../models';
 // @ts-ignore
 import type { GetStationsStatus200Response } from '../models';
+// @ts-ignore
+import type { SimpleError } from '../models';
 /**
  * StationsApi - axios parameter creator
  * @export
  */
 export const StationsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 관리자 전용. 대여소를 삭제합니다
+         * @summary 대여소 삭제
+         * @param {string} stationId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteStation: async (stationId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'stationId' is not null or undefined
+            assertParamExists('deleteStation', 'stationId', stationId)
+            const localVarPath = `/admin/stations/{stationId}`
+                .replace(`{${"stationId"}}`, encodeURIComponent(String(stationId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 전체 대여소 목록을 조회합니다. 각 대여소의 위치, 주소, 현재 자전거 수, 운영 상태 등을 포함합니다. 필터링 및 검색 기능을 지원합니다.
          * @summary 대여소 목록 조회
@@ -282,6 +320,19 @@ export const StationsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = StationsApiAxiosParamCreator(configuration)
     return {
         /**
+         * 관리자 전용. 대여소를 삭제합니다
+         * @summary 대여소 삭제
+         * @param {string} stationId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteStation(stationId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeleteStation200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteStation(stationId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StationsApi.deleteStation']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 전체 대여소 목록을 조회합니다. 각 대여소의 위치, 주소, 현재 자전거 수, 운영 상태 등을 포함합니다. 필터링 및 검색 기능을 지원합니다.
          * @summary 대여소 목록 조회
          * @param {string} [district] 서울시 구 단위 필터 (예: 강남구, 서초구)
@@ -374,6 +425,16 @@ export const StationsApiFactory = function (configuration?: Configuration, baseP
     const localVarFp = StationsApiFp(configuration)
     return {
         /**
+         * 관리자 전용. 대여소를 삭제합니다
+         * @summary 대여소 삭제
+         * @param {string} stationId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteStation(stationId: string, options?: RawAxiosRequestConfig): AxiosPromise<DeleteStation200Response> {
+            return localVarFp.deleteStation(stationId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 전체 대여소 목록을 조회합니다. 각 대여소의 위치, 주소, 현재 자전거 수, 운영 상태 등을 포함합니다. 필터링 및 검색 기능을 지원합니다.
          * @summary 대여소 목록 조회
          * @param {string} [district] 서울시 구 단위 필터 (예: 강남구, 서초구)
@@ -447,6 +508,18 @@ export const StationsApiFactory = function (configuration?: Configuration, baseP
  * @extends {BaseAPI}
  */
 export class StationsApi extends BaseAPI {
+    /**
+     * 관리자 전용. 대여소를 삭제합니다
+     * @summary 대여소 삭제
+     * @param {string} stationId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StationsApi
+     */
+    public deleteStation(stationId: string, options?: RawAxiosRequestConfig) {
+        return StationsApiFp(this.configuration).deleteStation(stationId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 전체 대여소 목록을 조회합니다. 각 대여소의 위치, 주소, 현재 자전거 수, 운영 상태 등을 포함합니다. 필터링 및 검색 기능을 지원합니다.
      * @summary 대여소 목록 조회

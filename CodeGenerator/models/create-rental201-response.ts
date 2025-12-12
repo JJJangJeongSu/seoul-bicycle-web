@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { DataRentalCreate } from './data-rental-create';
+import type { CreateRental201ResponseAllOfData } from './create-rental201-response-all-of-data';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

@@ -15,7 +15,6 @@ Name | Type | Description | Notes
 **duration** | **number** | 이용 시간 (분 단위) | [optional] [default to undefined]
 **distance** | **string** | 이동 거리 (km) | [optional] [default to undefined]
 **status** | **string** | 대여 상태 (rented: 대여 중, returned: 반납 완료) | [default to undefined]
-**bike_model** | **string** | 자전거 모델 | [default to undefined]
 
 ## Example
 
@@ -33,7 +32,6 @@ const instance: Rental = {
     duration,
     distance,
     status,
-    bike_model,
 };
 ```
 

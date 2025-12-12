@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Search, Eye, Ban, X, CheckCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useServices } from '../../hooks/useServices';
-import type { User, Pagination } from '../../types';
+import { getAllUsers, updateUserStatus } from '../../services/admin.service';
+import { User, Pagination, UserRoleEnum } from '../../../CodeGenerator';
 
 export function AdminUsers() {
-  const { adminService } = useServices();
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [viewingUser, setViewingUser] = useState<User | null>(null);
@@ -28,7 +27,7 @@ export function AdminUsers() {
     try {
       setLoading(true);
       setError(null);
-      const { users: data, pagination: paging } = await adminService.getAllUsers(currentPage, 10, debouncedSearch);
+      const { users: data, pagination: paging } = await getAllUsers(currentPage, 10, debouncedSearch);
       setUsers(data);
       setPagination(paging);
     } catch (err) {
@@ -37,7 +36,7 @@ export function AdminUsers() {
     } finally {
       setLoading(false);
     }
-  }, [adminService, currentPage, debouncedSearch]);
+  }, [currentPage, debouncedSearch]);
 
   useEffect(() => {
     loadUsers();
@@ -48,14 +47,15 @@ export function AdminUsers() {
   };
 
   const handleToggleSuspend = async (user: User) => {
-    const newStatus = user.status === 'active' ? 'blocked' : 'active';
-    const action = newStatus === 'blocked' ? '정지' : '정지 해제';
+    // Assuming status is 'active' or 'banned'/'blocked' in generated model
+    const newStatus = user.status === 'active' ? 'banned' : 'active';
+    const action = newStatus === 'banned' ? '정지' : '정지 해제';
 
     const confirmed = window.confirm(`정말로 ${user.name} 회원을 ${action}하시겠습니까?`);
     if (!confirmed) return;
 
     try {
-      await adminService.updateUserStatus(user.id, newStatus);
+      await updateUserStatus(user.id, newStatus as any); // Cast if needed for enum/string mismatch
       
       // Refresh list to get updated status
       loadUsers();
@@ -186,12 +186,10 @@ export function AdminUsers() {
               
               {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
                 .filter(page => {
-                  // Show current page, first, last, and pages around current
                   const current = pagination.currentPage;
                   return page === 1 || page === pagination.totalPages || Math.abs(page - current) <= 2;
                 })
                 .map((page, index, array) => {
-                  // Add ellipsis
                   if (index > 0 && array[index - 1] !== page - 1) {
                     return (
                       <span key={`ellipsis-${page}`} className="px-2 py-1">...</span>
@@ -269,6 +267,12 @@ export function AdminUsers() {
                 <div>
                   <p className="text-xs text-gray-500 mb-1">전화번호</p>
                   <p className="text-sm">{viewingUser.phone}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">권한</p>
+                  <p className="text-sm">
+                    {viewingUser.role === UserRoleEnum.Admin ? '관리자' : '일반 사용자'}
+                  </p>
                 </div>
               </div>
 

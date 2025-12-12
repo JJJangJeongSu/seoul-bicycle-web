@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { DataAdminStatistics } from './data-admin-statistics';
+import type { AdminStatistics } from './admin-statistics';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { Success } from './success';

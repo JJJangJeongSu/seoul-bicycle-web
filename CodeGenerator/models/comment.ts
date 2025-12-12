@@ -39,26 +39,16 @@ export interface Comment {
      */
     'author_name': string;
     /**
-     * 게시글 카테고리 (notice: 공지, info: 정보, question: 질문, free: 자유)
-     * @type {string}
-     * @memberof Comment
-     */
-    'category': CommentCategoryEnum;
-    /**
      * 작성 시간
      * @type {string}
      * @memberof Comment
      */
     'created_at': string;
+    /**
+     * 댓글 내용
+     * @type {string}
+     * @memberof Comment
+     */
+    'content': string;
 }
-
-export const CommentCategoryEnum = {
-    Notice: 'notice',
-    Info: 'info',
-    Question: 'question',
-    Free: 'free'
-} as const;
-
-export type CommentCategoryEnum = typeof CommentCategoryEnum[keyof typeof CommentCategoryEnum];
-
 

@@ -6,8 +6,8 @@ All URIs are relative to *http://localhost*
 |------------- | ------------- | -------------|
 |[**changePassword**](#changepassword) | **PUT** /users/{userId}/password | 비밀번호 변경|
 |[**changePassword_0**](#changepassword_0) | **PUT** /users/{userId}/password | 비밀번호 변경|
-|[**getUserById**](#getuserbyid) | **GET** /users/{userId} | 사용자 정보 조회|
-|[**getUserById_0**](#getuserbyid_0) | **GET** /users/{userId} | 사용자 정보 조회|
+|[**getUserById**](#getuserbyid) | **GET** /users/{userId}/profile | 사용자 정보 조회|
+|[**getUserById_0**](#getuserbyid_0) | **GET** /users/{userId}/profile | 사용자 정보 조회|
 |[**getUserRentals**](#getuserrentals) | **GET** /users/{userId}/rentals | 사용자 대여 이력 조회|
 |[**getUserStatistics**](#getuserstatistics) | **GET** /users/{userId}/statistics | 사용자 통계 조회|
 |[**getUserStatistics_0**](#getuserstatistics_0) | **GET** /users/{userId}/statistics | 사용자 통계 조회|
@@ -15,7 +15,7 @@ All URIs are relative to *http://localhost*
 |[**updateUser_0**](#updateuser_0) | **PUT** /users/{userId} | 사용자 정보 수정|
 
 # **changePassword**
-> changePassword(changePassword)
+> object changePassword(changePassword)
 
 사용자의 비밀번호를 변경합니다. 현재 비밀번호 확인이 필요합니다.
 
@@ -50,7 +50,7 @@ const { status, data } = await apiInstance.changePassword(
 
 ### Return type
 
-void (empty response body)
+**object**
 
 ### Authorization
 
@@ -59,20 +59,20 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Accept**: */*, application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**204** | 비밀번호 변경 성공 |  -  |
+|**200** | 비밀번호 변경 성공 |  -  |
 |**400** | 잘못된 요청 - 현재 비밀번호 불일치 |  -  |
 |**401** | 인증 필요 |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **changePassword_0**
-> changePassword_0(changePassword)
+> object changePassword_0(changePassword)
 
 사용자의 비밀번호를 변경합니다. 현재 비밀번호 확인이 필요합니다.
 
@@ -107,7 +107,7 @@ const { status, data } = await apiInstance.changePassword_0(
 
 ### Return type
 
-void (empty response body)
+**object**
 
 ### Authorization
 
@@ -116,13 +116,13 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Accept**: */*, application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**204** | 비밀번호 변경 성공 |  -  |
+|**200** | 비밀번호 변경 성공 |  -  |
 |**400** | 잘못된 요청 - 현재 비밀번호 불일치 |  -  |
 |**401** | 인증 필요 |  -  |
 

@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Users, Bike, MapPin, TrendingUp, Loader2 } from 'lucide-react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useServices } from '../../hooks/useServices';
+import { AdminStatistics } from '../../../CodeGenerator/models';
 
 export function AdminDashboard() {
   const { adminService } = useServices();
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    totalStations: 0,
-    totalBikes: 0,
-    activeRentals: 0,
-    todayRentalsToday: 0,
-    totalRepairsPending: 0,
+  const [stats, setStats] = useState<AdminStatistics>({
+    total_users: 0,
+    total_stations: 0,
+    total_bikes: 0,
+    active_rentals: 0,
+    today_rentals_today: 0,
+    total_repairs_pending: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +86,7 @@ export function AdminDashboard() {
             <span className="text-2xl opacity-80">👥</span>
           </div>
           <p className="text-sm opacity-90 mb-1">총 회원 수</p>
-          <p className="text-3xl">{stats.totalUsers.toLocaleString()}</p>
+          <p className="text-3xl">{stats.total_users.toLocaleString()}</p>
         </div>
 
         <div className="bg-green-500 text-white rounded-lg p-6">
@@ -94,7 +95,7 @@ export function AdminDashboard() {
             <span className="text-2xl opacity-80">🚲</span>
           </div>
           <p className="text-sm opacity-90 mb-1">총 대여소</p>
-          <p className="text-3xl">{stats.totalStations.toLocaleString()}</p>
+          <p className="text-3xl">{stats.total_stations.toLocaleString()}</p>
         </div>
 
         <div className="bg-purple-500 text-white rounded-lg p-6">
@@ -103,7 +104,7 @@ export function AdminDashboard() {
             <span className="text-2xl opacity-80">📈</span>
           </div>
           <p className="text-sm opacity-90 mb-1">총 자전거</p>
-          <p className="text-3xl">{stats.totalBikes.toLocaleString()}</p>
+          <p className="text-3xl">{stats.total_bikes.toLocaleString()}</p>
         </div>
 
         <div className="bg-orange-500 text-white rounded-lg p-6">
@@ -112,7 +113,7 @@ export function AdminDashboard() {
             <span className="text-2xl opacity-80">📍</span>
           </div>
           <p className="text-sm opacity-90 mb-1">현재 대여중</p>
-          <p className="text-3xl">{stats.activeRentals.toLocaleString()}</p>
+          <p className="text-3xl">{stats.active_rentals.toLocaleString()}</p>
         </div>
       </div>
 
@@ -185,14 +186,14 @@ export function AdminDashboard() {
         </div>
       </div>
 
-      {/* System Status */}
+      {/* System Status - Placeholder data for now */}
       <div className="grid md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h4 className="mb-4">🚲 자전거 현황</h4>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">정상</span>
-              <span>850대 (85%)</span>
+              <span>{(stats.total_bikes * 0.85).toFixed(0)}대 (85%)</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-green-500 h-2 rounded-full" style={{ width: '85%' }}></div>
@@ -200,18 +201,18 @@ export function AdminDashboard() {
 
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">대여중</span>
-              <span>120대 (12%)</span>
+              <span>{stats.active_rentals}대 ({(stats.active_rentals / stats.total_bikes * 100).toFixed(0)}%)</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-500 h-2 rounded-full" style={{ width: '12%' }}></div>
+              <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${(stats.active_rentals / stats.total_bikes * 100)}%` }}></div>
             </div>
 
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">고장</span>
-              <span>30대 (3%)</span>
+              <span className="text-gray-600">고장/수리</span>
+              <span>{stats.total_repairs_pending}대</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-red-500 h-2 rounded-full" style={{ width: '3%' }}></div>
+              <div className="bg-red-500 h-2 rounded-full" style={{ width: '5%' }}></div>
             </div>
           </div>
         </div>
@@ -221,18 +222,10 @@ export function AdminDashboard() {
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">운영중</span>
-              <span>14개 (93%)</span>
+              <span>{stats.total_stations}개 (100%)</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full" style={{ width: '93%' }}></div>
-            </div>
-
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">폐쇄</span>
-              <span>1개 (7%)</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-gray-500 h-2 rounded-full" style={{ width: '7%' }}></div>
+              <div className="bg-green-500 h-2 rounded-full" style={{ width: '100%' }}></div>
             </div>
           </div>
         </div>
@@ -242,26 +235,10 @@ export function AdminDashboard() {
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">처리 대기</span>
-              <span>3건</span>
+              <span>{stats.total_repairs_pending}건</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-red-500 h-2 rounded-full" style={{ width: '30%' }}></div>
-            </div>
-
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">처리중</span>
-              <span>5건</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '50%' }}></div>
-            </div>
-
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">완료</span>
-              <span>2건</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full" style={{ width: '20%' }}></div>
             </div>
           </div>
         </div>

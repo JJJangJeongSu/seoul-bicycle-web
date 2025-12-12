@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**post** | [**DataPostDetail**](DataPostDetail.md) |  | [default to undefined]
+**post** | [**PostDetail**](PostDetail.md) |  | [default to undefined]
 
 ## Example
 

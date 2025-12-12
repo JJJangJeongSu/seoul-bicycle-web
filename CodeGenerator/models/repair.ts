@@ -99,12 +99,6 @@ export interface Repair {
      */
     'updated_at': string;
     /**
-     * 
-     * @type {string}
-     * @memberof Repair
-     */
-    'bike_model': string;
-    /**
      * 대여소 이름
      * @type {string}
      * @memberof Repair

@@ -40,22 +40,22 @@ export interface Station1 {
     'address': string;
     /**
      * 위도
-     * @type {number}
+     * @type {string}
      * @memberof Station1
      */
-    'latitude': number;
+    'latitude': string;
     /**
      * 경도
-     * @type {number}
+     * @type {string}
      * @memberof Station1
      */
-    'longitude': number;
+    'longitude': string;
     /**
      * 현재 대여 가능한 자전거 수
      * @type {number}
      * @memberof Station1
      */
-    'bikeCount': number;
+    'bike_count': number;
     /**
      * 대여소 최대 수용 대수
      * @type {number}
@@ -68,6 +68,18 @@ export interface Station1 {
      * @memberof Station1
      */
     'status': Station1StatusEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof Station1
+     */
+    'created_at': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Station1
+     */
+    'updated_at': string;
 }
 
 export const Station1StatusEnum = {

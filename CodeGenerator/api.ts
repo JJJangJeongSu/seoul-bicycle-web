@@ -15,8 +15,11 @@
 
 
 export * from './apis/admin-api';
+export * from './apis/admin-bike-api';
+export * from './apis/admin-station-api';
 export * from './apis/ai-api';
 export * from './apis/auth-api';
+export * from './apis/bike-api';
 export * from './apis/board-api';
 export * from './apis/rentals-api';
 export * from './apis/repairs-api';

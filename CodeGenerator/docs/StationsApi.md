@@ -4,12 +4,67 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
+|[**deleteStation**](#deletestation) | **DELETE** /admin/stations/{stationId} | 대여소 삭제|
 |[**getAllStations**](#getallstations) | **GET** /stations | 대여소 목록 조회|
 |[**getAllStations_0**](#getallstations_0) | **GET** /stations | 대여소 목록 조회|
 |[**getNearestStation**](#getneareststation) | **GET** /stations/nearest | 가장 가까운 대여소 찾기|
 |[**getNearestStation_0**](#getneareststation_0) | **GET** /stations/nearest | 가장 가까운 대여소 찾기|
 |[**getStationsStatus**](#getstationsstatus) | **GET** /stations/status | 대여소 실시간 현황 갱신|
 |[**getStationsStatus_0**](#getstationsstatus_0) | **GET** /stations/status | 대여소 실시간 현황 갱신|
+
+# **deleteStation**
+> DeleteStation200Response deleteStation()
+
+관리자 전용. 대여소를 삭제합니다
+
+### Example
+
+```typescript
+import {
+    StationsApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new StationsApi(configuration);
+
+let stationId: string; // (default to undefined)
+
+const { status, data } = await apiInstance.deleteStation(
+    stationId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **stationId** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+**DeleteStation200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | 대여소 추가 성공 |  -  |
+|**400** | 잘못된 요청 |  -  |
+|**401** | 인증 필요 |  -  |
+|**403** | 권한 없음 - 관리자만 접근 가능 |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getAllStations**
 > GetAllStations200Response getAllStations()

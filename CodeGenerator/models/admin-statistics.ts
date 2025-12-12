@@ -25,30 +25,36 @@ export interface AdminStatistics {
      * @type {number}
      * @memberof AdminStatistics
      */
-    'totalUsers': number;
+    'total_users': number;
     /**
      * 총 대여소 수
      * @type {number}
      * @memberof AdminStatistics
      */
-    'totalStations': number;
+    'total_stations': number;
     /**
      * 총 자전거 수
      * @type {number}
      * @memberof AdminStatistics
      */
-    'totalBikes': number;
-    /**
-     * 오늘 대여 건수
-     * @type {number}
-     * @memberof AdminStatistics
-     */
-    'todayRentals': number;
+    'total_bikes': number;
     /**
      * 현재 대여 중인 자전거 수
      * @type {number}
      * @memberof AdminStatistics
      */
-    'activeRentals': number;
+    'active_rentals': number;
+    /**
+     * 오늘 대여 건수
+     * @type {number}
+     * @memberof AdminStatistics
+     */
+    'today_rentals_today': number;
+    /**
+     * 오늘 수리 건수
+     * @type {number}
+     * @memberof AdminStatistics
+     */
+    'total_repairs_pending': number;
 }
 

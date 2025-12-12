@@ -26,13 +26,19 @@ import type { CreatePost } from '../models';
 // @ts-ignore
 import type { CreatePost201Response } from '../models';
 // @ts-ignore
+import type { CreatePost201Response1 } from '../models';
+// @ts-ignore
 import type { GetAllPosts200Response } from '../models';
 // @ts-ignore
 import type { GetPostById200Response } from '../models';
 // @ts-ignore
+import type { SimpleError } from '../models';
+// @ts-ignore
 import type { UpdatePost } from '../models';
 // @ts-ignore
 import type { UpdatePost200Response } from '../models';
+// @ts-ignore
+import type { WriteComment } from '../models';
 /**
  * BoardApi - axios parameter creator
  * @export
@@ -40,15 +46,95 @@ import type { UpdatePost200Response } from '../models';
 export const BoardApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * 게시물에 댓글을 작성합니다
+         * @summary 게시물 댓글 작성
+         * @param {string} postId 
+         * @param {WriteComment} writeComment 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createPost: async (postId: string, writeComment: WriteComment, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'postId' is not null or undefined
+            assertParamExists('createPost', 'postId', postId)
+            // verify required parameter 'writeComment' is not null or undefined
+            assertParamExists('createPost', 'writeComment', writeComment)
+            const localVarPath = `/board/posts/{postId}/comment`
+                .replace(`{${"postId"}}`, encodeURIComponent(String(postId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(writeComment, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 게시물에 댓글을 작성합니다
+         * @summary 게시물 댓글 작성
+         * @param {string} postId 
+         * @param {WriteComment} writeComment 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createPost_1: async (postId: string, writeComment: WriteComment, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'postId' is not null or undefined
+            assertParamExists('createPost_1', 'postId', postId)
+            // verify required parameter 'writeComment' is not null or undefined
+            assertParamExists('createPost_1', 'writeComment', writeComment)
+            const localVarPath = `/board/posts/{postId}/comment`
+                .replace(`{${"postId"}}`, encodeURIComponent(String(postId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(writeComment, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
          * @summary 게시글 작성
          * @param {CreatePost} createPost 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createPost: async (createPost: CreatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createPost_2: async (createPost: CreatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createPost' is not null or undefined
-            assertParamExists('createPost', 'createPost', createPost)
+            assertParamExists('createPost_2', 'createPost', createPost)
             const localVarPath = `/board/posts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -82,9 +168,9 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createPost_1: async (createPost: CreatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createPost_3: async (createPost: CreatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createPost' is not null or undefined
-            assertParamExists('createPost_1', 'createPost', createPost)
+            assertParamExists('createPost_3', 'createPost', createPost)
             const localVarPath = `/board/posts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -152,9 +238,9 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deletePost_2: async (postId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deletePost_4: async (postId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'postId' is not null or undefined
-            assertParamExists('deletePost_2', 'postId', postId)
+            assertParamExists('deletePost_4', 'postId', postId)
             const localVarPath = `/board/posts/{postId}`
                 .replace(`{${"postId"}}`, encodeURIComponent(String(postId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -239,7 +325,7 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllPosts_3: async (page?: number, limit?: number, search?: string, category?: GetAllPosts0CategoryEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllPosts_5: async (page?: number, limit?: number, search?: string, category?: GetAllPosts0CategoryEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/board/posts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -320,9 +406,9 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPostById_4: async (postId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getPostById_6: async (postId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'postId' is not null or undefined
-            assertParamExists('getPostById_4', 'postId', postId)
+            assertParamExists('getPostById_6', 'postId', postId)
             const localVarPath = `/board/posts/{postId}`
                 .replace(`{${"postId"}}`, encodeURIComponent(String(postId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -395,11 +481,11 @@ export const BoardApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePost_5: async (postId: string, updatePost: UpdatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updatePost_7: async (postId: string, updatePost: UpdatePost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'postId' is not null or undefined
-            assertParamExists('updatePost_5', 'postId', postId)
+            assertParamExists('updatePost_7', 'postId', postId)
             // verify required parameter 'updatePost' is not null or undefined
-            assertParamExists('updatePost_5', 'updatePost', updatePost)
+            assertParamExists('updatePost_7', 'updatePost', updatePost)
             const localVarPath = `/board/posts/{postId}`
                 .replace(`{${"postId"}}`, encodeURIComponent(String(postId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -438,16 +524,31 @@ export const BoardApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = BoardApiAxiosParamCreator(configuration)
     return {
         /**
-         * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
-         * @summary 게시글 작성
-         * @param {CreatePost} createPost 
+         * 게시물에 댓글을 작성합니다
+         * @summary 게시물 댓글 작성
+         * @param {string} postId 
+         * @param {WriteComment} writeComment 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createPost(createPost: CreatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost(createPost, options);
+        async createPost(postId: string, writeComment: WriteComment, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost(postId, writeComment, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BoardApi.createPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 게시물에 댓글을 작성합니다
+         * @summary 게시물 댓글 작성
+         * @param {string} postId 
+         * @param {WriteComment} writeComment 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createPost_1(postId: string, writeComment: WriteComment, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost_1(postId, writeComment, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BoardApi.createPost_1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -457,10 +558,23 @@ export const BoardApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createPost_1(createPost: CreatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost_1(createPost, options);
+        async createPost_2(createPost: CreatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response1>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost_2(createPost, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BoardApi.createPost_1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BoardApi.createPost_2']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
+         * @summary 게시글 작성
+         * @param {CreatePost} createPost 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createPost_3(createPost: CreatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreatePost201Response1>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createPost_3(createPost, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BoardApi.createPost_3']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -483,10 +597,10 @@ export const BoardApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deletePost_2(postId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deletePost_2(postId, options);
+        async deletePost_4(postId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deletePost_4(postId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BoardApi.deletePost_2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BoardApi.deletePost_4']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -515,10 +629,10 @@ export const BoardApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllPosts_3(page?: number, limit?: number, search?: string, category?: GetAllPosts0CategoryEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetAllPosts200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllPosts_3(page, limit, search, category, options);
+        async getAllPosts_5(page?: number, limit?: number, search?: string, category?: GetAllPosts0CategoryEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetAllPosts200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllPosts_5(page, limit, search, category, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BoardApi.getAllPosts_3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BoardApi.getAllPosts_5']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -541,10 +655,10 @@ export const BoardApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPostById_4(postId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetPostById200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getPostById_4(postId, options);
+        async getPostById_6(postId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetPostById200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPostById_6(postId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BoardApi.getPostById_4']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BoardApi.getPostById_6']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -569,10 +683,10 @@ export const BoardApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdatePost200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updatePost_5(postId, updatePost, options);
+        async updatePost_7(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdatePost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updatePost_7(postId, updatePost, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BoardApi.updatePost_5']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BoardApi.updatePost_7']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -586,14 +700,26 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
     const localVarFp = BoardApiFp(configuration)
     return {
         /**
-         * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
-         * @summary 게시글 작성
-         * @param {CreatePost} createPost 
+         * 게시물에 댓글을 작성합니다
+         * @summary 게시물 댓글 작성
+         * @param {string} postId 
+         * @param {WriteComment} writeComment 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createPost(createPost: CreatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
-            return localVarFp.createPost(createPost, options).then((request) => request(axios, basePath));
+        createPost(postId: string, writeComment: WriteComment, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
+            return localVarFp.createPost(postId, writeComment, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 게시물에 댓글을 작성합니다
+         * @summary 게시물 댓글 작성
+         * @param {string} postId 
+         * @param {WriteComment} writeComment 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createPost_1(postId: string, writeComment: WriteComment, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
+            return localVarFp.createPost_1(postId, writeComment, options).then((request) => request(axios, basePath));
         },
         /**
          * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
@@ -602,8 +728,18 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createPost_1(createPost: CreatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response> {
-            return localVarFp.createPost_1(createPost, options).then((request) => request(axios, basePath));
+        createPost_2(createPost: CreatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response1> {
+            return localVarFp.createPost_2(createPost, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
+         * @summary 게시글 작성
+         * @param {CreatePost} createPost 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createPost_3(createPost: CreatePost, options?: RawAxiosRequestConfig): AxiosPromise<CreatePost201Response1> {
+            return localVarFp.createPost_3(createPost, options).then((request) => request(axios, basePath));
         },
         /**
          * 게시글을 삭제합니다. 작성자 본인 또는 관리자만 삭제할 수 있습니다.
@@ -622,8 +758,8 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deletePost_2(postId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.deletePost_2(postId, options).then((request) => request(axios, basePath));
+        deletePost_4(postId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deletePost_4(postId, options).then((request) => request(axios, basePath));
         },
         /**
          * 커뮤니티 게시판의 게시글 목록을 조회합니다. 카테고리별 필터링, 검색, 페이지네이션을 지원합니다. 공지사항(isPinned: true)은 상단에 고정됩니다.
@@ -648,8 +784,8 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllPosts_3(page?: number, limit?: number, search?: string, category?: GetAllPosts0CategoryEnum, options?: RawAxiosRequestConfig): AxiosPromise<GetAllPosts200Response> {
-            return localVarFp.getAllPosts_3(page, limit, search, category, options).then((request) => request(axios, basePath));
+        getAllPosts_5(page?: number, limit?: number, search?: string, category?: GetAllPosts0CategoryEnum, options?: RawAxiosRequestConfig): AxiosPromise<GetAllPosts200Response> {
+            return localVarFp.getAllPosts_5(page, limit, search, category, options).then((request) => request(axios, basePath));
         },
         /**
          * 특정 게시글의 상세 정보를 조회합니다. 조회 시 조회수(views)가 자동으로 1 증가합니다.
@@ -668,8 +804,8 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPostById_4(postId: string, options?: RawAxiosRequestConfig): AxiosPromise<GetPostById200Response> {
-            return localVarFp.getPostById_4(postId, options).then((request) => request(axios, basePath));
+        getPostById_6(postId: string, options?: RawAxiosRequestConfig): AxiosPromise<GetPostById200Response> {
+            return localVarFp.getPostById_6(postId, options).then((request) => request(axios, basePath));
         },
         /**
          * 기존 게시글을 수정합니다. 작성자 본인만 수정할 수 있습니다.
@@ -690,8 +826,8 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): AxiosPromise<UpdatePost200Response> {
-            return localVarFp.updatePost_5(postId, updatePost, options).then((request) => request(axios, basePath));
+        updatePost_7(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig): AxiosPromise<UpdatePost200Response> {
+            return localVarFp.updatePost_7(postId, updatePost, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -704,15 +840,29 @@ export const BoardApiFactory = function (configuration?: Configuration, basePath
  */
 export class BoardApi extends BaseAPI {
     /**
-     * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
-     * @summary 게시글 작성
-     * @param {CreatePost} createPost 
+     * 게시물에 댓글을 작성합니다
+     * @summary 게시물 댓글 작성
+     * @param {string} postId 
+     * @param {WriteComment} writeComment 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public createPost(createPost: CreatePost, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).createPost(createPost, options).then((request) => request(this.axios, this.basePath));
+    public createPost(postId: string, writeComment: WriteComment, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).createPost(postId, writeComment, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 게시물에 댓글을 작성합니다
+     * @summary 게시물 댓글 작성
+     * @param {string} postId 
+     * @param {WriteComment} writeComment 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BoardApi
+     */
+    public createPost_1(postId: string, writeComment: WriteComment, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).createPost_1(postId, writeComment, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -723,8 +873,20 @@ export class BoardApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public createPost_1(createPost: CreatePost, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).createPost_1(createPost, options).then((request) => request(this.axios, this.basePath));
+    public createPost_2(createPost: CreatePost, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).createPost_2(createPost, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 새로운 게시글을 작성합니다. 로그인한 사용자만 작성할 수 있습니다. 작성자 정보는 JWT 토큰에서 자동으로 추출됩니다.
+     * @summary 게시글 작성
+     * @param {CreatePost} createPost 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BoardApi
+     */
+    public createPost_3(createPost: CreatePost, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).createPost_3(createPost, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -747,8 +909,8 @@ export class BoardApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public deletePost_2(postId: string, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).deletePost_2(postId, options).then((request) => request(this.axios, this.basePath));
+    public deletePost_4(postId: string, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).deletePost_4(postId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -777,8 +939,8 @@ export class BoardApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public getAllPosts_3(page?: number, limit?: number, search?: string, category?: GetAllPosts0CategoryEnum, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).getAllPosts_3(page, limit, search, category, options).then((request) => request(this.axios, this.basePath));
+    public getAllPosts_5(page?: number, limit?: number, search?: string, category?: GetAllPosts0CategoryEnum, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).getAllPosts_5(page, limit, search, category, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -801,8 +963,8 @@ export class BoardApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public getPostById_4(postId: string, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).getPostById_4(postId, options).then((request) => request(this.axios, this.basePath));
+    public getPostById_6(postId: string, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).getPostById_6(postId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -827,8 +989,8 @@ export class BoardApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BoardApi
      */
-    public updatePost_5(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig) {
-        return BoardApiFp(this.configuration).updatePost_5(postId, updatePost, options).then((request) => request(this.axios, this.basePath));
+    public updatePost_7(postId: string, updatePost: UpdatePost, options?: RawAxiosRequestConfig) {
+        return BoardApiFp(this.configuration).updatePost_7(postId, updatePost, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

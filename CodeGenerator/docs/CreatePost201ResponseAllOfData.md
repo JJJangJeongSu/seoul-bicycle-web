@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**post** | [**Post**](Post.md) |  | [default to undefined]
+**comment** | [**Comment**](Comment.md) |  | [default to undefined]
 
 ## Example
 
@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 import { CreatePost201ResponseAllOfData } from './api';
 
 const instance: CreatePost201ResponseAllOfData = {
-    post,
+    comment,
 };
 ```
 

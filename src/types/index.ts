@@ -86,6 +86,23 @@ export type RepairType = 'bike' | 'station';
 export type RepairCategory = 'brake' | 'tire' | 'chain' | 'light' | 'seat' | 'bell' | 'other';
 export type RepairStatus = 'pending' | 'in-progress' | 'completed';
 
+export type AdminRepair = {
+  id: string,
+  reporterId: string,
+  reporterName: string,
+  type: RepairType,
+  bikeId: string,
+  stationId: string,
+  category: RepairCategory,
+  description?: string,
+  status: RepairStatus,
+  adminNote?: string,
+  createdAt: Date,
+  updatedAt: Date,
+  completedAt?: Date,
+  stationName?: string
+}
+
 export type Repair = {
   id: string;
   type: RepairType;
