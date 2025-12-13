@@ -6,9 +6,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**pending** | **string** | 대기중 | [default to undefined]
-**in_progress** | **string** | 진행중 | [default to undefined]
-**completed** | **string** | 완료 | [default to undefined]
+**pending** | **number** | 대기중 | [default to undefined]
+**in_progress** | **number** | 진행중 | [default to undefined]
+**completed** | **number** | 완료 | [default to undefined]
 
 ## Example
 

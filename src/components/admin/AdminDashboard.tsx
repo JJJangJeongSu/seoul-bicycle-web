@@ -6,14 +6,7 @@ import { AdminStatistics } from '../../../CodeGenerator/models';
 
 export function AdminDashboard() {
   const { adminService } = useServices();
-  const [stats, setStats] = useState<AdminStatistics>({
-    total_users: 0,
-    total_stations: 0,
-    total_bikes: 0,
-    active_rentals: 0,
-    today_rentals_today: 0,
-    total_repairs_pending: 0,
-  });
+  const [stats, setStats] = useState<AdminStatistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,25 +29,19 @@ export function AdminDashboard() {
     loadStats();
   }, [adminService]);
 
-  const monthlyData = [
-    { month: '1월', 대여: 7200 },
-    { month: '2월', 대여: 7800 },
-    { month: '3월', 대여: 8400 },
-    { month: '4월', 대여: 9200 },
-    { month: '5월', 대여: 8900 },
-    { month: '6월', 대여: 8956 },
-  ];
+  // Transform time_population for chart
+  // Assuming time_population is [[{time: 0, usage: 10}, ...]]
+  // API returns Array<Array<...>>, likely representing different days or aggregates. We take the first one for "today".
+  const hourlyData = stats?.time_population?.[0]?.map(item => ({
+    hour: item.time.toString().padStart(2, '0'),
+    이용: item.usage
+  })) || [];
 
-  const hourlyData = [
-    { hour: '00', 이용: 45 },
-    { hour: '03', 이용: 12 },
-    { hour: '06', 이용: 89 },
-    { hour: '09', 이용: 234 },
-    { hour: '12', 이용: 189 },
-    { hour: '15', 이용: 156 },
-    { hour: '18', 이용: 312 },
-    { hour: '21', 이용: 178 },
-  ];
+  // Transform popular stations for chart (Top 5 Monthly or Weekly)
+  const popularStationsData = stats?.popular_stations?.monthly?.slice(0, 5).map(station => ({
+    name: station.name,
+    count: station.count
+  })) || [];
 
   // Show loading state
   if (loading) {
@@ -67,11 +54,11 @@ export function AdminDashboard() {
   }
 
   // Show error state
-  if (error) {
+  if (error || !stats) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px]">
         <div className="text-destructive mb-4 text-xl">⚠️</div>
-        <p className="text-gray-600 mb-4">{error}</p>
+        <p className="text-gray-600 mb-4">{error || '데이터가 없습니다.'}</p>
       </div>
     );
   }
@@ -94,8 +81,8 @@ export function AdminDashboard() {
             <Bike className="w-10 h-10 opacity-80" />
             <span className="text-2xl opacity-80">🚲</span>
           </div>
-          <p className="text-sm opacity-90 mb-1">총 대여소</p>
-          <p className="text-3xl">{stats.total_stations.toLocaleString()}</p>
+          <p className="text-sm opacity-90 mb-1">총 자전거</p>
+          <p className="text-3xl">{stats.total_bikes.toLocaleString()}</p>
         </div>
 
         <div className="bg-purple-500 text-white rounded-lg p-6">
@@ -103,8 +90,8 @@ export function AdminDashboard() {
             <TrendingUp className="w-10 h-10 opacity-80" />
             <span className="text-2xl opacity-80">📈</span>
           </div>
-          <p className="text-sm opacity-90 mb-1">총 자전거</p>
-          <p className="text-3xl">{stats.total_bikes.toLocaleString()}</p>
+          <p className="text-sm opacity-90 mb-1">오늘 대여</p>
+          <p className="text-3xl">{stats.today_rentals_today.toLocaleString()}</p>
         </div>
 
         <div className="bg-orange-500 text-white rounded-lg p-6">
@@ -119,32 +106,48 @@ export function AdminDashboard() {
 
       {/* Charts */}
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Monthly Trend */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg mb-4">월별 대여 트렌드</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="대여" stroke="#3b82f6" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
         {/* Hourly Usage */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg mb-4">시간대별 이용량</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={hourlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="hour" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="이용" fill="#10b981" />
-            </BarChart>
-          </ResponsiveContainer>
+          <h3 className="text-lg mb-4">오늘 시간대별 이용량</h3>
+          <div className="h-[300px]">
+            {hourlyData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={hourlyData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="hour" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="이용" fill="#10b981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                데이터가 없습니다
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Popular Stations */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg mb-4">인기 대여소 (월간 TOP 5)</h3>
+          <div className="h-[300px]">
+            {popularStationsData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={popularStationsData} layout="vertical">
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" />
+                  <YAxis dataKey="name" type="category" width={100} />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                데이터가 없습니다
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -152,93 +155,132 @@ export function AdminDashboard() {
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg mb-4">📊 최근 활동</h3>
         <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm">홍길동님이 자전거를 대여했습니다</span>
-            </div>
-            <span className="text-sm text-gray-500">5분 전</span>
-          </div>
-
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className="text-sm">김철수님이 자전거를 반납했습니다</span>
-            </div>
-            <span className="text-sm text-gray-500">12분 전</span>
-          </div>
-
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-              <span className="text-sm">새로운 고장 신고가 접수되었습니다</span>
-            </div>
-            <span className="text-sm text-gray-500">23분 전</span>
-          </div>
-
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span className="text-sm">이영희님이 회원가입했습니다</span>
-            </div>
-            <span className="text-sm text-gray-500">1시간 전</span>
-          </div>
+          {stats.recent_activities && stats.recent_activities.length > 0 ? (
+            stats.recent_activities.map((activity, index) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${
+                    activity.category === 'rental' ? 'bg-green-500' :
+                    activity.category === 'return' ? 'bg-blue-500' :
+                    activity.category === 'repair' ? 'bg-yellow-500' :
+                    activity.category === 'registeration' ? 'bg-purple-500' : 'bg-gray-500'
+                  }`}></div>
+                  <span className="text-sm">{activity.content}</span>
+                </div>
+                <span className="text-sm text-gray-500">
+                  {new Date(activity.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500 py-4">최근 활동이 없습니다.</p>
+          )}
         </div>
       </div>
 
-      {/* System Status - Placeholder data for now */}
+      {/* System Status */}
       <div className="grid md:grid-cols-3 gap-6">
+        {/* Bike Status */}
         <div className="bg-white rounded-lg shadow p-6">
           <h4 className="mb-4">🚲 자전거 현황</h4>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">정상</span>
-              <span>{(stats.total_bikes * 0.85).toFixed(0)}대 (85%)</span>
+              <span className="text-gray-600">정상 (대여가능)</span>
+              <span>{stats.bike_status.available.toLocaleString()}대</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full" style={{ width: '85%' }}></div>
+              <div 
+                className="bg-green-500 h-2 rounded-full" 
+                style={{ width: `${(stats.bike_status.available / stats.total_bikes * 100) || 0}%` }}
+              ></div>
             </div>
 
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">대여중</span>
-              <span>{stats.active_rentals}대 ({(stats.active_rentals / stats.total_bikes * 100).toFixed(0)}%)</span>
+              <span>{stats.bike_status.rented.toLocaleString()}대</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${(stats.active_rentals / stats.total_bikes * 100)}%` }}></div>
+              <div 
+                className="bg-blue-500 h-2 rounded-full" 
+                style={{ width: `${(stats.bike_status.rented / stats.total_bikes * 100) || 0}%` }}
+              ></div>
             </div>
 
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">고장/수리</span>
-              <span>{stats.total_repairs_pending}대</span>
+              <span>{stats.bike_status.maintenence.toLocaleString()}대</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-red-500 h-2 rounded-full" style={{ width: '5%' }}></div>
+              <div 
+                className="bg-red-500 h-2 rounded-full" 
+                style={{ width: `${(stats.bike_status.maintenence / stats.total_bikes * 100) || 0}%` }}
+              ></div>
             </div>
           </div>
         </div>
 
+        {/* Station Status */}
         <div className="bg-white rounded-lg shadow p-6">
           <h4 className="mb-4">📍 대여소 현황</h4>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">운영중</span>
-              <span>{stats.total_stations}개 (100%)</span>
+              <span>{stats.station_status.active.toLocaleString()}개</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full" style={{ width: '100%' }}></div>
+              <div 
+                className="bg-green-500 h-2 rounded-full" 
+                style={{ width: `${(stats.station_status.active / stats.total_stations * 100) || 0}%` }}
+              ></div>
+            </div>
+             <div className="flex justify-between text-sm mt-2">
+              <span className="text-gray-600">중단/폐쇄</span>
+              <span>{stats.station_status.inactive.toLocaleString()}개</span>
+            </div>
+             <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-gray-500 h-2 rounded-full" 
+                style={{ width: `${(stats.station_status.inactive / stats.total_stations * 100) || 0}%` }}
+              ></div>
             </div>
           </div>
         </div>
 
+        {/* Repair Status */}
         <div className="bg-white rounded-lg shadow p-6">
           <h4 className="mb-4">🔧 고장 신고</h4>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">처리 대기</span>
-              <span>{stats.total_repairs_pending}건</span>
+              <span>{stats.repair_status.pending.toLocaleString()}건</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-red-500 h-2 rounded-full" style={{ width: '30%' }}></div>
+              <div 
+                className="bg-red-500 h-2 rounded-full" 
+                style={{ width: `${(stats.repair_status.pending / stats.total_repairs_pending * 100) || 0}%` }}
+              ></div>
+            </div>
+
+             <div className="flex justify-between text-sm">
+              <span className="text-gray-600">진행중</span>
+              <span>{stats.repair_status['in-progress'].toLocaleString()}건</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-yellow-500 h-2 rounded-full" 
+                style={{ width: `${(stats.repair_status['in-progress'] / stats.total_repairs_pending * 100) || 0}%` }}
+              ></div>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">완료(오늘)</span>
+              <span>{stats.repair_status.completed.toLocaleString()}건</span>
+            </div>
+             <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-green-500 h-2 rounded-full" 
+                style={{ width: '100%' }} // Completed is accumulative, simplified visual
+              ></div>
             </div>
           </div>
         </div>

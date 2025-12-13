@@ -22,21 +22,21 @@
 export interface AdminStatisticsRepairStatus {
     /**
      * 대기중
-     * @type {string}
+     * @type {number}
      * @memberof AdminStatisticsRepairStatus
      */
-    'pending': string;
+    'pending': number;
     /**
      * 진행중
-     * @type {string}
+     * @type {number}
      * @memberof AdminStatisticsRepairStatus
      */
-    'in-progress': string;
+    'in-progress': number;
     /**
      * 완료
-     * @type {string}
+     * @type {number}
      * @memberof AdminStatisticsRepairStatus
      */
-    'completed': string;
+    'completed': number;
 }
 

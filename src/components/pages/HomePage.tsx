@@ -94,8 +94,6 @@ export function HomePage() {
       // Create rental via service
       const newRental = await rentalService.createRental(user.id, stationId);
 
-      // Update station bike count
-      await stationService.updateStationBikeCount(stationId, station.bikeCount - 1);
 
       // Invalidate queries to refresh data
       queryClient.invalidateQueries({ queryKey: ['stations'] });
@@ -104,56 +102,20 @@ export function HomePage() {
       setSelectedStation(null);
       alert(`✅ 대여 완료!\n자전거 번호: ${newRental.bikeId}\n출발 대여소: ${station.name}`);
     } catch (err) {
-      console.error('Failed to rent bike:', err);
-      alert('자전거 대여에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
   const handleReturn = async (stationId: string) => {
-    if (!currentRental) {
-      alert('대여 중인 자전거가 없습니다');
-      return;
-    }
 
     const station = stations.find(s => s.id === stationId);
     if (!station) return;
 
-    // Calculate duration (in minutes)
-    const duration = Math.floor((new Date().getTime() - currentRental.rentalTime.getTime()) / 60000);
-
-    // Calculate distance (mock - using random value)
-    const distance = parseFloat((Math.random() * 10 + 1).toFixed(1));
-
     try {
       // Return rental via service
-      const completedRental = await rentalService.returnRental(
-        currentRental.id,
-        stationId,
-        distance,
-        duration
-      );
-
-      // Save to localStorage for history
-      const existingHistory = localStorage.getItem('rental_history');
-      const history: Rental[] = existingHistory ? JSON.parse(existingHistory) : [];
-
-      const rentalToSave = {
-        ...completedRental,
-        rentalTime: completedRental.rentalTime.toISOString(),
-        returnTime: completedRental.returnTime?.toISOString(),
-      };
-      // history.push(rentalToSave);
-      localStorage.setItem('rental_history', JSON.stringify(history));
-
-      // Update station bike count
-      await stationService.updateStationBikeCount(stationId, station.bikeCount + 1);
+      await rentalService.returnRental(stationId);
 
       // Invalidate queries to refresh data
       queryClient.invalidateQueries({ queryKey: ['stations'] });
-
-      const startStation = stations.find(s => s.id === currentRental.startStationId);
-
-      alert(`✅ 반납 완료!\n\n출발: ${startStation?.name}\n도착: ${station.name}\n이용 시간: ${duration}분\n이동 거리: ${distance}km`);
 
       setCurrentRental(null);
       setSelectedStation(null);

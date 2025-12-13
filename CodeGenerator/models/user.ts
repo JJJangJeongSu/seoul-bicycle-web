@@ -27,6 +27,12 @@ export interface User {
      */
     'id': string;
     /**
+     * 현재 자전거 이용중인지
+     * @type {boolean}
+     * @memberof User
+     */
+    'is_renting': boolean;
+    /**
      * 사용자 이메일 주소 (로그인 ID)
      * @type {string}
      * @memberof User

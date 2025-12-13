@@ -18,8 +18,15 @@ export const login = async (email: string, password: string): Promise<{ user: Us
   }
 
   const { user, token } = data;
+  
+  // Map API user object to Frontend User type including isRenting
+  const frontendUser: User = {
+    ...user,
+    isRenting: Number(user.is_renting) === 1
+  };
+
   setAuthToken(token);
-  return { user, token };
+  return { user: frontendUser, token };
 };
 
 export const signup = async (data: SignupData): Promise<{ user: User; token: string }> => {
@@ -31,6 +38,7 @@ export const signup = async (data: SignupData): Promise<{ user: User; token: str
   }
 
   const { user, token } = responseData;
+  
   setAuthToken(token);
   return { user, token };
 };

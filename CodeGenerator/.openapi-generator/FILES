@@ -95,7 +95,7 @@ docs/GetStationAdmin200Response.md
 docs/GetStationAdmin200ResponseAllOfData.md
 docs/GetStationsStatus200Response.md
 docs/GetStationsStatus200ResponseAllOfData.md
-docs/GetUserById200Response.md
+docs/GetUser200Response.md
 docs/GetUserRentals200Response.md
 docs/GetUserStatistics200Response.md
 docs/Login.md
@@ -220,9 +220,9 @@ models/get-station-admin200-response-all-of-data.ts
 models/get-station-admin200-response.ts
 models/get-stations-status200-response-all-of-data.ts
 models/get-stations-status200-response.ts
-models/get-user-by-id200-response.ts
 models/get-user-rentals200-response.ts
 models/get-user-statistics200-response.ts
+models/get-user200-response.ts
 models/index.ts
 models/login-user200-response.ts
 models/login.ts

@@ -38,7 +38,8 @@ export type { User, Station, Repair, Pagination, Rental, Bike };
 export const getStatistics = async (): Promise<AdminStatistics> => {
   const response = await adminApi.getAdminStatistics();
   const data = response.data as any; 
-  const stats = data.data || data;
+  // The API returns { data: AdminStatistics } wrapped in Success
+  const stats = data.data;
   return stats;
 };
 

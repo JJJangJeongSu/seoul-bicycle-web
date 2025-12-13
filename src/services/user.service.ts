@@ -8,6 +8,7 @@ import { usersApi } from '../api';
 import { ChangePassword, Update } from '../../CodeGenerator';
 import { UserStatistics } from '../../CodeGenerator/models/user-statistics';
 import { Rental } from '../types';
+import { User } from '../../CodeGenerator/models/user';
 
 export const changePassword = async (userId: string, data: ChangePassword): Promise<void> => {
   await usersApi.changePassword(userId, data);
@@ -43,4 +44,22 @@ export const getUserRentals = async (userId: string): Promise<Rental[]> => {
     duration: item.duration,
     status: item.status,
   })) : [];
+};
+
+export const getUser = async (): Promise<User> => {
+  const response = await usersApi.getUser();
+  // Handle response wrapper if present
+  const responseData = response.data as any;
+  const rawData = responseData.data.user || responseData;
+
+  // Map API response (snake_case) to frontend model (camelCase)
+  return {
+    id: rawData.id,
+    name: rawData.name,
+    email: rawData.email,
+    role: rawData.role,
+    phone: rawData.phone,
+    is_renting: rawData.is_renting,
+    status: rawData.status,
+  };
 };

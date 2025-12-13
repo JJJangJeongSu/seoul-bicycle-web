@@ -7,6 +7,7 @@ export type User = {
   role: 'user' | 'admin';
   phone: string;
   status: string;
+  isRenting?: boolean;
 };
 
 export type AdminStatistics = {

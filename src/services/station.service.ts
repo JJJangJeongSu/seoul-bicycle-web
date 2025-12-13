@@ -78,14 +78,3 @@ export const getStationsStatus = async (): Promise<{ total: number; active: numb
     return { total: 0, active: 0, inactive: 0, available: 0 };
   }
 };
-
-export const updateStationBikeCount = async (id: string, count: number): Promise<Station> => {
-  await delay();
-
-  const index = mockStations.findIndex(s => s.id === id);
-  if (index === -1) throw new Error('Station not found');
-
-  // Note: This modifies the mock data in memory
-  mockStations[index] = { ...mockStations[index], bikeCount: count };
-  return mockStations[index];
-};

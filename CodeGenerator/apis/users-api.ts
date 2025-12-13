@@ -24,7 +24,7 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { ChangePassword } from '../models';
 // @ts-ignore
-import type { GetUserById200Response } from '../models';
+import type { GetUser200Response } from '../models';
 // @ts-ignore
 import type { GetUserRentals200Response } from '../models';
 // @ts-ignore
@@ -120,49 +120,11 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 특정 사용자의 프로필 정보를 조회합니다.
          * @summary 사용자 정보 조회
-         * @param {string} userId 사용자 ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserById: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('getUserById', 'userId', userId)
-            const localVarPath = `/users/{userId}/profile`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 특정 사용자의 프로필 정보를 조회합니다.
-         * @summary 사용자 정보 조회
-         * @param {string} userId 사용자 ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserById_2: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('getUserById_2', 'userId', userId)
-            const localVarPath = `/users/{userId}/profile`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+        getUser: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users/profile`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -270,11 +232,41 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics_3: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserStatistics_2: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
-            assertParamExists('getUserStatistics_3', 'userId', userId)
+            assertParamExists('getUserStatistics_2', 'userId', userId)
             const localVarPath = `/users/{userId}/statistics`
                 .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 특정 사용자의 프로필 정보를 조회합니다.
+         * @summary 사용자 정보 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUser_3: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users/profile`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -418,27 +410,13 @@ export const UsersApiFp = function(configuration?: Configuration) {
         /**
          * 특정 사용자의 프로필 정보를 조회합니다.
          * @summary 사용자 정보 조회
-         * @param {string} userId 사용자 ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserById(userId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserById200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserById(userId, options);
+        async getUser(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUser200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUser(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UsersApi.getUserById']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 특정 사용자의 프로필 정보를 조회합니다.
-         * @summary 사용자 정보 조회
-         * @param {string} userId 사용자 ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUserById_2(userId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserById200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserById_2(userId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UsersApi.getUserById_2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['UsersApi.getUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -476,10 +454,22 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserStatistics_3(userId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserStatistics200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics_3(userId, options);
+        async getUserStatistics_2(userId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserStatistics200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics_2(userId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UsersApi.getUserStatistics_3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['UsersApi.getUserStatistics_2']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 특정 사용자의 프로필 정보를 조회합니다.
+         * @summary 사용자 정보 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUser_3(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUser200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUser_3(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UsersApi.getUser_3']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -490,7 +480,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateUser(userId: string, update: Update, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserById200Response>> {
+        async updateUser(userId: string, update: Update, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUser200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser(userId, update, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UsersApi.updateUser']?.[localVarOperationServerIndex]?.url;
@@ -504,7 +494,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateUser_4(userId: string, update: Update, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserById200Response>> {
+        async updateUser_4(userId: string, update: Update, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUser200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser_4(userId, update, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UsersApi.updateUser_4']?.[localVarOperationServerIndex]?.url;
@@ -545,22 +535,11 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         /**
          * 특정 사용자의 프로필 정보를 조회합니다.
          * @summary 사용자 정보 조회
-         * @param {string} userId 사용자 ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserById(userId: string, options?: RawAxiosRequestConfig): AxiosPromise<GetUserById200Response> {
-            return localVarFp.getUserById(userId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 특정 사용자의 프로필 정보를 조회합니다.
-         * @summary 사용자 정보 조회
-         * @param {string} userId 사용자 ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserById_2(userId: string, options?: RawAxiosRequestConfig): AxiosPromise<GetUserById200Response> {
-            return localVarFp.getUserById_2(userId, options).then((request) => request(axios, basePath));
+        getUser(options?: RawAxiosRequestConfig): AxiosPromise<GetUser200Response> {
+            return localVarFp.getUser(options).then((request) => request(axios, basePath));
         },
         /**
          * 특정 사용자의 대여 이력을 조회합니다. 페이지네이션을 지원하며, 최신 대여 순으로 정렬됩니다. 각 대여 기록에는 출발/도착 대여소, 이용 시간, 이동 거리가 포함됩니다.
@@ -591,8 +570,17 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics_3(userId: string, options?: RawAxiosRequestConfig): AxiosPromise<GetUserStatistics200Response> {
-            return localVarFp.getUserStatistics_3(userId, options).then((request) => request(axios, basePath));
+        getUserStatistics_2(userId: string, options?: RawAxiosRequestConfig): AxiosPromise<GetUserStatistics200Response> {
+            return localVarFp.getUserStatistics_2(userId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 특정 사용자의 프로필 정보를 조회합니다.
+         * @summary 사용자 정보 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUser_3(options?: RawAxiosRequestConfig): AxiosPromise<GetUser200Response> {
+            return localVarFp.getUser_3(options).then((request) => request(axios, basePath));
         },
         /**
          * 사용자의 프로필 정보를 수정합니다. 본인 또는 관리자만 수정할 수 있습니다.
@@ -602,7 +590,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUser(userId: string, update: Update, options?: RawAxiosRequestConfig): AxiosPromise<GetUserById200Response> {
+        updateUser(userId: string, update: Update, options?: RawAxiosRequestConfig): AxiosPromise<GetUser200Response> {
             return localVarFp.updateUser(userId, update, options).then((request) => request(axios, basePath));
         },
         /**
@@ -613,7 +601,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUser_4(userId: string, update: Update, options?: RawAxiosRequestConfig): AxiosPromise<GetUserById200Response> {
+        updateUser_4(userId: string, update: Update, options?: RawAxiosRequestConfig): AxiosPromise<GetUser200Response> {
             return localVarFp.updateUser_4(userId, update, options).then((request) => request(axios, basePath));
         },
     };
@@ -655,25 +643,12 @@ export class UsersApi extends BaseAPI {
     /**
      * 특정 사용자의 프로필 정보를 조회합니다.
      * @summary 사용자 정보 조회
-     * @param {string} userId 사용자 ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public getUserById(userId: string, options?: RawAxiosRequestConfig) {
-        return UsersApiFp(this.configuration).getUserById(userId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 특정 사용자의 프로필 정보를 조회합니다.
-     * @summary 사용자 정보 조회
-     * @param {string} userId 사용자 ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public getUserById_2(userId: string, options?: RawAxiosRequestConfig) {
-        return UsersApiFp(this.configuration).getUserById_2(userId, options).then((request) => request(this.axios, this.basePath));
+    public getUser(options?: RawAxiosRequestConfig) {
+        return UsersApiFp(this.configuration).getUser(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -710,8 +685,19 @@ export class UsersApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public getUserStatistics_3(userId: string, options?: RawAxiosRequestConfig) {
-        return UsersApiFp(this.configuration).getUserStatistics_3(userId, options).then((request) => request(this.axios, this.basePath));
+    public getUserStatistics_2(userId: string, options?: RawAxiosRequestConfig) {
+        return UsersApiFp(this.configuration).getUserStatistics_2(userId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 특정 사용자의 프로필 정보를 조회합니다.
+     * @summary 사용자 정보 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public getUser_3(options?: RawAxiosRequestConfig) {
+        return UsersApiFp(this.configuration).getUser_3(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

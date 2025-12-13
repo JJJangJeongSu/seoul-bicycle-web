@@ -69,7 +69,7 @@ export * from './get-station-admin200-response';
 export * from './get-station-admin200-response-all-of-data';
 export * from './get-stations-status200-response';
 export * from './get-stations-status200-response-all-of-data';
-export * from './get-user-by-id200-response';
+export * from './get-user200-response';
 export * from './get-user-rentals200-response';
 export * from './get-user-statistics200-response';
 export * from './login';

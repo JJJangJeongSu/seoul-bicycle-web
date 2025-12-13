@@ -4,6 +4,8 @@ import type { User, SignupData } from '../types';
 import * as authService from '../services/auth.service';
 import { useLogin, useSignup } from '../hooks/queries/useAuth';
 
+import * as userService from '../services/user.service';
+
 // AuthContextType 인터페이스 정의
 interface AuthContextType {
   user: User | null;
@@ -11,6 +13,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (data: SignupData) => Promise<void>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   showLoginModal: boolean;
   showSignupModal: boolean;
   setShowLoginModal: (show: boolean) => void;
@@ -93,6 +96,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [navigate]);
 
+  const refreshUser = useCallback(async () => {
+    if (!user) return;
+    try {
+      const apiUser = await userService.getUser();
+      
+      // Map API user object to Frontend User type
+      // The API returns is_renting (snake_case), we map it to isRenting (camelCase)
+      const isRentingValue = apiUser.is_renting as unknown;
+      // Handle various truthy values for rental status (1, "1", true)
+      const isRenting = isRentingValue === 1 || isRentingValue === '1' || isRentingValue === true;
+
+      const updatedUser: User = {
+        id: apiUser.id,
+        email: apiUser.email,
+        name: apiUser.name,
+        role: apiUser.role as 'user' | 'admin',
+        phone: apiUser.phone,
+        status: apiUser.status,
+        isRenting: isRenting
+      };
+
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error('Failed to refresh user data:', error);
+    }
+  }, [user]);
+
   const openLoginModal = useCallback(() => {
     setShowLoginModal(true);
   }, []);
@@ -105,6 +136,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         login,
         signup,
         logout,
+        refreshUser,
         showLoginModal,
         showSignupModal,
         setShowLoginModal,

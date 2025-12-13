@@ -7,8 +7,8 @@ All URIs are relative to *http://localhost*
 |[**createRental**](#createrental) | **POST** /rentals | 자전거 대여|
 |[**createRental_0**](#createrental_0) | **POST** /rentals | 자전거 대여|
 |[**getUserRentals**](#getuserrentals) | **GET** /users/{userId}/rentals | 사용자 대여 이력 조회|
-|[**returnRental**](#returnrental) | **PUT** /rentals/{rentalId}/return | 자전거 반납|
-|[**returnRental_0**](#returnrental_0) | **PUT** /rentals/{rentalId}/return | 자전거 반납|
+|[**returnRental**](#returnrental) | **PUT** /rentals/return | 자전거 반납|
+|[**returnRental_0**](#returnrental_0) | **PUT** /rentals/return | 자전거 반납|
 
 # **createRental**
 > CreateRental201Response createRental(createRentalRequest)
@@ -196,11 +196,9 @@ import {
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
-let rentalId: string; // (default to undefined)
 let returnRentalRequest: ReturnRentalRequest; //
 
 const { status, data } = await apiInstance.returnRental(
-    rentalId,
     returnRentalRequest
 );
 ```
@@ -210,7 +208,6 @@ const { status, data } = await apiInstance.returnRental(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **returnRentalRequest** | **ReturnRentalRequest**|  | |
-| **rentalId** | [**string**] |  | defaults to undefined|
 
 
 ### Return type
@@ -254,11 +251,9 @@ import {
 const configuration = new Configuration();
 const apiInstance = new RentalsApi(configuration);
 
-let rentalId: string; // (default to undefined)
 let returnRentalRequest: ReturnRentalRequest; //
 
 const { status, data } = await apiInstance.returnRental_0(
-    rentalId,
     returnRentalRequest
 );
 ```
@@ -268,7 +263,6 @@ const { status, data } = await apiInstance.returnRental_0(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **returnRentalRequest** | **ReturnRentalRequest**|  | |
-| **rentalId** | [**string**] |  | defaults to undefined|
 
 
 ### Return type

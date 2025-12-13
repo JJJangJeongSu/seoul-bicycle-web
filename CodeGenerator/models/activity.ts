@@ -44,7 +44,8 @@ export const ActivityCategoryEnum = {
     Rental: 'rental',
     Repair: 'repair',
     Registeration: 'registeration',
-    Board: 'board'
+    Board: 'board',
+    Return: 'return'
 } as const;
 
 export type ActivityCategoryEnum = typeof ActivityCategoryEnum[keyof typeof ActivityCategoryEnum];

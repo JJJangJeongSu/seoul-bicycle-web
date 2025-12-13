@@ -25,24 +25,24 @@ export interface CalculateRoute {
      * @type {number}
      * @memberof CalculateRoute
      */
-    'start_lat': number;
+    'startLat': number;
     /**
      * 출발지 경도
      * @type {number}
      * @memberof CalculateRoute
      */
-    'start_lon': number;
+    'startLon': number;
     /**
      * 목적지 위도
      * @type {number}
      * @memberof CalculateRoute
      */
-    'end_lat': number;
+    'endLat': number;
     /**
      * 목적지 경도
      * @type {number}
      * @memberof CalculateRoute
      */
-    'end_lon': number;
+    'endLon': number;
 }
 

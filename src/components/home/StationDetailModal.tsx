@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { X, MapPin, Phone, Clock, Bike, Navigation } from 'lucide-react';
 import type { Station } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
@@ -16,10 +17,22 @@ export function StationDetailModal({
   onRent,
   onReturn,
 }: StationDetailModalProps) {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const { currentRental } = useRental();
-  const canRent = user && !currentRental && station.bikeCount > 0 && station.status === 'active';
-  const canReturn = user && currentRental && station.status === 'active';
+  
+  // Refresh user data when modal opens to get latest rental status
+  useEffect(() => {
+    if (user) {
+      refreshUser();
+    }
+  }, [user?.id]); // Depend on user ID to avoid infinite loops if user object reference changes deeply
+
+  // Use isRenting from user object as primary source of truth for rental status
+  const isRenting = user?.isRenting ?? false;
+  console.log(isRenting);
+  
+  const canRent = user && !isRenting && station.bikeCount > 0 && station.status === 'active';
+  const canReturn = user && isRenting && station.status === 'active';
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -106,7 +119,7 @@ export function StationDetailModal({
               </div>
             )}
 
-            {currentRental && (
+            {isRenting && currentRental && (
               <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <p className="text-sm text-blue-800 mb-2">
                   현재 대여 중인 자전거: {currentRental.bikeId}
@@ -117,7 +130,18 @@ export function StationDetailModal({
               </div>
             )}
 
-            {canReturn && (
+            {isRenting && !currentRental && (
+               <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-sm text-blue-800 mb-2">
+                  현재 자전거를 대여 중입니다.
+                </p>
+                <p className="text-xs text-blue-600">
+                  반납하시려면 '여기에 반납하기' 버튼을 눌러주세요.
+                </p>
+              </div>
+            )}
+
+            {isRenting && canReturn && (
               <button
                 onClick={() => onReturn(station.id)}
                 className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
@@ -127,7 +151,7 @@ export function StationDetailModal({
               </button>
             )}
 
-            {canRent && (
+            {!isRenting && canRent && (
               <button
                 onClick={() => onRent(station.id)}
                 className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"

@@ -29,10 +29,8 @@ export const createRental = async (userId: string, stationId: string): Promise<R
   };
 };
 
-export const returnRental = async (rentalId: string, stationId: string, distance: number, duration: number): Promise<Rental> => {
-  const response = await rentalsApi.returnRental(rentalId, {
-    endStationId: stationId,
-  });
+export const returnRental = async (stationId: string): Promise<Rental> => {
+  const response = await rentalsApi.returnRental({ endStationId: stationId });
   // Cast response to access generated data structure
   const responseData = (response.data as unknown as { data: ReturnRental1 }).data;
   
