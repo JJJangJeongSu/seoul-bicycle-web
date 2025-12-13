@@ -5,7 +5,6 @@ import { MyPage } from './components/pages/MyPage';
 import { BoardPage } from './components/pages/BoardPage';
 import { RepairPage } from './components/pages/RepairPage';
 import { AdminPage } from './components/pages/AdminPage';
-import { RoutePage } from './components/pages/RoutePage';
 import { AICourseRecommendPage } from './components/pages/AICourseRecommendPage';
 import { LoginModal } from './components/auth/LoginModal';
 import { SignupModal } from './components/auth/SignupModal';
@@ -44,7 +43,6 @@ export default function App() {
 
           <Route path="/board" element={<BoardPage />} />
           <Route path="/repair" element={<RepairPage />} />
-          <Route path="/route" element={<RoutePage />} />
           <Route path="/ai-course" element={<AICourseRecommendPage />} />
 
           <Route
