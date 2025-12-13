@@ -19,9 +19,9 @@ export const updateUser = async (userId: string, data: Update): Promise<void> =>
 
 export const getUserStatistics = async (userId: string): Promise<UserStatistics> => {
   const response = await usersApi.getUserStatistics(userId);
-  // Handle response wrapper if present
-  const responseData = response.data as any;
-  return responseData.data || responseData;
+  // Handle response wrapper if present. Accessing 'data' dynamically as generation might miss allOf composition
+  const responseData = response.data as unknown as { data: UserStatistics };
+  return responseData.data;
 };
 
 export const getUserRentals = async (userId: string): Promise<Rental[]> => {
