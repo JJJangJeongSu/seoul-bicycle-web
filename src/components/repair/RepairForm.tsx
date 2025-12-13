@@ -44,7 +44,7 @@ export function RepairForm({ onSuccess, onCancel }: RepairFormProps) {
       // Create repair via service
       const newRepair = await repairService.createRepair({
         type: formData.type,
-        bikeId: formData.bikeId,
+        bike_id: formData.bikeId,
         category: formData.category as RepairCategory,
         description: formData.description,
         reporter: user.name,

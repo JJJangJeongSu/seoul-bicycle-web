@@ -62,8 +62,8 @@ export const getRepairById = async (id: string): Promise<Repair | null> => {
   return {
     id: item.id,
     type: item.type,
-    bikeId: item.bike_id,
-    stationId: item.station_id,
+    bike_id: item.bike_id,
+    station_id: item.station_id,
     category: item.category,
     description: item.description,
     reporter: item.reporter_name,

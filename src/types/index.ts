@@ -108,8 +108,8 @@ export type AdminRepair = {
 export type Repair = {
   id: string;
   type: RepairType;
-  bikeId?: string;
-  stationId?: string;
+  bike_id?: string;
+  station_id?: string;
   category: RepairCategory;
   description: string;
   reporter: string;
