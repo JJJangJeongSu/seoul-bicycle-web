@@ -13,17 +13,30 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { Success } from './success';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { UserStatistics } from './user-statistics';
 
 /**
- * @type GetUserStatistics200Response
+ * 
  * @export
+ * @interface StationUsageCount
  */
-export type GetUserStatistics200Response = Success;
-
+export interface StationUsageCount {
+    /**
+     * 정류소 이름
+     * @type {string}
+     * @memberof StationUsageCount
+     */
+    'name': string;
+    /**
+     * 정류소 ID
+     * @type {string}
+     * @memberof StationUsageCount
+     */
+    'id': string;
+    /**
+     * 사용횟수(대여 or 반납)
+     * @type {number}
+     * @memberof StationUsageCount
+     */
+    'count': number;
+}
 

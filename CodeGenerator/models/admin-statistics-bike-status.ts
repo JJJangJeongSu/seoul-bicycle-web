@@ -15,34 +15,28 @@
 
 
 /**
- * 
+ * 자전거 현황
  * @export
- * @interface CalculateRoute
+ * @interface AdminStatisticsBikeStatus
  */
-export interface CalculateRoute {
+export interface AdminStatisticsBikeStatus {
     /**
-     * 출발지 위도
+     * 정상
      * @type {number}
-     * @memberof CalculateRoute
+     * @memberof AdminStatisticsBikeStatus
      */
-    'start_lat': number;
+    'available': number;
     /**
-     * 출발지 경도
+     * 대여중
      * @type {number}
-     * @memberof CalculateRoute
+     * @memberof AdminStatisticsBikeStatus
      */
-    'start_lon': number;
+    'rented': number;
     /**
-     * 목적지 위도
+     * 고장/수리
      * @type {number}
-     * @memberof CalculateRoute
+     * @memberof AdminStatisticsBikeStatus
      */
-    'end_lat': number;
-    /**
-     * 목적지 경도
-     * @type {number}
-     * @memberof CalculateRoute
-     */
-    'end_lon': number;
+    'maintenence': number;
 }
 

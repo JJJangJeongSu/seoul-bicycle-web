@@ -13,6 +13,24 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { Activity } from './activity';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { AdminStatisticsBikeStatus } from './admin-statistics-bike-status';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { AdminStatisticsPopularStations } from './admin-statistics-popular-stations';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { AdminStatisticsRepairStatus } from './admin-statistics-repair-status';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { AdminStatisticsStationStatus } from './admin-statistics-station-status';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { AdminStatisticsTimePopulationInnerInner } from './admin-statistics-time-population-inner-inner';
 
 /**
  * 
@@ -56,5 +74,41 @@ export interface AdminStatistics {
      * @memberof AdminStatistics
      */
     'total_repairs_pending': number;
+    /**
+     * 최근 활동(회원가입/대여/게시글 작성 등등) (최신순 5개)
+     * @type {Array<Activity>}
+     * @memberof AdminStatistics
+     */
+    'recent_activities': Array<Activity>;
+    /**
+     * 
+     * @type {AdminStatisticsBikeStatus}
+     * @memberof AdminStatistics
+     */
+    'bike_status': AdminStatisticsBikeStatus;
+    /**
+     * 
+     * @type {AdminStatisticsStationStatus}
+     * @memberof AdminStatistics
+     */
+    'station_status': AdminStatisticsStationStatus;
+    /**
+     * 
+     * @type {AdminStatisticsRepairStatus}
+     * @memberof AdminStatistics
+     */
+    'repair_status': AdminStatisticsRepairStatus;
+    /**
+     * 시간대별 대여량(반납 아님)
+     * @type {Array<Array<AdminStatisticsTimePopulationInnerInner>>}
+     * @memberof AdminStatistics
+     */
+    'time_population': Array<Array<AdminStatisticsTimePopulationInnerInner>>;
+    /**
+     * 
+     * @type {AdminStatisticsPopularStations}
+     * @memberof AdminStatistics
+     */
+    'popular_stations': AdminStatisticsPopularStations;
 }
 

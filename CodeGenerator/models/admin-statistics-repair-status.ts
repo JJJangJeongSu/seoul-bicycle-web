@@ -15,34 +15,28 @@
 
 
 /**
- * 
+ * 수리 현황 
  * @export
- * @interface CalculateRoute
+ * @interface AdminStatisticsRepairStatus
  */
-export interface CalculateRoute {
+export interface AdminStatisticsRepairStatus {
     /**
-     * 출발지 위도
-     * @type {number}
-     * @memberof CalculateRoute
+     * 대기중
+     * @type {string}
+     * @memberof AdminStatisticsRepairStatus
      */
-    'start_lat': number;
+    'pending': string;
     /**
-     * 출발지 경도
-     * @type {number}
-     * @memberof CalculateRoute
+     * 진행중
+     * @type {string}
+     * @memberof AdminStatisticsRepairStatus
      */
-    'start_lon': number;
+    'in-progress': string;
     /**
-     * 목적지 위도
-     * @type {number}
-     * @memberof CalculateRoute
+     * 완료
+     * @type {string}
+     * @memberof AdminStatisticsRepairStatus
      */
-    'end_lat': number;
-    /**
-     * 목적지 경도
-     * @type {number}
-     * @memberof CalculateRoute
-     */
-    'end_lon': number;
+    'completed': string;
 }
 

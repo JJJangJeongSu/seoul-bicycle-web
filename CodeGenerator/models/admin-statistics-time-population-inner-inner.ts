@@ -13,17 +13,24 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { Success } from './success';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { UserStatistics } from './user-statistics';
 
 /**
- * @type GetUserStatistics200Response
+ * 
  * @export
+ * @interface AdminStatisticsTimePopulationInnerInner
  */
-export type GetUserStatistics200Response = Success;
-
+export interface AdminStatisticsTimePopulationInnerInner {
+    /**
+     * 0/3/6/9/.../15/18/21
+     * @type {number}
+     * @memberof AdminStatisticsTimePopulationInnerInner
+     */
+    'time': number;
+    /**
+     * 사용 횟수
+     * @type {number}
+     * @memberof AdminStatisticsTimePopulationInnerInner
+     */
+    'usage': number;
+}
 

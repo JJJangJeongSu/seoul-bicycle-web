@@ -4,8 +4,8 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**calculateRoute**](#calculateroute) | **POST** /routes/calculate | 최적 경로 계산|
-|[**calculateRoute_0**](#calculateroute_0) | **POST** /routes/calculate | 최적 경로 계산|
+|[**calculateRoute**](#calculateroute) | **POST** /routes/find | 최적 경로 계산|
+|[**calculateRoute_0**](#calculateroute_0) | **POST** /routes/find | 최적 경로 계산|
 |[**geocodeAddress**](#geocodeaddress) | **GET** /geocode | 주소를 좌표로 변환|
 |[**geocodeAddress_0**](#geocodeaddress_0) | **GET** /geocode | 주소를 좌표로 변환|
 

@@ -30,7 +30,6 @@ export function AdminRepairs() {
     hasNext: false,
     hasPrev: false
   });
-  
   // Filtering
   const [statusFilter, setStatusFilter] = useState<string>('all');
 

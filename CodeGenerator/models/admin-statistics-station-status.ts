@@ -13,17 +13,24 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { Success } from './success';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { UserStatistics } from './user-statistics';
 
 /**
- * @type GetUserStatistics200Response
+ * 대여소 현황
  * @export
+ * @interface AdminStatisticsStationStatus
  */
-export type GetUserStatistics200Response = Success;
-
+export interface AdminStatisticsStationStatus {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminStatisticsStationStatus
+     */
+    'active': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminStatisticsStationStatus
+     */
+    'inactive': number;
+}
 

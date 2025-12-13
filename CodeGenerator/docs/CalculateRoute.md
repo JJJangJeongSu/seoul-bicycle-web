@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**startLat** | **number** | 출발지 위도 | [default to undefined]
-**startLon** | **number** | 출발지 경도 | [default to undefined]
-**endLat** | **number** | 목적지 위도 | [default to undefined]
-**endLon** | **number** | 목적지 경도 | [default to undefined]
+**start_lat** | **number** | 출발지 위도 | [default to undefined]
+**start_lon** | **number** | 출발지 경도 | [default to undefined]
+**end_lat** | **number** | 목적지 위도 | [default to undefined]
+**end_lon** | **number** | 목적지 경도 | [default to undefined]
 
 ## Example
 
@@ -16,10 +16,10 @@ Name | Type | Description | Notes
 import { CalculateRoute } from './api';
 
 const instance: CalculateRoute = {
-    startLat,
-    startLon,
-    endLat,
-    endLon,
+    start_lat,
+    start_lon,
+    end_lat,
+    end_lon,
 };
 ```
 
