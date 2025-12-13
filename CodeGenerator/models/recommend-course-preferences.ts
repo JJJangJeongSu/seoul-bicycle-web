@@ -41,7 +41,7 @@ export interface RecommendCoursePreferences {
 }
 
 export const RecommendCoursePreferencesDifficultyEnum = {
-    : '최하',
+    1: '최하',
     2: '하',
     3: '중',
     4: '상',

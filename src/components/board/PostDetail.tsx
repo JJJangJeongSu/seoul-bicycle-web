@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Eye, MessageSquare, Edit, Trash2, Loader2 } from 'lucide-react';
-import type { Post } from '../../types';
+import { ArrowLeft, Eye, MessageSquare, Edit, Trash2, Loader2, Send } from 'lucide-react';
+import type { Post, Comment } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
 import { useServices } from '../../hooks/useServices';
 
@@ -58,26 +58,9 @@ export function PostDetail({ postId, onBack, onEdit }: PostDetailProps) {
     loadPost();
   }, [postId, user, boardService]);
 
-  const [comments, setComments] = useState([
-    {
-      id: 'C-001',
-      author: '김철수',
-      authorId: '2',
-      content: '좋은 정보 감사합니다!',
-      createdAt: new Date('2024-11-07T16:20:00'),
-      replies: [
-        {
-          id: 'C-002',
-          author: '이영희',
-          authorId: '3',
-          content: '저도 가봐야겠어요',
-          createdAt: new Date('2024-11-07T16:45:00'),
-        },
-      ],
-    },
-  ]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
-  const [replyTo, setReplyTo] = useState<string | null>(null);
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
   // Show loading state
   if (loading) {
@@ -102,7 +85,7 @@ export function PostDetail({ postId, onBack, onEdit }: PostDetailProps) {
     );
   }
 
-  const handleComment = () => {
+  const handleComment = async () => {
     if (!user) {
       alert('로그인이 필요합니다');
       return;
@@ -112,30 +95,18 @@ export function PostDetail({ postId, onBack, onEdit }: PostDetailProps) {
       return;
     }
 
-    const comment = {
-      id: `C-${Date.now()}`,
-      author: user.name,
-      authorId: user.id,
-      content: newComment,
-      createdAt: new Date(),
-      replies: [],
-    };
-
-    if (replyTo) {
-      setComments(prev =>
-        prev.map(c =>
-          c.id === replyTo
-            ? { ...c, replies: [...c.replies, comment] }
-            : c
-        )
-      );
-      setReplyTo(null);
-    } else {
-      setComments(prev => [...prev, comment]);
+    try {
+      setIsSubmittingComment(true);
+      const createdComment = await boardService.createComment(postId, newComment);
+      setComments(prev => [...prev, createdComment]);
+      setNewComment('');
+      alert('댓글이 등록되었습니다');
+    } catch (error) {
+      console.error('Failed to create comment:', error);
+      alert('댓글 등록에 실패했습니다.');
+    } finally {
+      setIsSubmittingComment(false);
     }
-
-    setNewComment('');
-    alert('댓글이 등록되었습니다');
   };
 
   const handleDelete = async () => {
@@ -260,80 +231,56 @@ export function PostDetail({ postId, onBack, onEdit }: PostDetailProps) {
 
         {/* Comment List */}
         <div className="space-y-4 mb-6">
-          {comments.map(comment => (
-            <div key={comment.id} className="border-b pb-4">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <span>{comment.author}</span>
-                  <span className="text-sm text-gray-500 ml-2">
-                    {comment.createdAt.toLocaleString('ko-KR')}
-                  </span>
-                </div>
-                {user && (
-                  <button
-                    onClick={() => setReplyTo(comment.id)}
-                    className="text-sm text-blue-600 hover:underline"
-                  >
-                    답글
-                  </button>
-                )}
-              </div>
-              <p className="text-gray-700 mb-2">{comment.content}</p>
-
-              {/* Replies */}
-              {comment.replies.length > 0 && (
-                <div className="ml-8 mt-3 space-y-3">
-                  {comment.replies.map(reply => (
-                    <div key={reply.id} className="bg-gray-50 rounded p-3">
-                      <div className="flex items-start justify-between mb-1">
-                        <div>
-                          <span className="text-sm">↳ {reply.author}</span>
-                          <span className="text-xs text-gray-500 ml-2">
-                            {reply.createdAt.toLocaleString('ko-KR')}
-                          </span>
-                        </div>
-                      </div>
-                      <p className="text-sm text-gray-700">{reply.content}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {replyTo === comment.id && (
-                <div className="ml-8 mt-3 p-3 bg-blue-50 rounded">
-                  <p className="text-sm text-blue-700 mb-2">답글 작성 중...</p>
-                  <button
-                    onClick={() => setReplyTo(null)}
-                    className="text-sm text-gray-600 hover:underline"
-                  >
-                    취소
-                  </button>
-                </div>
-              )}
+          {comments.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              첫 번째 댓글을 남겨보세요!
             </div>
-          ))}
+          ) : (
+            comments.map(comment => (
+              <div key={comment.id} className="border-b pb-4 last:border-0">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <span className="font-medium">{comment.authorName}</span>
+                    <span className="text-sm text-gray-500 ml-2">
+                      {comment.createdAt.toLocaleString('ko-KR')}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Comment Form */}
         {user ? (
           <div className="border-t pt-4">
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder={replyTo ? "답글을 입력하세요..." : "댓글을 입력하세요..."}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
-              rows={3}
-            />
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">
-                {newComment.length} / 500
-              </span>
+            <div className="relative">
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="댓글을 입력하세요..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12 resize-none"
+                rows={3}
+                disabled={isSubmittingComment}
+              />
               <button
                 onClick={handleComment}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                disabled={isSubmittingComment || !newComment.trim()}
+                className="absolute bottom-3 right-3 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                title="댓글 등록"
               >
-                {replyTo ? '답글 등록' : '댓글 등록'}
+                {isSubmittingComment ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Send className="w-5 h-5" />
+                )}
               </button>
+            </div>
+            <div className="flex justify-end mt-1">
+              <span className="text-xs text-gray-500">
+                {newComment.length} / 500
+              </span>
             </div>
           </div>
         ) : (

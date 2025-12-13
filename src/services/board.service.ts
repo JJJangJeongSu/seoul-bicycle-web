@@ -4,7 +4,7 @@
  * Handles board-related API calls
  */
 
-import type { Post, PostCreate } from '../types';
+import type { Post, PostCreate, Comment } from '../types';
 import { boardApi } from '../api';
 import { GetAllPostsCategoryEnum } from '../../CodeGenerator/apis/board-api';
 
@@ -58,7 +58,7 @@ export const getPostById = async (id: string): Promise<Post | null> => {
 
 export const createPost = async (post: PostCreate): Promise<Post> => {
   // API expects title, content, category.
-  const response = await boardApi.createPost({
+  const response = await boardApi.createPost_2({
     title: post.title,
     content: post.content,
     category: post.category as any,
@@ -110,4 +110,20 @@ export const updatePost = async (id: string, updates: Partial<Post>): Promise<Po
 
 export const deletePost = async (id: string): Promise<void> => {
   await boardApi.deletePost(id);
+};
+
+export const createComment = async (postId: string, content: string): Promise<Comment> => {
+  // Using boardApi.createPost because the generated code mapped the comment endpoint to this name
+  // Endpoint: /board/posts/{postId}/comment
+  const response = await boardApi.createPost(postId, { content });
+  const responseData = (response.data as any).data.comment;
+
+  return {
+    id: responseData.comment_id,
+    postId: postId,
+    authorName: responseData.author_name,
+    authorId: responseData.author_id,
+    content: responseData.content,
+    createdAt: new Date(responseData.created_at),
+  };
 };

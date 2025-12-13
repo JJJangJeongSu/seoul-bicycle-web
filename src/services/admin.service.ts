@@ -5,6 +5,7 @@
  * user management, station management, repair tracking, and statistics.
  */
 
+import axios from 'axios';
 import { adminApi } from '../api';
 import { axiosInstance } from '../api/config';
 import type { 
@@ -18,11 +19,13 @@ import type {
   UpdateRepairStatus,
   AdminStatistics,
   GetStationAdmin200ResponseAllOfData,
-  Bike
+  Bike,
+  Rental
 } from '../../CodeGenerator/models';
 
 // Re-export specific types if needed by components, or components import directly
-export type { User, Station, Repair, Pagination };
+// Re-export specific types if needed by components, or components import directly
+export type { User, Station, Repair, Pagination, Rental, Bike };
 
 // ==========================================
 // Dashboard Statistics
@@ -265,3 +268,117 @@ export const updateRepair = async (id: string, data: any): Promise<void> => {
   };
   await axiosInstance.put(`/admin/repairs/${id}`, payload);
 };
+
+
+/*
+Bike Management
+*/
+
+/**
+ * Retrieves a paginated list of all bikes.
+ * @param page - Current page number (default: 1)
+ * @param limit - Items per page (default: 10)
+ * @param searchId - Optional bike ID search query
+ * @returns Promise<{ bikes: Bike[], pagination: Pagination }>
+ */
+export const getAllBikes = async (
+  page: number = 1,
+  limit: number = 10,
+  searchId?: string
+): Promise<{ bikes: Bike[], pagination: Pagination }> => {
+  const response = await adminApi.getAllBikesAdmin(page, limit, searchId);
+  const data = response.data as any;
+  const responseData = data.data || data;
+  const bikes = responseData.bikes || [];
+  const pagination = responseData.pagination || {
+    currentPage: page,
+    totalPages: 1,
+    totalItems: bikes.length,
+    itemsPerPage: limit,
+    hasNext: false,
+    hasPrev: false
+  };
+
+  return { bikes, pagination };
+};
+
+/**
+ * Creates a new bike.
+ * @param stationId - The ID of the station where the bike is located
+ */
+export const createBike = async (stationId: string): Promise<void> => {
+  await adminApi.createBike(stationId);
+};
+
+/**
+ * Retrieves a single bike by its ID.
+ * @param id - Bike ID
+ * @returns Promise<{ bike: Bike, pagination: Pagination } | null>
+ */
+export const getBikeById = async (id: string): Promise<{ bike: Bike, pagination: Pagination } | null> => {
+  try {
+    const response = await adminApi.getBikeAdmin(id);
+    const data = response.data as any;
+    const responseData = data.data || data;
+    const bike = responseData.bike as Bike;
+    const pagination = responseData.pagination as Pagination;
+    return { bike, pagination };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+};
+
+/**
+ * Deletes a bike.
+ * @param id - Bike ID
+ */
+export const deleteBike = async (id: string): Promise<void> => {
+  await adminApi.deleteBike(id);
+};
+
+/**
+ * Updates a bike's status.
+ * @param id - Bike ID
+ * @param status - New status
+ */
+export const updateBikeStatus = async (
+  id: string, 
+  status: 'available' | 'rented' | 'maintenance' | 'broken'
+): Promise<void> => {
+  await adminApi.updateBikeStatus(id, status as any);
+};
+
+/**
+ * Retrieves rental records for a specific bike.
+ * @param bikeId - Bike ID
+ * @param page - Current page number (default: 1)
+ * @param limit - Items per page (default: 10)
+ * @param sortBy - Sort order ('recent' or 'old')
+ * @returns Promise<{ records: Rental[], pagination: Pagination }>
+ */
+export const getBikeRentalRecords = async (
+  bikeId: string,
+  page: number = 1,
+  limit: number = 10,
+  sortBy: 'recent' | 'old' = 'recent'
+): Promise<{ records: Rental[], pagination: Pagination }> => {
+  const response = await adminApi.getBikeRentalRecords(bikeId, page, limit, sortBy as any);
+  const data = response.data as any;
+  const responseData = data.data || data;
+  const records = responseData.records || [];
+  const pagination = responseData.pagination || {
+    currentPage: page,
+    totalPages: 1,
+    totalItems: records.length,
+    itemsPerPage: limit,
+    hasNext: false,
+    hasPrev: false
+  };
+
+  return { records, pagination };
+};
+
+

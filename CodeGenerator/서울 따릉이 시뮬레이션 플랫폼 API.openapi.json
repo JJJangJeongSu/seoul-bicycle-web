@@ -1,0 +1,850 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "서울 따릉이 시뮬레이션 플랫폼 API",
+    "description": "서울 공공자전거 따릉이 시스템을 시뮬레이션하는 RESTful API. 사용자 인증, 대여소 조회, 자전거 대여/반납, 게시판, 고장 신고, 경로 찾기, AI 코스 추천 등의 기능을 제공합니다.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Seoul Bike Sharing Platform",
+      "url": "https://www.figma.com/design/aJfOnTQZwtUneqKjGGYkcj/Simulation-Platform-Design"
+    }
+  },
+  "tags": [
+    {
+      "name": "admin"
+    },
+    {
+      "name": "bike"
+    }
+  ],
+  "paths": {
+    "/admin/bikes": {
+      "get": {
+        "summary": "자전거 목록 조회",
+        "deprecated": false,
+        "description": "관리자 전용. 전체 자전거 목록을 조회합니다. 검색 및 페이지네이션을 지원합니다.",
+        "operationId": "getAllBikesAdmin",
+        "tags": [
+          "admin",
+          "bike"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "example": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "페이지당 항목 수",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "example": 20
+            }
+          },
+          {
+            "name": "searchId",
+            "in": "query",
+            "description": "자전거 번호 검색어",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "홍길동"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "회원 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "bikes": {
+                              "$ref": "#/components/schemas/AdminBikesList"
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          },
+                          "required": [
+                            "bikes",
+                            "pagination"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "인증 필요",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "403": {
+            "description": "권한 없음 - 관리자만 접근 가능",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "자전거 추가",
+        "deprecated": false,
+        "description": "관리자 전용. 자전거를 추가합니다. 정류장 id를 입력받습니다.",
+        "operationId": "createBike",
+        "tags": [
+          "admin",
+          "bike"
+        ],
+        "parameters": [
+          {
+            "name": "stationId",
+            "in": "query",
+            "description": "정류장 번호",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "홍길동"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "자전거 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "bike": {
+                              "$ref": "#/components/schemas/Bike"
+                            }
+                          },
+                          "required": [
+                            "bike"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "인증 필요",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "403": {
+            "description": "권한 없음 - 관리자만 접근 가능",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/admin/bikes/{bikeId}/rentals": {
+      "get": {
+        "summary": "특정 자전거의 렌탈 내역 조회",
+        "deprecated": false,
+        "description": "관리자 전용. 특정 자전거의 렌탈 내역을 조회합니다. 정렬 및 페이지네이션을 지원합니다.",
+        "operationId": "getBikeRentalRecords",
+        "tags": [
+          "admin",
+          "bike"
+        ],
+        "parameters": [
+          {
+            "name": "bikeId",
+            "in": "path",
+            "description": "자전거의 ID",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "example": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "페이지당 항목 수",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "example": 20
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "정렬기준",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "recent",
+                "old"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "회원 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "records": {
+                              "$ref": "#/components/schemas/RentalRecords"
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          },
+                          "required": [
+                            "records",
+                            "pagination"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "인증 필요",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "403": {
+            "description": "권한 없음 - 관리자만 접근 가능",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/admin/bikes/{bikeId}/status": {
+      "put": {
+        "summary": "자전거 상태 수정",
+        "deprecated": false,
+        "description": "관리자 전용. 대여소 정보를 수정합니다.",
+        "operationId": "updateBikeStatus",
+        "tags": [
+          "admin"
+        ],
+        "parameters": [
+          {
+            "name": "bikeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "available",
+                      "rented",
+                      "maintenance",
+                      "broken"
+                    ],
+                    "description": "수정할 상태",
+                    "example": "available"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "대여소 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "bike": {
+                              "$ref": "#/components/schemas/Bike"
+                            }
+                          },
+                          "required": [
+                            "bike"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "인증 필요",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "403": {
+            "description": "권한 없음 - 관리자만 접근 가능",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "대여소를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/admin/bikes/{bikeId}": {
+      "get": {
+        "summary": "자전거 상세 조회",
+        "deprecated": false,
+        "description": "관리자 전용, 특정 자전거의 정보만을 조회",
+        "operationId": "getBikeAdmin",
+        "tags": [
+          "admin",
+          "bike"
+        ],
+        "parameters": [
+          {
+            "name": "bikeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "회원 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "bike": {
+                              "$ref": "#/components/schemas/Bike"
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          },
+                          "required": [
+                            "bike",
+                            "pagination"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "인증 필요",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "403": {
+            "description": "권한 없음 - 관리자만 접근 가능",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "자전거 삭제",
+        "deprecated": false,
+        "description": "관리자 전용. 자전거를 추가합니다. 정류장 id를 입력받습니다.",
+        "operationId": "deleteBike",
+        "tags": [
+          "admin",
+          "bike"
+        ],
+        "parameters": [
+          {
+            "name": "bikeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "회원 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "인증 필요",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "403": {
+            "description": "권한 없음 - 관리자만 접근 가능",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Rental": {
+        "type": "object",
+        "required": [
+          "id",
+          "bike_id",
+          "start_station_id",
+          "status",
+          "rental_time",
+          "return_time",
+          "end_station_id",
+          "user_id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "대여 고유 ID",
+            "example": "R-1699999999999"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "1"
+          },
+          "bike_id": {
+            "type": "string",
+            "description": "자전거 ID (Seoul Public Bike)",
+            "example": "SPB-12345"
+          },
+          "start_station_id": {
+            "type": "string",
+            "description": "출발 대여소 ID",
+            "pattern": "^ST-[0-9]{4}$",
+            "example": "ST-1000"
+          },
+          "end_station_id": {
+            "type": "string",
+            "description": "도착 대여소 ID (반납 시에만)",
+            "nullable": true,
+            "example": "ST-015"
+          },
+          "rental_time": {
+            "type": "string",
+            "description": "대여 시작 시간",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2024-11-15T10:00:00Z"
+          },
+          "return_time": {
+            "type": "string",
+            "description": "반납 시간",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2024-11-15T10:45:00Z"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "이용 시간 (분 단위)",
+            "nullable": true,
+            "example": 45
+          },
+          "distance": {
+            "type": "string",
+            "description": "이동 거리 (km)",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "rented",
+              "returned"
+            ],
+            "description": "대여 상태 (rented: 대여 중, returned: 반납 완료)",
+            "example": "rented"
+          }
+        }
+      },
+      "Bike": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "available",
+              "rented",
+              "maintenence"
+            ]
+          },
+          "current_station_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "use_count": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "current_station_id",
+          "created_at",
+          "updated_at",
+          "use_count"
+        ]
+      },
+      "Success": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "응답 상태"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "SimpleError": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
+      "Pagination": {
+        "type": "object",
+        "required": [
+          "currentPage",
+          "totalPages",
+          "totalItems",
+          "itemsPerPage",
+          "hasNext",
+          "hasPrev"
+        ],
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "현재 페이지 번호",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "전체 페이지 수",
+            "example": 5
+          },
+          "totalItems": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "전체 항목 수",
+            "example": 100
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "페이지당 항목 수",
+            "example": 20
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "다음 페이지 존재 여부",
+            "example": true
+          },
+          "hasPrev": {
+            "type": "boolean",
+            "description": "이전 페이지 존재 여부",
+            "example": false
+          }
+        }
+      },
+      "AdminBikesList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Bike"
+        }
+      },
+      "RentalRecords": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Rental"
+        }
+      }
+    },
+    "responses": {},
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT 토큰을 사용한 인증. 'Authorization: Bearer {token}' 헤더 형식으로 전송합니다."
+      }
+    }
+  },
+  "servers": [],
+  "security": []
+}
