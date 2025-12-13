@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sparkles, Loader2 } from 'lucide-react';
+import { Sparkles, Loader2, MapPin } from 'lucide-react';
 import { aiApi } from '../../api';
 import CourseView from '../home/CourseView';
 import { LatLng } from '../../types';
@@ -14,14 +14,17 @@ export function AICourseRecommendPage() {
   const [prompt, setPrompt] = useState('');
   const [courses, setCourses] = useState<CourseInfo[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const handleRecommend = async () => {
     if (!prompt.trim()) return alert('원하는 코스를 입력해주세요');
     setLoading(true);
+    setSelectedIndex(null);
 
     try {
       const llmResp = await aiApi.recommendCourse(prompt.trim());
       const places = llmResp.data.data.places;
+
       if (!places || places.length === 0) {
         alert('추천 코스가 없습니다.');
         setCourses([]);
@@ -45,29 +48,25 @@ export function AICourseRecommendPage() {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      {/* 입력 */}
+      {/* 입력 영역 */}
       <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-lg p-6 mb-6">
         <label className="block text-sm text-gray-700 mb-3 flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-purple-600" />
           어떤 코스를 찾으시나요?
         </label>
+
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="예: 한강 따라 달리는 쉬운 코스"
-          className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent mb-4 min-h-32 resize-none"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              !loading && handleRecommend();
-            }
-          }}
+          className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 mb-4 min-h-32 resize-none"
           disabled={loading}
         />
+
         <button
           onClick={handleRecommend}
           disabled={loading}
-          className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {loading ? (
             <>
@@ -83,8 +82,53 @@ export function AICourseRecommendPage() {
         </button>
       </div>
 
-      {/* 지도 + 마커/Polyline */}
-      <CourseView courses={courses} />
+      {/* 지도 */}
+      <div className="w-full mb-6">
+        <CourseView
+          courses={courses}
+          selectedIndex={selectedIndex}
+        />
+      </div>
+
+      {/* 코스 설명 카드 */}
+      {courses.length > 0 && (
+        <div className="grid gap-4">
+          {courses.map((course, idx) => {
+            const selected = selectedIndex === idx;
+
+            return (
+              <div
+                key={idx}
+                onClick={() => setSelectedIndex(idx)}
+                className={`cursor-pointer rounded-lg border p-4 transition
+                  ${
+                    selected
+                      ? 'border-purple-500 bg-purple-50 shadow-md'
+                      : 'border-gray-200 hover:bg-gray-50'
+                  }
+                `}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPin className="w-5 h-5 text-purple-600" />
+                  <h3 className="font-semibold text-gray-800">
+                    코스 {idx + 1}. {course.name}
+                  </h3>
+                </div>
+
+                <p className="text-sm text-gray-600">
+                  출발지 → 도착지를 잇는 추천 경로입니다.
+                </p>
+
+                {selected && (
+                  <p className="mt-2 text-sm text-purple-600 font-medium">
+                    ✔ 현재 지도에 표시 중
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

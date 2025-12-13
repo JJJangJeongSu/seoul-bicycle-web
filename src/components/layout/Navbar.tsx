@@ -41,16 +41,6 @@ export function Navbar() {
             </button>
 
             <button
-              onClick={() => navigate('/route')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
-                isActive('/route') ? 'bg-white text-primary shadow-lg scale-105' : 'hover:bg-white/20'
-              }`}
-            >
-              <Route className="w-5 h-5" />
-              길찾기
-            </button>
-
-            <button
               onClick={() => navigate('/ai-course')}
               className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
                 isActive('/ai-course') ? 'bg-white text-primary shadow-lg scale-105' : 'hover:bg-white/20'

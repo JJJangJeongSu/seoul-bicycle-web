@@ -43,7 +43,7 @@ export const RoutesApiAxiosParamCreator = function (configuration?: Configuratio
         calculateRoute: async (calculateRoute: CalculateRoute, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'calculateRoute' is not null or undefined
             assertParamExists('calculateRoute', 'calculateRoute', calculateRoute)
-            const localVarPath = `/routes/calculate`;
+            const localVarPath = `/routes/find`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -79,7 +79,7 @@ export const RoutesApiAxiosParamCreator = function (configuration?: Configuratio
         calculateRoute_1: async (calculateRoute: CalculateRoute, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'calculateRoute' is not null or undefined
             assertParamExists('calculateRoute_1', 'calculateRoute', calculateRoute)
-            const localVarPath = `/routes/calculate`;
+            const localVarPath = `/routes/find`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;

@@ -5,7 +5,6 @@ import { MyPage } from './components/pages/MyPage';
 import { BoardPage } from './components/pages/BoardPage';
 import { RepairPage } from './components/pages/RepairPage';
 import { AdminPage } from './components/pages/AdminPage';
-import { RoutePage } from './components/pages/RoutePage';
 import { AICourseRecommendPage } from './components/pages/AICourseRecommendPage';
 import { LoginModal } from './components/auth/LoginModal';
 import { SignupModal } from './components/auth/SignupModal';
@@ -15,13 +14,21 @@ import { useAuth } from './contexts/AuthContext';
 export type { User, Station, Rental } from './types';
 
 export default function App() {
-  const { user, showLoginModal, showSignupModal, login, signup, setShowLoginModal, setShowSignupModal } = useAuth();
+  const {
+    user,
+    showLoginModal,
+    showSignupModal,
+    login,
+    signup,
+    setShowLoginModal,
+    setShowSignupModal,
+  } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
 
-      <main>
+      <main className="flex-1 flex flex-col">
         <Routes>
           <Route path="/" element={<HomePage />} />
 
@@ -35,11 +42,7 @@ export default function App() {
           />
 
           <Route path="/board" element={<BoardPage />} />
-
           <Route path="/repair" element={<RepairPage />} />
-
-          <Route path="/route" element={<RoutePage />} />
-
           <Route path="/ai-course" element={<AICourseRecommendPage />} />
 
           <Route
@@ -51,7 +54,6 @@ export default function App() {
             }
           />
 
-          {/* 404 페이지 - 존재하지 않는 경로는 홈으로 리다이렉트 */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
