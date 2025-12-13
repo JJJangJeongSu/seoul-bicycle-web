@@ -44,6 +44,7 @@ export function PostDetail({ postId, onBack, onEdit }: PostDetailProps) {
           setPostData({
             ...foundPost,
           });
+          setComments(foundPost.commentList || []);
         } else {
           setError('게시글을 찾을 수 없습니다.');
         }
