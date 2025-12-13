@@ -48,6 +48,14 @@ export const getPostById = async (id: string): Promise<Post | null> => {
       views: responseData.views,
       likes: responseData.likes,
       comments: responseData.comment_count, // Mapped from comment_count
+      commentList: responseData.comments ? responseData.comments.map((comment: any) => ({
+        id: comment.comment_id,
+        postId: comment.post_id,
+        authorName: comment.author_name,
+        authorId: comment.author_id,
+        content: comment.content,
+        createdAt: new Date(comment.created_at),
+      })) : [],
       createdAt: new Date(responseData.created_at), // Convert string to Date
       isPinned: Boolean(responseData.is_pinned), // Mapped from is_pinned
     };

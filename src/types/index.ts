@@ -62,6 +62,7 @@ export type Post = {
   views: number;
   likes: number;
   comments: number;
+  commentList?: Comment[];
   createdAt: Date;
   isPinned?: boolean;
 };

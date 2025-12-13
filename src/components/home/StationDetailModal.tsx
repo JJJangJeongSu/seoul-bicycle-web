@@ -47,21 +47,6 @@ export function StationDetailModal({
               </div>
             </div>
 
-            <div className="flex items-start gap-3">
-              <Phone className="w-5 h-5 text-gray-600 mt-1" />
-              <div>
-                <p className="text-sm text-gray-600">관리 전화</p>
-                <p>1599-0000 (고객센터)</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <Clock className="w-5 h-5 text-gray-600 mt-1" />
-              <div>
-                <p className="text-sm text-gray-600">운영 시간</p>
-                <p>24시간 운영</p>
-              </div>
-            </div>
 
             <div className="flex items-start gap-3">
               <Bike className="w-5 h-5 text-gray-600 mt-1" />
@@ -109,29 +94,7 @@ export function StationDetailModal({
             )}
           </div>
 
-          {/* Map Placeholder */}
-          <div className="bg-gray-100 rounded-lg h-48 flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <MapPin className="w-12 h-12 mx-auto mb-2" />
-              <p className="text-sm">지도에서 위치 표시</p>
-              <p className="text-xs mt-1">위도: {station.latitude.toFixed(4)}, 경도: {station.longitude.toFixed(4)}</p>
-            </div>
-          </div>
 
-          {/* Statistics */}
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="mb-3">📊 통계 정보</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">일평균 대여 횟수</p>
-                <p className="text-xl">42회</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">평균 이용 시간</p>
-                <p className="text-xl">28분</p>
-              </div>
-            </div>
-          </div>
 
           {/* Actions */}
           <div className="space-y-3">
@@ -174,12 +137,7 @@ export function StationDetailModal({
               </button>
             )}
 
-            <button
-              className="w-full py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
-            >
-              <Navigation className="w-5 h-5" />
-              길찾기
-            </button>
+           
           </div>
         </div>
       </div>
