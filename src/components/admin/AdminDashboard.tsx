@@ -103,7 +103,53 @@ export function AdminDashboard() {
           <p className="text-3xl">{stats.active_rentals.toLocaleString()}</p>
         </div>
       </div>
+{/* Charts */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Hourly Usage */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg mb-4">오늘 시간대별 이용량</h3>
+          <div className="h-[300px]">
+            {hourlyData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={hourlyData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="hour" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="이용" fill="#10b981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                데이터가 없습니다
+              </div>
+            )}
+          </div>
+        </div>
 
+        {/* Popular Stations */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg mb-4">인기 대여소 (월간 TOP 5)</h3>
+          <div className="h-[300px]">
+            {popularStationsData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={popularStationsData} layout="vertical">
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" />
+                  <YAxis dataKey="name" type="category" width={100} />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                데이터가 없습니다
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      
       {/* Recent Activity */}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg mb-4">📊 최근 활동</h3>
